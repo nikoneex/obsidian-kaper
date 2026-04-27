@@ -1,0 +1,678 @@
+/* ── Block container ───────────────────────────────────────────────────── */
+
+.kaper-block {
+  padding: var(--size-4-8) var(--size-4-3) var(--size-4-4);
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+/* Reset Obsidian's default heading styles inside the block — class rules win */
+.kaper-block h1,
+.kaper-block h2,
+.kaper-block h3,
+.kaper-block h4,
+.kaper-block h5,
+.kaper-block h6 {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  border-bottom: none;
+}
+
+/* Suppress Obsidian's default code-block chrome (hover edit/copy/flair) */
+.markdown-rendered pre:has(.kaper-block) .edit-block-button,
+.markdown-rendered pre:has(.kaper-block) .copy-code-button,
+.markdown-rendered pre:has(.kaper-block) .code-block-flair {
+  display: none !important;
+}
+
+.markdown-rendered pre:has(.kaper-block) {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.kaper-view-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+
+.kaper-tabs {
+  display: flex;
+  gap: var(--size-2-2);
+  margin-bottom: var(--size-4-3);
+}
+
+.kaper-tab {
+  padding: var(--size-2-2) var(--size-4-2);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.kaper-tab.is-active {
+  color: var(--text-normal);
+  border-bottom-color: var(--interactive-accent);
+}
+
+.kaper-cook-mode-button {
+  margin-left: auto;
+  padding: var(--size-2-2) var(--size-4-2);
+  background: none;
+  border: none;
+  color: var(--text-accent);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.kaper-parse-error {
+  padding: var(--size-4-3);
+  border-radius: var(--radius-m);
+  background-color: var(--background-modifier-error);
+  color: var(--text-error);
+}
+
+/* ── Preview ──────────────────────────────────────────────────────────── */
+
+.kaper-preview {
+  display: flex;
+  flex-direction: column;
+  padding: var(--size-4-2) 0;
+}
+
+.kaper-preview__header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 28px;
+}
+
+.kaper-block .kaper-preview__title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-normal);
+  margin: 0 0 10px;
+}
+
+.kaper-preview__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.kaper-preview__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.kaper-preview__meta-item svg {
+  color: var(--text-faint);
+}
+
+.kaper-preview__meta-divider {
+  width: 1px;
+  height: 12px;
+  background: var(--background-modifier-border);
+}
+
+.kaper-preview__difficulty {
+  text-transform: capitalize;
+  gap: 8px;
+}
+
+.kaper-preview__difficulty-label {
+  color: var(--text-muted);
+}
+
+.kaper-preview__difficulty-bars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.kaper-preview__difficulty-bar {
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--background-modifier-border);
+}
+
+.kaper-preview__difficulty--easy .kaper-preview__difficulty-bar:nth-child(-n + 1),
+.kaper-preview__difficulty--medium .kaper-preview__difficulty-bar:nth-child(-n + 2),
+.kaper-preview__difficulty--hard .kaper-preview__difficulty-bar:nth-child(-n + 3) {
+  background: var(--interactive-accent);
+}
+
+.kaper-preview__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kaper-preview__tag {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--background-secondary);
+  color: var(--text-muted);
+}
+
+/* ── Preview body ─────────────────────────────────────────────────────── */
+
+.kaper-preview__body {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.kaper-block .kaper-preview__section-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+/* ── Preview ingredients ──────────────────────────────────────────────── */
+
+.kaper-preview__ingredient-group {
+  margin-bottom: 20px;
+}
+
+.kaper-preview__ingredient-group:last-child {
+  margin-bottom: 0;
+}
+
+.kaper-block .kaper-preview__group-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+  text-transform: capitalize;
+}
+
+.kaper-preview__ingredient-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.kaper-preview__ingredient {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.kaper-preview__ingredient--optional {
+  opacity: 0.6;
+}
+
+.kaper-preview__ingredient-amount {
+  font-weight: 600;
+  color: var(--interactive-accent);
+  white-space: nowrap;
+  min-width: 72px;
+}
+
+.kaper-preview__ingredient-name {
+  color: var(--text-normal);
+}
+
+.kaper-preview__ingredient-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Preview steps ────────────────────────────────────────────────────── */
+
+.kaper-preview__steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+}
+
+.kaper-preview__step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kaper-preview__step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kaper-preview__step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kaper-block .kaper-preview__step-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-normal);
+  flex: 1;
+  margin: 0;
+}
+
+.kaper-preview__step-duration {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.kaper-preview__step-note,
+.kaper-preview__step-technique {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding-left: 38px;
+  margin: 0;
+}
+
+.kaper-preview__callout {
+  margin-left: 38px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.kaper-preview__callout strong {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.kaper-preview__callout--tip {
+  background: rgba(var(--callout-tip, 0, 122, 255), 0.1);
+  color: rgb(var(--callout-tip, 0, 122, 255));
+}
+
+.kaper-preview__callout--warning {
+  background: rgba(var(--callout-warning, 233, 151, 63), 0.1);
+  color: rgb(var(--callout-warning, 233, 151, 63));
+}
+
+/* ── Form ──────────────────────────────────────────────────────────────── */
+
+.kaper-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-6);
+  padding: var(--size-4-3) 0;
+}
+
+.kaper-form__title-row {
+  padding-bottom: var(--size-4-2);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.kaper-form__title-input {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-interface);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-normal);
+  padding: 0;
+}
+
+.kaper-form__title-input::placeholder {
+  color: var(--text-faint);
+}
+
+.kaper-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+}
+
+.kaper-form__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kaper-block .kaper-form__section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.kaper-form__row {
+  display: flex;
+  gap: var(--size-4-2);
+}
+
+.kaper-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.kaper-form__field > label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ── Inputs ────────────────────────────────────────────────────────────── */
+
+.kaper-form__input,
+.kaper-form__textarea,
+.kaper-form__select {
+  background: var(--background-modifier-form-field);
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-family: var(--font-interface);
+  font-size: 14px;
+  color: var(--text-normal);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 34px;
+}
+
+.kaper-form__input::placeholder,
+.kaper-form__textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.kaper-form__input:focus,
+.kaper-form__textarea:focus,
+.kaper-form__select:focus {
+  border-color: var(--interactive-accent);
+}
+
+.kaper-form__textarea {
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.5;
+}
+
+.kaper-form__select {
+  cursor: pointer;
+  appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' stroke='%23999' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.kaper-form__input--narrow { max-width: 120px; flex: none; }
+.kaper-form__input--amount { width: 72px; flex: none; }
+.kaper-form__input--unit { width: 80px; flex: none; }
+.kaper-form__input--name { flex: 1; }
+.kaper-form__input--sub { width: 100px; flex: none; }
+.kaper-form__input--time { max-width: 110px; flex: none; }
+.kaper-form__input--step-title { flex: 1; }
+.kaper-form__input--duration { width: 90px; flex: none; }
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+
+.kaper-form__add-btn {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-accent);
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.kaper-form__add-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
+.kaper-form__remove-btn,
+.kaper-form__icon-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.1s, color 0.1s;
+}
+
+.kaper-form__remove-btn:hover {
+  background: var(--background-modifier-error-hover);
+  color: #fff;
+}
+
+.kaper-form__icon-btn:hover:not(:disabled) {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.kaper-form__icon-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ── Ingredient groups ─────────────────────────────────────────────────── */
+
+.kaper-form__ingredient-group {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.kaper-form__group-header {
+  display: flex;
+  align-items: center;
+  gap: var(--size-2-2);
+  padding: var(--size-2-2) var(--size-4-2);
+  background: var(--background-secondary);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.kaper-form__group-name {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-interface);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0;
+}
+
+.kaper-form__group-name::placeholder {
+  color: var(--text-faint);
+  font-weight: 400;
+}
+
+.kaper-form__group-name:focus {
+  color: var(--text-normal);
+}
+
+.kaper-form__ingredient-list {
+  padding: var(--size-2-2) var(--size-4-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2-2);
+}
+
+.kaper-form__ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: var(--size-2-2);
+}
+
+.kaper-form__drag-handle {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-faint);
+  background: none;
+  border: none;
+  cursor: grab;
+  flex-shrink: 0;
+  padding: 0;
+  touch-action: none;
+  transition: background 0.1s, color 0.1s;
+}
+
+.kaper-form__drag-handle:hover {
+  color: var(--text-muted);
+  background: var(--background-modifier-hover);
+}
+
+.kaper-form__drag-handle:active {
+  cursor: grabbing;
+}
+
+.kaper-form__drag-handle:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 1px;
+}
+
+.kaper-form__drag-overlay {
+  background: var(--background-primary);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  cursor: grabbing;
+}
+
+.kaper-form__add-ingredient-btn {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 4px 0;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.1s;
+}
+
+.kaper-form__add-ingredient-btn:hover {
+  color: var(--text-accent);
+}
+
+.kaper-form__add-step-btn {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px dashed var(--background-modifier-border);
+  background: none;
+  cursor: pointer;
+  transition: border-color 0.1s, color 0.1s;
+  width: 100%;
+  text-align: center;
+}
+
+.kaper-form__add-step-btn:hover {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+}
+
+/* ── Steps ─────────────────────────────────────────────────────────────── */
+
+.kaper-form__step {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.kaper-form__step-header {
+  display: flex;
+  align-items: center;
+  gap: var(--size-2-2);
+  padding: var(--size-2-2) var(--size-4-2);
+  background: var(--background-secondary);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.kaper-form__step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kaper-form__step-actions {
+  display: flex;
+  gap: var(--size-2-1);
+  margin-left: auto;
+}
+
+.kaper-form__step-body {
+  padding: var(--size-4-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+}
+
+.kaper-form__callout-row {
+  display: flex;
+  gap: var(--size-4-2);
+}

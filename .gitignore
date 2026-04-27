@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+
+main.js
+main.js.map
+*.log
+
+.DS_Store
+.vscode/
+.idea/
+
+data.json
+
+.env
+.env.local
