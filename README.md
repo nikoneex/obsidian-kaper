@@ -4,7 +4,7 @@ Bring [Kaper](https://kaper.me) recipes into your Obsidian vault. Any markdown f
 
 #### Live Preview Mode
 
-![Kaper recipe preview](assets/preview.png)
+<p align="center"><img src="assets/preview.png" alt="Kaper recipe preview" width="500"></p>
 
 ## What is Kaper?
 
@@ -27,7 +27,7 @@ The killer feature: **Cook Mode** at [kaper.me](https://kaper.me). Big-text, han
 
 #### Form Mode
 
-![Form editor](assets/form.png)
+<p align="center"><img src="assets/form.png" alt="Form editor" width="500"></p>
 
 ## File format
 
@@ -78,7 +78,7 @@ Required fields: `title`, `servings`, `ingredients`, `steps`.
 
 ## Usage
 
-![Editing a recipe](assets/demo.gif)
+<p align="center"><img src="assets/demo.gif" alt="Editing a recipe" width="500"></p>
 
 - **Create a recipe** — click the utensils icon in the left ribbon, or run **Kaper: Create recipe** from the command palette.
 - **Convert an existing note** — run **Kaper: Convert current note to Kaper recipe** from the command palette to add the frontmatter and starter block to any open `.md` file.
