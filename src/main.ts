@@ -1,20 +1,28 @@
 import { Notice, Plugin, TFile, TFolder } from 'obsidian';
-import { clearPersistentRoots, registerKaperBlockProcessor } from './codeblock-processor';
+import { kaperEditorExtension } from './editor-extension';
 import { FileLabelRewriter } from './file-label-rewriter';
 import { ensureKaperFrontmatter, hasKaperFrontmatter } from './frontmatter';
+import { serializeKaperYaml } from './parser/recipe-parser';
+import { RecipeModel } from './parser/types';
 
 const RIBBON_ICON = 'utensils-crossed';
 const DEFAULT_BASE = 'Untitled';
 
-const STARTER_BODY = `\`\`\`kaper
-title: Untitled
-servings: 1
-ingredients:
-  main: []
-steps: []
-version: 1
-\`\`\`
-`;
+function emptyRecipe(title = 'Untitled'): RecipeModel {
+  return {
+    version: 1,
+    title,
+    servings: 2,
+    ingredients: { main: [] },
+    steps: [],
+    capabilities: new Map(),
+  };
+}
+
+function starterBlock(title?: string): string {
+  const yaml = serializeKaperYaml(emptyRecipe(title));
+  return `\`\`\`kaper\n${yaml}\`\`\`\n`;
+}
 
 function joinPath(folder: string, name: string): string {
   return folder === '/' ? name : `${folder}/${name}`;
@@ -24,7 +32,7 @@ export default class KaperPlugin extends Plugin {
   private labelRewriter: FileLabelRewriter | null = null;
 
   async onload() {
-    registerKaperBlockProcessor(this);
+    this.registerEditorExtension([kaperEditorExtension]);
 
     this.labelRewriter = new FileLabelRewriter(this);
     this.app.workspace.onLayoutReady(() => this.labelRewriter?.start());
@@ -58,7 +66,6 @@ export default class KaperPlugin extends Plugin {
   onunload() {
     this.labelRewriter?.stop();
     this.labelRewriter = null;
-    clearPersistentRoots();
   }
 
   private async createRecipe(): Promise<void> {
@@ -68,7 +75,7 @@ export default class KaperPlugin extends Plugin {
     const fileName = await this.uniqueFileName(folder.path, DEFAULT_BASE);
     const path = joinPath(folder.path, fileName);
 
-    const initialContent = ensureKaperFrontmatter(STARTER_BODY);
+    const initialContent = ensureKaperFrontmatter(starterBlock());
 
     const file = await this.app.vault.create(path, initialContent);
     const leaf = this.app.workspace.getLeaf(false);
@@ -86,10 +93,7 @@ export default class KaperPlugin extends Plugin {
       }
       if (!updated.includes('```kaper')) {
         const trailing = updated.endsWith('\n') ? '' : '\n';
-        updated = `${updated}${trailing}\n${STARTER_BODY.replace(
-          'title: Untitled',
-          `title: ${file.basename}`,
-        )}`;
+        updated = `${updated}${trailing}\n${starterBlock(file.basename)}`;
         added.block = true;
       }
       return updated;

@@ -50,7 +50,10 @@ export class FileLabelRewriter {
   private recordsAffectLabels(records: MutationRecord[]): boolean {
     for (const record of records) {
       const target = record.target;
-      if (target instanceof Element && target.closest(RELEVANT_PARENT_SELECTOR)) {
+      if (!(target instanceof Element)) continue;
+      // CodeMirror's typing churn lives in .cm-content; never affects labels.
+      if (target.closest('.cm-content')) continue;
+      if (target.closest(RELEVANT_PARENT_SELECTOR)) {
         return true;
       }
     }
