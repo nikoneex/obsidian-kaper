@@ -8,7 +8,7 @@ import { RecipeModel } from './parser/types';
 
 const FENCE_OPEN = '```kaper';
 const FENCE_CLOSE = '```';
-const KAPER_FRONTMATTER_REGEX = /^---\r?\n[\s\S]*?\nkaper:\s*true(\s|$)/;
+const KAPER_FRONTMATTER_REGEX = /^---\r?\n[\s\S]*?^kaper:\s*true\b/m;
 
 interface BlockRange {
   blockFrom: number;
