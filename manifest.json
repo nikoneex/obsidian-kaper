@@ -3,7 +3,7 @@
   "name": "Kaper",
   "version": "0.1.0",
   "minAppVersion": "1.4.0",
-  "description": "Rich UI for kaper recipe blocks inside Obsidian.",
+  "description": "Edit and preview Kaper recipes inline as structured blocks",
   "author": "neex",
   "authorUrl": "https://kaper.me",
   "isDesktopOnly": false

@@ -12,7 +12,7 @@ Bring [Kaper](https://kaper.me) recipes into your Obsidian vault. Any markdown f
 
 - **The web app** at [kaper.me](https://kaper.me) — works in any modern browser, no install.
 - **This Obsidian plugin** — edit recipes alongside your notes, with full Live Preview integration.
-- **The desktop app** *coming soon — Electron-based, full file-system access.
+- **The desktop app** (coming soon) — Electron-based, full file-system access.
 
 The killer feature: **Cook Mode** at [kaper.me](https://kaper.me). Big-text, hands-free, gesture-friendly view for actually cooking from the recipe. Click the **Cook mode** button in any rendered Kaper block and you'll land in the web app's Cook Mode for that recipe — no copy-paste, no app switch, just the recipe ready to follow at the stove.
 
@@ -103,9 +103,13 @@ Kaper recipe files are 100% portable. The same `.md` file works in:
 
 - This Obsidian plugin
 - The Kaper web app at [kaper.me](https://kaper.me)
-- The Kaper desktop *coming soon
+- The Kaper desktop app (coming soon)
 
-Your recipes never leave your filesystem. There's no sync layer — open the folder in any of the three and edits flow naturally through your normal sync setup (iCloud, Dropbox, Syncthing, git, whatever).
+Your recipes never leave your filesystem. There's no sync layer — open the folder in any of them and edits flow naturally through your normal sync setup (iCloud, Dropbox, Syncthing, git, whatever).
+
+## Privacy
+
+This plugin makes no network requests. The only outbound link is the **Cook Mode** button, which opens `kaper.me?from=obsidian` in your default browser. The `from=obsidian` parameter just tells the web app where you came from. Your recipe files never leave your local vault.
 
 ## Installation
 
@@ -122,7 +126,7 @@ _Pending submission to the Obsidian Community Plugin registry._
 ### Development
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/nikoneex/obsidian-kaper.git
 cd obsidian-kaper
 npm install
 npm run dev    # watch mode → main.js
