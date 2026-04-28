@@ -3,7 +3,7 @@
   "name": "Kaper",
   "version": "1.0.1",
   "minAppVersion": "1.4.0",
-  "description": "Edit and preview Kaper recipes inline as structured blocks",
+  "description": "Edit and preview Kaper recipes inline as structured blocks.",
   "author": "neex",
   "authorUrl": "https://kaper.me",
   "isDesktopOnly": true
