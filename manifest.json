@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "minAppVersion": "1.4.0",
   "description": "Rich UI for kaper recipe blocks inside Obsidian.",
-  "author": "Niko Mungcal",
+  "author": "neex",
   "authorUrl": "https://kaper.me",
   "isDesktopOnly": false
 }

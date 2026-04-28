@@ -1,31 +1,51 @@
-# Kaper
+# Kaper for Obsidian
 
-Rich UI for `kaper` recipe blocks inside Obsidian. Any ` ```kaper ` fenced YAML block in your notes renders as a structured recipe — preview and form editor — while the surrounding markdown stays as regular Obsidian prose.
+Bring [Kaper](https://kaper.me) recipes into your Obsidian vault. Any markdown file with a ` ```kaper ` block renders as a structured recipe — preview and form editor — while the surrounding markdown stays as regular Obsidian prose.
 
-Companion to the [Kaper](https://kaper.me) web app. Files are interchangeable.
+#### Live Preview Mode
 
 ![Kaper recipe preview](assets/preview.png)
 
+## What is Kaper?
+
+[Kaper](https://kaper.me) is a local-first recipe manager. Your recipes live as plain markdown files in a folder you control — no cloud, no lock-in, no account. Open the same vault in:
+
+- **The web app** at [kaper.me](https://kaper.me) — works in any modern browser, no install.
+- **This Obsidian plugin** — edit recipes alongside your notes, with full Live Preview integration.
+- **The desktop app** *coming soon — Electron-based, full file-system access.
+
+The killer feature: **Cook Mode** at [kaper.me](https://kaper.me). Big-text, hands-free, gesture-friendly view for actually cooking from the recipe. Click the **Cook mode** button in any rendered Kaper block and you'll land in the web app's Cook Mode for that recipe — no copy-paste, no app switch, just the recipe ready to follow at the stove.
+
 ## Features
 
-- **In-place rendering** — `kaper` code blocks become a rendered recipe view in Reading mode and Live Preview. Markdown around the block (notes, headings, links) is unaffected.
+- **In-place rendering** — `kaper` code blocks render as a structured recipe view in Live Preview. Markdown around the block (notes, headings, links) is unaffected.
+- **Form editor** — full editing for title, servings, difficulty, prep/cook time, tags, ingredient groups (add/remove/reorder by drag), steps (add/remove/reorder, with note, tip, warning, technique, duration).
 - **Preview** — title, servings, difficulty bars, tag pills, ingredient groups, numbered steps with tip/warning callouts. Styled with your Obsidian accent color so it adapts to any theme.
-- **Form editor** — full editing for title, servings, difficulty, prep/cook time, tags, ingredient groups (add/remove), steps (add/remove/reorder, with note, tip, warning, technique, duration).
-- **Auto-save** — debounced 1s. Form state, focus, and scroll position survive saves (the React tree is held across re-renders).
-- **Cook Mode** — opens `kaper.me` in your browser to start the full Cook Mode experience on the web.
+- **Cook Mode** — one click jumps to [kaper.me](https://kaper.me?from=obsidian) in your browser, ready to cook.
+- **Auto-save** — every form change writes back to the YAML; no save button.
 - **Ribbon button** — one click to create a new recipe in the active folder.
+
+#### Form Mode
 
 ![Form editor](assets/form.png)
 
 ## File format
 
-Recipes are markdown files containing a ` ```kaper ` YAML block. The YAML inside the fences is parsed; everything outside is rendered as normal markdown.
+Kaper recipes are plain markdown files with two markers:
+
+1. A frontmatter `kaper: true` flag (this is what marks the file as a recipe).
+2. A ` ```kaper ` fenced YAML block somewhere in the body (this is the recipe data).
+
+Anything outside the YAML block is rendered as normal markdown — perfect for notes, intros, and links.
 
 ````markdown
+---
+kaper: true
+---
+
 A true Roman classic — no cream, no shortcuts.
 
 ```kaper
-version: 1
 title: Classic Pasta Carbonara
 servings: 2
 difficulty: medium
@@ -48,21 +68,44 @@ steps:
   - title: Cook guanciale in a cold skillet until crispy.
     duration: 8m
     technique: Starting cold renders the fat without burning.
+version: 1
 ```
 
 Tips and notes about the recipe go here as regular markdown.
 ````
 
-Required fields: `title`, `servings`, `ingredients`, `steps`. Unknown top-level keys (e.g. `nutrition:`, `wine:`) are preserved on save for forward compatibility.
+Required fields: `title`, `servings`, `ingredients`, `steps`.
 
 ## Usage
 
 ![Editing a recipe](assets/demo.gif)
 
 - **Create a recipe** — click the utensils icon in the left ribbon, or run **Kaper: Create recipe** from the command palette.
-- **View** — open any markdown file with a `kaper` block. In Reading mode or Live Preview (cursor outside the block) it renders as a recipe.
-- **Edit** — switch to the **Form** tab inside the rendered block. Changes write back to the YAML automatically.
-- **Edit raw YAML** — switch to Source mode, or click inside the code block in Live Preview.
+- **Convert an existing note** — run **Kaper: Convert current note to Kaper recipe** from the command palette to add the frontmatter and starter block to any open `.md` file.
+- **View / edit** — open any kaper file in Live Preview. Toggle between **Preview** and **Form** tabs.
+- **Cook from a recipe** — click **Cook mode** in the rendered block. Opens [kaper.me](https://kaper.me?from=obsidian) for the full hands-free cooking experience.
+- **Edit raw YAML** — switch to Source mode (top-right pane icon).
+
+## Built on Obsidian's foundation
+
+Obsidian's editor is built on [CodeMirror 6](https://codemirror.net/). This plugin extends CodeMirror directly — recipe blocks render as block widgets *inside* the editor itself, sharing the same rendering pipeline as headings, embeds, and Live Preview. There's no second UI layered on top of the editor, just one editor with rich content for kaper blocks.
+
+Other open-source pieces that make this work:
+
+- **[@dnd-kit/sortable](https://dndkit.com/)** — accessible drag-and-drop ingredient reordering (keyboard, touch, mouse).
+- **[js-yaml](https://github.com/nodeca/js-yaml)** — YAML parsing and round-trip serialization for the kaper block content.
+
+Credit to those projects' maintainers.
+
+## Compatibility with the Kaper apps
+
+Kaper recipe files are 100% portable. The same `.md` file works in:
+
+- This Obsidian plugin
+- The Kaper web app at [kaper.me](https://kaper.me)
+- The Kaper desktop *coming soon
+
+Your recipes never leave your filesystem. There's no sync layer — open the folder in any of the three and edits flow naturally through your normal sync setup (iCloud, Dropbox, Syncthing, git, whatever).
 
 ## Installation
 
@@ -100,3 +143,7 @@ npm test
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+**Want the full Kaper experience?** Try [kaper.me](https://kaper.me) — no install, no signup. Open any folder of recipes and start cooking.
