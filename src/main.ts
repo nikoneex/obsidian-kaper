@@ -1,4 +1,4 @@
-import { Notice, Plugin, TFile, TFolder } from 'obsidian';
+import { Notice, Plugin, TFile, TFolder, normalizePath } from 'obsidian';
 import { kaperEditorExtension } from './editor-extension';
 import { FileLabelRewriter } from './file-label-rewriter';
 import { ensureKaperFrontmatter, hasKaperFrontmatter } from './frontmatter';
@@ -25,7 +25,7 @@ function starterBlock(title?: string): string {
 }
 
 function joinPath(folder: string, name: string): string {
-  return folder === '/' ? name : `${folder}/${name}`;
+  return normalizePath(folder === '/' ? name : `${folder}/${name}`);
 }
 
 export default class KaperPlugin extends Plugin {
