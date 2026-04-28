@@ -6,5 +6,5 @@
   "description": "Edit and preview Kaper recipes inline as structured blocks",
   "author": "neex",
   "authorUrl": "https://kaper.me",
-  "isDesktopOnly": false
+  "isDesktopOnly": true
 }
