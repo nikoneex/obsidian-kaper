@@ -1,14 +1,22 @@
 # Kaper File Format
 
-A `.kaper.md` file is a standard Markdown file containing exactly one fenced ` ```kaper ``` ` code block of YAML. Everything outside the block is freeform Markdown (notes, backstory, photos). The YAML block holds all structured recipe data.
+A Kaper recipe is a standard `.md` file with two markers:
+
+1. **Frontmatter `kaper: true`** — identifies the file as a recipe.
+2. **A fenced ` ```kaper ``` ` code block of YAML** — holds the structured recipe data.
+
+Everything outside the YAML block is freeform Markdown (notes, backstory, photos).
 
 ## File Structure
 
 ````markdown
+---
+kaper: true
+---
+
 <!-- Optional freeform Markdown before the block (preamble) -->
 
 ```kaper
-version: 1
 title: Spaghetti Carbonara
 servings: 2
 difficulty: medium
@@ -62,6 +70,7 @@ steps:
   - title: Combine
     warning: Do NOT add the egg mixture over direct heat — carry-over heat from the pasta is enough.
     image: ./steps/combine.jpg
+version: 1
 ```
 
 <!-- Optional freeform Markdown after the block (postamble) -->
@@ -73,7 +82,7 @@ This recipe has been in the family for years. Use guanciale if you can find it.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `title` | string | Recipe name. Used to generate the filename (`kebab-case.kaper.md`). |
+| `title` | string | Recipe name. Independent of the on-disk filename. |
 | `servings` | number | Base serving count. Used by the ScalingEngine. |
 | `ingredients` | object | Named groups of ingredient objects (see below). |
 | `steps` | array | Ordered list of step objects (see below). |
@@ -188,14 +197,31 @@ steps:
     tip: Start from cold water for consistent results.
 ```
 
-## Filename Convention
+## File Naming
 
-Filenames are auto-generated from the `title` field using kebab-case slugification:
+Recipes are plain `.md` files. **The filename is independent of the recipe's `title` field** — title edits don't rename the file, and renames don't change the title. Each app provides a rename action when you want them to match.
 
-- `"Spaghetti Carbonara"` → `spaghetti-carbonara.kaper.md`
-- `"Mom's Chicken Soup"` → `moms-chicken-soup.kaper.md`
+New recipes default to `Untitled.md` with collision-suffix (`Untitled 2.md`, `Untitled 3.md`, etc.). Rename via Kaper's sidebar context menu, or Obsidian's native rename (F2 / right-click).
 
-The double extension (`.kaper.md`) signals intent while preserving Markdown rendering in VS Code, Obsidian, and GitHub.
+### Recipe identification
+
+A `.md` file is treated as a recipe iff its frontmatter contains `kaper: true`:
+
+````markdown
+---
+kaper: true
+---
+
+```kaper
+...
+```
+````
+
+Other frontmatter keys you add (`tags`, `aliases`, etc.) are preserved on save.
+
+### Legacy `.kaper.md` files
+
+Files ending in `.kaper.md` from earlier versions are still read as recipes during the deprecation transition. After the transition window, only frontmatter-marked files will be detected.
 
 ## Parser Behavior
 
