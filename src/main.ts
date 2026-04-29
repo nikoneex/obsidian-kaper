@@ -31,7 +31,7 @@ function joinPath(folder: string, name: string): string {
 export default class KaperPlugin extends Plugin {
   private labelRewriter: FileLabelRewriter | null = null;
 
-  async onload() {
+  onload() {
     this.registerEditorExtension([kaperEditorExtension]);
 
     this.labelRewriter = new FileLabelRewriter(this);
@@ -72,7 +72,7 @@ export default class KaperPlugin extends Plugin {
     const activeFile = this.app.workspace.getActiveFile();
     const folder: TFolder = activeFile?.parent ?? this.app.vault.getRoot();
 
-    const fileName = await this.uniqueFileName(folder.path, DEFAULT_BASE);
+    const fileName = this.uniqueFileName(folder.path, DEFAULT_BASE);
     const path = joinPath(folder.path, fileName);
 
     const initialContent = ensureKaperFrontmatter(starterBlock());
@@ -108,7 +108,7 @@ export default class KaperPlugin extends Plugin {
     );
   }
 
-  private async uniqueFileName(folderPath: string, base: string): Promise<string> {
+  private uniqueFileName(folderPath: string, base: string): string {
     const exists = (name: string) =>
       this.app.vault.getAbstractFileByPath(joinPath(folderPath, name)) !== null;
 
