@@ -51,7 +51,7 @@ export default class KaperPlugin extends Plugin {
 
     this.addCommand({
       id: 'convert-to-recipe',
-      name: 'Convert current note to Kaper recipe',
+      name: 'Convert current note to recipe',
       checkCallback: (checking) => {
         const file = this.app.workspace.getActiveFile();
         if (!file || file.extension !== 'md') return false;
@@ -100,11 +100,11 @@ export default class KaperPlugin extends Plugin {
     });
 
     if (!added.frontmatter && !added.block) {
-      new Notice('Already a Kaper recipe.');
+      new Notice('Already a recipe.');
       return;
     }
     new Notice(
-      `Converted to Kaper recipe${added.block ? ' (starter block added)' : ''}.`,
+      `Converted to recipe${added.block ? ' (starter block added)' : ''}.`,
     );
   }
 

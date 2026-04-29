@@ -69,7 +69,7 @@ function recipeToDraft(recipe: RecipeModel): RecipeDraft {
   return {
     title: recipe.title,
     servings: recipe.servings,
-    difficulty: (recipe.difficulty ?? '') as RecipeDraft['difficulty'],
+    difficulty: recipe.difficulty ?? '',
     tagsInput: recipe.tags?.join(', ') ?? '',
     timePrep: recipe.time?.prep ?? '',
     timeCook: recipe.time?.cook ?? '',
