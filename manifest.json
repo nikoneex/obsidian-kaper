@@ -1,7 +1,7 @@
 {
   "id": "kaper",
   "name": "Kaper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "minAppVersion": "1.4.0",
   "description": "Edit and preview Kaper recipes inline as structured blocks.",
   "author": "neex",
