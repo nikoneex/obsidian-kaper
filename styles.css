@@ -449,9 +449,45 @@
 .kaper-form__input--unit { width: 80px; flex: none; }
 .kaper-form__input--name { flex: 1; }
 .kaper-form__input--sub { width: 100px; flex: none; }
-.kaper-form__input--time { max-width: 110px; flex: none; }
 .kaper-form__input--step-title { flex: 1; }
-.kaper-form__input--duration { width: 90px; flex: none; }
+
+/* ── Time input (hours / minutes) ──────────────────────────────────────── */
+
+.kaper-time-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kaper-time-input__field {
+  width: 44px;
+  background: var(--background-modifier-form-field);
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 7px 8px;
+  font-family: var(--font-interface);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--text-normal);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
+}
+
+.kaper-time-input__field::placeholder { color: var(--text-faint); }
+
+.kaper-time-input__field:focus {
+  border-color: var(--interactive-accent);
+}
+
+.kaper-time-input__field:disabled { opacity: 0.5; cursor: default; }
+
+.kaper-time-input__unit {
+  font-size: 11px;
+  color: var(--text-faint);
+  user-select: none;
+}
 
 /* ── Buttons ───────────────────────────────────────────────────────────── */
 

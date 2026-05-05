@@ -66,6 +66,11 @@ class KaperWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     const container = document.createElement('div');
     container.className = 'kaper-block';
+    // Prevent focus on inputs inside the widget from bubbling to CM's contentDOM,
+    // which otherwise treats it as "editor focused" and scrolls the doc cursor
+    // (often near the closing fence) into view — manifesting as a jump to the
+    // bottom of the form on first focus.
+    container.addEventListener('focusin', (e) => e.stopPropagation());
     const root = createRoot(container);
     widgetRoots.set(container, root);
     this.render(root, view);

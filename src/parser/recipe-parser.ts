@@ -52,7 +52,9 @@ export function serializeKaperYaml(recipe: RecipeModel): string {
 }
 
 function validateCore(data: Record<string, unknown>): string | null {
-  if (!data['title'] || typeof data['title'] !== 'string') {
+  // Accept empty string — the form lets users transiently clear the title
+  // while editing. Only missing or non-string values are rejected.
+  if (data['title'] === undefined || typeof data['title'] !== 'string') {
     return 'Missing required field: title (string)';
   }
   if (data['servings'] === undefined || typeof data['servings'] !== 'number') {
