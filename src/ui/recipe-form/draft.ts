@@ -15,7 +15,7 @@ export interface RecipeDraft {
   title: string;
   servings: number;
   difficulty: '' | 'easy' | 'medium' | 'hard';
-  tagsInput: string;
+  tags: string[];
   timePrep: string;
   timeCook: string;
   source: string;
@@ -56,7 +56,7 @@ export function recipeToDraft(recipe: RecipeModel): RecipeDraft {
     title: recipe.title,
     servings: recipe.servings,
     difficulty: recipe.difficulty ?? '',
-    tagsInput: recipe.tags?.join(', ') ?? '',
+    tags: recipe.tags ?? [],
     timePrep: recipe.time?.prep ?? '',
     timeCook: recipe.time?.cook ?? '',
     source: recipe.source ?? '',
@@ -82,10 +82,7 @@ export function draftToRecipe(draft: RecipeDraft, original: RecipeModel): Recipe
       ) as IngredientAmount[];
   }
 
-  const tags = draft.tagsInput
-    .split(',')
-    .map((t) => t.trim())
-    .filter(Boolean);
+  const tags = draft.tags.map((t) => t.trim()).filter(Boolean);
 
   const time = compact({ prep: draft.timePrep, cook: draft.timeCook });
 

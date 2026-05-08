@@ -74,16 +74,14 @@ export function IngredientsSection({ draft, update }: SectionProps) {
               value={group.groupName}
               onChange={(e) => updateGroup(gi, { ...group, groupName: e.target.value })}
             />
-            {draft.ingredientGroups.length > 1 && (
-              <button
-                type="button"
-                className="kaper-form__remove-btn"
-                onClick={() => removeGroup(gi)}
-                aria-label="Remove group"
-              >
-                ×
-              </button>
-            )}
+            <button
+              type="button"
+              className="kaper-form__remove-btn"
+              onClick={() => removeGroup(gi)}
+              aria-label="Remove group"
+            >
+              ×
+            </button>
           </div>
 
           <div className="kaper-form__ingredient-list">

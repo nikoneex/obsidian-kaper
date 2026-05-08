@@ -1,3 +1,4 @@
+import { TagInput } from '../TagInput';
 import { TimeInput } from '../TimeInput';
 import { RecipeDraft, SectionProps } from './draft';
 
@@ -55,12 +56,9 @@ export function BasicsSection({ draft, update }: SectionProps) {
 
       <div className="kaper-form__field">
         <label>Tags</label>
-        <input
-          className="kaper-form__input"
-          type="text"
-          placeholder="pasta, italian, quick…"
-          value={draft.tagsInput}
-          onChange={(e) => update({ ...draft, tagsInput: e.target.value })}
+        <TagInput
+          value={draft.tags}
+          onChange={(next) => update({ ...draft, tags: next })}
         />
       </div>
     </section>
