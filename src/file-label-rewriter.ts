@@ -15,23 +15,23 @@ const RELEVANT_PARENT_SELECTOR =
 export class FileLabelRewriter {
   private observer: MutationObserver | null = null;
   private rewriteScheduled = false;
-  private readonly focusInHandler = (e: Event) => this.handleFocusIn(e);
-  private readonly focusOutHandler = (e: Event) => this.handleFocusOut(e);
 
   constructor(private readonly plugin: Plugin) {}
 
   start(): void {
     this.scheduleRewrite();
 
+    const doc = activeDocument;
+
     this.observer = new MutationObserver((records) => {
       if (this.recordsAffectLabels(records)) {
         this.scheduleRewrite();
       }
     });
-    this.observer.observe(document.body, { childList: true, subtree: true });
+    this.observer.observe(doc.body, { childList: true, subtree: true });
 
-    document.addEventListener('focusin', this.focusInHandler);
-    document.addEventListener('focusout', this.focusOutHandler);
+    this.plugin.registerDomEvent(doc, 'focusin', (e) => this.handleFocusIn(e));
+    this.plugin.registerDomEvent(doc, 'focusout', (e) => this.handleFocusOut(e));
 
     const { workspace, vault } = this.plugin.app;
     this.plugin.registerEvent(workspace.on('layout-change', () => this.scheduleRewrite()));
@@ -43,14 +43,12 @@ export class FileLabelRewriter {
   stop(): void {
     this.observer?.disconnect();
     this.observer = null;
-    document.removeEventListener('focusin', this.focusInHandler);
-    document.removeEventListener('focusout', this.focusOutHandler);
   }
 
   private recordsAffectLabels(records: MutationRecord[]): boolean {
     for (const record of records) {
       const target = record.target;
-      if (!(target instanceof Element)) continue;
+      if (!target.instanceOf(Element)) continue;
       // CodeMirror's typing churn lives in .cm-content; never affects labels.
       if (target.closest('.cm-content')) continue;
       if (target.closest(RELEVANT_PARENT_SELECTOR)) {
@@ -71,9 +69,9 @@ export class FileLabelRewriter {
 
   private rewriteAll(): void {
     for (const selector of STATIC_SELECTORS) {
-      document.querySelectorAll<HTMLElement>(selector).forEach((el) => this.stripStatic(el));
+      activeDocument.querySelectorAll<HTMLElement>(selector).forEach((el) => this.stripStatic(el));
     }
-    document
+    activeDocument
       .querySelectorAll<HTMLElement>(RENAMEABLE_SELECTOR)
       .forEach((el) => this.stripRenameable(el));
   }
@@ -88,7 +86,7 @@ export class FileLabelRewriter {
   }
 
   private stripRenameable(el: HTMLElement): void {
-    if (document.activeElement === el) return;
+    if (activeDocument.activeElement === el) return;
     this.stripText(el);
   }
 
@@ -114,9 +112,9 @@ export class FileLabelRewriter {
 
     target.textContent = realName;
 
-    const range = document.createRange();
+    const range = activeDocument.createRange();
     range.selectNodeContents(target);
-    const selection = window.getSelection();
+    const selection = activeWindow.getSelection();
     selection?.removeAllRanges();
     selection?.addRange(range);
   }
@@ -124,6 +122,6 @@ export class FileLabelRewriter {
   private handleFocusOut(e: Event): void {
     const target = e.target as HTMLElement | null;
     if (!target?.matches?.(RENAMEABLE_SELECTOR)) return;
-    setTimeout(() => this.scheduleRewrite(), 50);
+    activeWindow.setTimeout(() => this.scheduleRewrite(), 50);
   }
 }

@@ -284,7 +284,7 @@ export function IngredientList({
             </div>
           )}
         </DragOverlay>,
-        document.body,
+        activeDocument.body,
       )}
     </DndContext>
   );

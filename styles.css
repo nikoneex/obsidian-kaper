@@ -23,19 +23,6 @@
   border-bottom: none;
 }
 
-/* Suppress Obsidian's default code-block chrome (hover edit/copy/flair) */
-.markdown-rendered pre:has(.kaper-block) .edit-block-button,
-.markdown-rendered pre:has(.kaper-block) .copy-code-button,
-.markdown-rendered pre:has(.kaper-block) .code-block-flair {
-  display: none !important;
-}
-
-.markdown-rendered pre:has(.kaper-block) {
-  background: transparent;
-  padding: 0;
-  border: none;
-}
-
 .kaper-view-content {
   display: flex;
   flex-direction: column;
@@ -682,7 +669,7 @@
 
 .kaper-form__remove-btn:hover {
   background: var(--background-modifier-error-hover);
-  color: #fff;
+  color: #ffffff;
 }
 
 .kaper-form__icon-btn:hover:not(:disabled) {

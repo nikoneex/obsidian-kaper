@@ -99,7 +99,7 @@ There is no Kaper server. We literally cannot read your files.
 ### Manual
 
 1. Download `main.js`, `manifest.json`, and `styles.css` from the latest GitHub release.
-2. Drop them into `<your-vault>/.obsidian/plugins/kaper/`.
+2. Drop them into your vault's `.obsidian/plugins/kaper/` folder.
 3. Settings → Community plugins → enable **Kaper**.
 
 ## Built on
