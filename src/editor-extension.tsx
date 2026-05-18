@@ -8,7 +8,9 @@ import { RecipeModel } from './parser/types';
 
 const FENCE_OPEN = '```kaper';
 const FENCE_CLOSE = '```';
-const KAPER_FRONTMATTER_REGEX = /^---\r?\n[\s\S]*?^kaper:\s*true\b/m;
+// Matches a leading frontmatter block containing any non-empty `kaper:` value —
+// covers legacy `kaper: true` and the stamped `kaper: r_<nanoid>` shape.
+const KAPER_FRONTMATTER_REGEX = /^---\r?\n[\s\S]*?^kaper\s*:\s*\S+/m;
 
 interface BlockRange {
   blockFrom: number;
@@ -64,7 +66,14 @@ class KaperWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
-    const container = view.dom.ownerDocument.createDiv({ cls: 'kaper-block' });
+    // CodeMirror requires `toDOM()` to return a detached element — it inserts
+    // the widget itself. Obsidian's `createDiv`/`Node.createDiv` helpers all
+    // *append* the new element to their receiver, so on a Document they throw
+    // HierarchyRequestError (only one root element allowed). We need plain
+    // `createElement` here; the lint warning to prefer `createDiv` doesn't
+    // apply to widget DOM construction.
+    const container = view.dom.ownerDocument.createElement('div');
+    container.className = 'kaper-block';
     // Prevent focus on inputs inside the widget from bubbling to CM's contentDOM,
     // which otherwise treats it as "editor focused" and scrolls the doc cursor
     // (often near the closing fence) into view — manifesting as a jump to the

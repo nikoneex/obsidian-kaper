@@ -75,9 +75,10 @@ describe('parseKaperYaml', () => {
     expect(result.parseError).toBe('kaper block must be a YAML object');
   });
 
-  it('returns error when title is missing', () => {
+  it('normalizes missing title to empty string instead of erroring', () => {
     const result = parseKaperYaml('version: 1\nservings: 2\ningredients:\n  main: []\nsteps: []');
-    expect(result.parseError).toBe('Missing required field: title (string)');
+    expect(result.parseError).toBeUndefined();
+    expect(result.recipe?.title).toBe('');
   });
 
   it('returns error when servings is missing', () => {
@@ -148,6 +149,24 @@ describe('parseKaperYaml', () => {
       protein: '20g',
     });
   });
+
+  it('parses _app metadata as a core field, not a capability', () => {
+    const result = parseKaperYaml(
+      'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []\nsteps: []\n_app:\n  isFavorite: true\n  lastCooked: "2026-04-01T12:00:00Z"',
+    );
+    expect(result.recipe!._app).toEqual({
+      isFavorite: true,
+      lastCooked: '2026-04-01T12:00:00Z',
+    });
+    expect(result.recipe!.capabilities.has('_app')).toBe(false);
+  });
+
+  it('preserves unknown _app keys forward-compatibly', () => {
+    const result = parseKaperYaml(
+      'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []\nsteps: []\n_app:\n  isFavorite: true\n  futureField: "abc"',
+    );
+    expect(result.recipe!._app?.['futureField']).toBe('abc');
+  });
 });
 
 describe('serializeKaperYaml', () => {
@@ -164,6 +183,21 @@ describe('serializeKaperYaml', () => {
     const result = serializeKaperYaml(recipe);
     expect(result).toContain('nutrition:');
     expect(result).toContain('calories: 500');
+  });
+
+  it('emits _app at the end when present', () => {
+    const recipe = makeRecipe({ _app: { isFavorite: true } });
+    const result = serializeKaperYaml(recipe);
+    expect(result).toContain('_app:');
+    expect(result).toContain('isFavorite: true');
+    // _app should follow `version:` in serialized order.
+    expect(result.indexOf('_app:')).toBeGreaterThan(result.indexOf('version:'));
+  });
+
+  it('omits _app entirely when it has no keys', () => {
+    const recipe = makeRecipe({ _app: {} });
+    const result = serializeKaperYaml(recipe);
+    expect(result).not.toContain('_app');
   });
 });
 
