@@ -2,6 +2,7 @@ import { load as parseYaml, dump as dumpYaml } from 'js-yaml';
 import {
   IngredientAmount,
   IngredientGroup,
+  RecipeAppMeta,
   RecipeCore,
   RecipeModel,
   RecipeStep,
@@ -10,6 +11,7 @@ import {
 const CORE_KEYS = new Set([
   'version', 'title', 'servings', 'difficulty', 'tags',
   'time', 'equipment', 'ingredients', 'steps', 'source', 'yield', 'coverImage',
+  '_app',
 ]);
 
 export interface ParsedKaperBlock {
@@ -43,18 +45,22 @@ export function parseKaperYaml(yamlSource: string): ParsedKaperBlock {
 }
 
 export function serializeKaperYaml(recipe: RecipeModel): string {
-  const { capabilities, version, ...rest } = recipe;
+  const { capabilities, version, _app, ...core } = recipe;
   const capabilityData: Record<string, unknown> = {};
   capabilities.forEach((value, key) => {
     capabilityData[key] = value;
   });
-  return dumpYaml({ ...rest, ...capabilityData, version }, { lineWidth: 100 });
+  // Order: core fields → capabilities → version → optional `_app`. Mirrors
+  // kaper web so files round-trip identically. `_app` is omitted entirely
+  // when empty so titles/servings-only recipes don't carry dead metadata.
+  const appBlock = _app && Object.keys(_app).length > 0 ? { _app } : {};
+  return dumpYaml({ ...core, ...capabilityData, version, ...appBlock }, { lineWidth: 100 });
 }
 
 function validateCore(data: Record<string, unknown>): string | null {
-  if (!data['title'] || typeof data['title'] !== 'string') {
-    return 'Missing required field: title (string)';
-  }
+  // Title is optional — extractCore normalises undefined/null/non-string to
+  // an empty string. UI surfaces fall back to the filename or a placeholder
+  // when the title is blank.
   if (data['servings'] === undefined || typeof data['servings'] !== 'number') {
     return 'Missing required field: servings (number)';
   }
@@ -73,7 +79,7 @@ function validateCore(data: Record<string, unknown>): string | null {
 function extractCore(data: Record<string, unknown>): RecipeCore {
   return {
     version: typeof data['version'] === 'number' ? data['version'] : 1,
-    title: data['title'] as string,
+    title: typeof data['title'] === 'string' ? data['title'] : '',
     servings: data['servings'] as number,
     difficulty: data['difficulty'] as RecipeCore['difficulty'],
     tags: Array.isArray(data['tags']) ? (data['tags'] as string[]) : undefined,
@@ -84,7 +90,13 @@ function extractCore(data: Record<string, unknown>): RecipeCore {
     source: typeof data['source'] === 'string' ? data['source'] : undefined,
     yield: typeof data['yield'] === 'string' ? data['yield'] : undefined,
     coverImage: typeof data['coverImage'] === 'string' ? data['coverImage'] : undefined,
+    _app: extractAppMeta(data['_app']),
   };
+}
+
+function extractAppMeta(value: unknown): RecipeAppMeta | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
+  return value as RecipeAppMeta;
 }
 
 function parseIngredients(raw: Record<string, unknown>): IngredientGroup {

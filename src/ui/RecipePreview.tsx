@@ -2,6 +2,7 @@ import { RecipeModel } from '../parser/types';
 
 interface RecipePreviewProps {
   recipe: RecipeModel;
+  onSwitchToForm?: () => void;
 }
 
 const IconUsers = () => (
@@ -40,9 +41,15 @@ const IconTimer = () => (
   </svg>
 );
 
-export function RecipePreview({ recipe }: RecipePreviewProps) {
-  const groupEntries = Object.entries(recipe.ingredients);
+export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
+  // Filter empty groups so they don't render as blank sections.
+  const groupEntries = Object.entries(recipe.ingredients).filter(
+    ([, items]) => items.length > 0,
+  );
   const hasMultipleGroups = groupEntries.length > 1;
+  const hasIngredients = groupEntries.length > 0;
+  const hasSteps = recipe.steps.length > 0;
+  const isEmpty = !hasIngredients && !hasSteps;
   const showServings = recipe.servings > 0;
   const showCookTime = !!recipe.time?.cook;
   const showDifficulty = !!recipe.difficulty;
@@ -99,69 +106,90 @@ export function RecipePreview({ recipe }: RecipePreviewProps) {
       </header>
 
       <div className="kaper-preview__body">
-        <section className="kaper-preview__section">
-          <h2 className="kaper-preview__section-title">Ingredients</h2>
-          {groupEntries.map(([groupName, items]) => (
-            <div key={groupName} className="kaper-preview__ingredient-group">
-              {hasMultipleGroups && (
-                <h3 className="kaper-preview__group-name">{groupName}</h3>
-              )}
-              <ul className="kaper-preview__ingredient-list">
-                {items.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className={
-                      'kaper-preview__ingredient' +
-                      (item.optional ? ' kaper-preview__ingredient--optional' : '')
-                    }
-                  >
-                    <span className="kaper-preview__ingredient-amount">
-                      {item.amount} {item.unit}
-                    </span>
-                    <span className="kaper-preview__ingredient-name">{item.name}</span>
-                    {item.optional && <i>(optional)</i>}
-                    {item.sub && (
-                      <span className="kaper-preview__ingredient-sub">or {item.sub}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </section>
-
-        <section className="kaper-preview__section">
-          <h2 className="kaper-preview__section-title">Instructions</h2>
-          <ol className="kaper-preview__steps">
-            {recipe.steps.map((step, idx) => (
-              <li key={idx} className="kaper-preview__step">
-                <div className="kaper-preview__step-header">
-                  <span className="kaper-preview__step-num" aria-hidden="true">
-                    {idx + 1}
-                  </span>
-                  <h3 className="kaper-preview__step-title">{step.title}</h3>
-                  {step.duration && (
-                    <span className="kaper-preview__step-duration">{step.duration}</span>
-                  )}
-                </div>
-                {step.note && <p className="kaper-preview__step-note">{step.note}</p>}
-                {step.technique && (
-                  <p className="kaper-preview__step-technique">{step.technique}</p>
+        {hasIngredients && (
+          <section className="kaper-preview__section">
+            <h2 className="kaper-preview__section-title">Ingredients</h2>
+            {groupEntries.map(([groupName, items]) => (
+              <div key={groupName} className="kaper-preview__ingredient-group">
+                {hasMultipleGroups && (
+                  <h3 className="kaper-preview__group-name">{groupName}</h3>
                 )}
-                {step.tip && (
-                  <div className="kaper-preview__callout kaper-preview__callout--tip">
-                    <strong>Tip</strong> {step.tip}
-                  </div>
-                )}
-                {step.warning && (
-                  <div className="kaper-preview__callout kaper-preview__callout--warning">
-                    <strong>Note</strong> {step.warning}
-                  </div>
-                )}
-              </li>
+                <ul className="kaper-preview__ingredient-list">
+                  {items.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className={
+                        'kaper-preview__ingredient' +
+                        (item.optional ? ' kaper-preview__ingredient--optional' : '')
+                      }
+                    >
+                      <span className="kaper-preview__ingredient-amount">
+                        {item.amount} {item.unit}
+                      </span>
+                      <span className="kaper-preview__ingredient-name">{item.name}</span>
+                      {item.optional && <i>(optional)</i>}
+                      {item.sub && (
+                        <span className="kaper-preview__ingredient-sub">or {item.sub}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ol>
-        </section>
+          </section>
+        )}
+
+        {hasSteps && (
+          <section className="kaper-preview__section">
+            <h2 className="kaper-preview__section-title">Instructions</h2>
+            <ol className="kaper-preview__steps">
+              {recipe.steps.map((step, idx) => (
+                <li key={idx} className="kaper-preview__step">
+                  <div className="kaper-preview__step-header">
+                    <span className="kaper-preview__step-num" aria-hidden="true">
+                      {idx + 1}
+                    </span>
+                    <h3 className="kaper-preview__step-title">{step.title}</h3>
+                    {step.duration && (
+                      <span className="kaper-preview__step-duration">{step.duration}</span>
+                    )}
+                  </div>
+                  {step.note && <p className="kaper-preview__step-note">{step.note}</p>}
+                  {/* `technique` is parsed and preserved on save but intentionally
+                      not rendered or exposed in the form yet — future enhancement. */}
+                  {step.tip && (
+                    <div className="kaper-preview__callout kaper-preview__callout--tip">
+                      <strong>Tip</strong> {step.tip}
+                    </div>
+                  )}
+                  {step.warning && (
+                    <div className="kaper-preview__callout kaper-preview__callout--warning">
+                      <strong>Note</strong> {step.warning}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {isEmpty && (
+          <div className="kaper-preview__nudge">
+            <p className="kaper-preview__nudge-msg">
+              This recipe is empty. Add ingredients or steps in the Form tab — or write
+              freeform notes around the kaper block.
+            </p>
+            {onSwitchToForm && (
+              <button
+                type="button"
+                className="kaper-preview__nudge-btn"
+                onClick={onSwitchToForm}
+              >
+                Switch to Form
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );

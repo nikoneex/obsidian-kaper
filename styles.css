@@ -23,19 +23,6 @@
   border-bottom: none;
 }
 
-/* Suppress Obsidian's default code-block chrome (hover edit/copy/flair) */
-.markdown-rendered pre:has(.kaper-block) .edit-block-button,
-.markdown-rendered pre:has(.kaper-block) .copy-code-button,
-.markdown-rendered pre:has(.kaper-block) .code-block-flair {
-  display: none !important;
-}
-
-.markdown-rendered pre:has(.kaper-block) {
-  background: transparent;
-  padding: 0;
-  border: none;
-}
-
 .kaper-view-content {
   display: flex;
   flex-direction: column;
@@ -328,6 +315,42 @@
   color: rgb(var(--callout-warning, 233, 151, 63));
 }
 
+/* ── Empty-state nudge (no ingredients & no steps) ─────────────────────── */
+
+.kaper-preview__nudge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 20px;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-secondary);
+}
+
+.kaper-preview__nudge-msg {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.kaper-preview__nudge-btn {
+  align-self: flex-end;
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  color: var(--text-accent);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.kaper-preview__nudge-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
 /* ── Form ──────────────────────────────────────────────────────────────── */
 
 .kaper-form {
@@ -449,9 +472,163 @@
 .kaper-form__input--unit { width: 80px; flex: none; }
 .kaper-form__input--name { flex: 1; }
 .kaper-form__input--sub { width: 100px; flex: none; }
-.kaper-form__input--time { max-width: 110px; flex: none; }
 .kaper-form__input--step-title { flex: 1; }
-.kaper-form__input--duration { width: 90px; flex: none; }
+
+/* ── Time input (hours / minutes) ──────────────────────────────────────── */
+
+.kaper-time-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kaper-time-input__field {
+  width: 44px;
+  background: var(--background-modifier-form-field);
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 7px 8px;
+  font-family: var(--font-interface);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--text-normal);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
+}
+
+.kaper-time-input__field::placeholder { color: var(--text-faint); }
+
+.kaper-time-input__field:focus {
+  border-color: var(--interactive-accent);
+}
+
+.kaper-time-input__field:disabled { opacity: 0.5; cursor: default; }
+
+.kaper-time-input__unit {
+  font-size: 11px;
+  color: var(--text-faint);
+  user-select: none;
+}
+
+/* ── Tag input (chip input + suggestion dropdown) ──────────────────────── */
+
+.kaper-tag-input {
+  position: relative;
+  background: var(--background-modifier-form-field);
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 5px 8px;
+  cursor: text;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.kaper-tag-input.is-focused {
+  border-color: var(--interactive-accent);
+}
+
+.kaper-tag-input.is-open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.kaper-tag-input__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 22px;
+}
+
+.kaper-tag-input__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  padding: 2px 4px 2px 8px;
+  border-radius: 100px;
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  user-select: none;
+  line-height: 1;
+}
+
+.kaper-tag-input__chip-label {
+  white-space: nowrap;
+}
+
+.kaper-tag-input__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-muted);
+  opacity: 0.55;
+  cursor: pointer;
+  border-radius: 100px;
+  transition: opacity 0.1s, background 0.1s;
+}
+
+.kaper-tag-input__chip-remove:hover {
+  opacity: 1;
+  background: var(--background-modifier-hover);
+}
+
+.kaper-tag-input__field {
+  flex: 1;
+  min-width: 80px;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 2px 0;
+  font-family: var(--font-interface);
+  font-size: 14px;
+  color: var(--text-normal);
+}
+
+.kaper-tag-input__field::placeholder { color: var(--text-faint); }
+
+.kaper-tag-input__field:disabled { opacity: 0.5; cursor: default; }
+
+.kaper-tag-input__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--background-primary);
+  border: 1.5px solid var(--interactive-accent);
+  border-top: 1px solid var(--background-modifier-border);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.kaper-tag-input__option {
+  padding: 7px 10px;
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.08s, color 0.08s;
+}
+
+.kaper-tag-input__option:hover,
+.kaper-tag-input__option.is-active {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
 
 /* ── Buttons ───────────────────────────────────────────────────────────── */
 
@@ -492,7 +669,7 @@
 
 .kaper-form__remove-btn:hover {
   background: var(--background-modifier-error-hover);
-  color: #fff;
+  color: #ffffff;
 }
 
 .kaper-form__icon-btn:hover:not(:disabled) {
@@ -615,7 +792,6 @@
   color: var(--text-muted);
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px dashed var(--background-modifier-border);
   background: none;
   cursor: pointer;
   transition: border-color 0.1s, color 0.1s;

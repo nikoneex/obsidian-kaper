@@ -6,8 +6,13 @@ describe('hasKaperFrontmatter', () => {
     expect(hasKaperFrontmatter('---\nkaper: true\n---\n\nbody')).toBe(true);
   });
 
+  it('returns true for stamped kaper: r_<id> frontmatter', () => {
+    expect(hasKaperFrontmatter('---\nkaper: r_AbCdEfGhIj\n---\n\nbody')).toBe(true);
+  });
+
   it('returns true regardless of order within frontmatter', () => {
     expect(hasKaperFrontmatter('---\ntags: [recipe]\nkaper: true\n---\n\nbody')).toBe(true);
+    expect(hasKaperFrontmatter('---\ntags: [recipe]\nkaper: r_xyz123\n---\n\nbody')).toBe(true);
   });
 
   it('returns false for files without frontmatter', () => {
@@ -18,8 +23,8 @@ describe('hasKaperFrontmatter', () => {
     expect(hasKaperFrontmatter('---\ntags: [foo]\n---\n\nbody')).toBe(false);
   });
 
-  it('returns false for kaper: false', () => {
-    expect(hasKaperFrontmatter('---\nkaper: false\n---\n\nbody')).toBe(false);
+  it('returns false for kaper with empty value', () => {
+    expect(hasKaperFrontmatter('---\nkaper:\n---\n\nbody')).toBe(false);
   });
 });
 
@@ -32,6 +37,11 @@ describe('ensureKaperFrontmatter', () => {
 
   it('leaves files with kaper: true frontmatter alone', () => {
     const input = '---\nkaper: true\n---\n\n```kaper\ntitle: x\n```';
+    expect(ensureKaperFrontmatter(input)).toBe(input);
+  });
+
+  it('preserves a stamped kaper: r_<id> value', () => {
+    const input = '---\nkaper: r_AbCdEfGhIj\n---\n\n```kaper\ntitle: x\n```';
     expect(ensureKaperFrontmatter(input)).toBe(input);
   });
 
