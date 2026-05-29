@@ -1,7 +1,7 @@
 import { Notice, Plugin, TFile, TFolder, normalizePath } from 'obsidian';
 import { kaperEditorExtension } from './editor-extension';
 import { FileLabelRewriter } from './file-label-rewriter';
-import { ensureKaperFrontmatter, hasKaperFrontmatter } from './frontmatter';
+import { ensureKaperId, hasKaperFrontmatter } from './frontmatter';
 import { serializeKaperYaml } from './parser/recipe-parser';
 import { RecipeModel } from './parser/types';
 
@@ -75,7 +75,7 @@ export default class KaperPlugin extends Plugin {
     const fileName = this.uniqueFileName(folder.path, DEFAULT_BASE);
     const path = joinPath(folder.path, fileName);
 
-    const initialContent = ensureKaperFrontmatter(starterBlock());
+    const initialContent = ensureKaperId(starterBlock());
 
     const file = await this.app.vault.create(path, initialContent);
     const leaf = this.app.workspace.getLeaf(false);
@@ -88,7 +88,7 @@ export default class KaperPlugin extends Plugin {
     await this.app.vault.process(file, (data) => {
       let updated = data;
       if (!hasKaperFrontmatter(updated)) {
-        updated = ensureKaperFrontmatter(updated);
+        updated = ensureKaperId(updated);
         added.frontmatter = true;
       }
       if (!updated.includes('```kaper')) {
