@@ -804,6 +804,43 @@
   color: var(--text-accent);
 }
 
+/* ── Step image upload ─────────────────────────────────────────────────── */
+
+.kaper-form__image-row {
+  display: flex;
+  align-items: center;
+  gap: var(--size-2-2);
+}
+
+.kaper-form__image-thumb {
+  max-width: 120px;
+  max-height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.kaper-form__image-add {
+  display: inline-block;
+  width: fit-content;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.1s, color 0.1s;
+}
+
+.kaper-form__image-add:hover {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+}
+
+.kaper-form__image-input {
+  display: none;
+}
+
 /* ── Steps ─────────────────────────────────────────────────────────────── */
 
 .kaper-form__step {
