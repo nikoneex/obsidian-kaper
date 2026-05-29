@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AssetIO } from '../assets';
 import { RecipeModel } from '../parser/types';
 import { RecipeDraft, draftToRecipe, recipeToDraft } from './recipe-form/draft';
 import { BasicsSection } from './recipe-form/BasicsSection';
@@ -8,10 +9,12 @@ import { StepsSection } from './recipe-form/StepsSection';
 
 interface RecipeFormEditorProps {
   recipe: RecipeModel;
+  assets: AssetIO;
+  filePath: string;
   onChange: (recipe: RecipeModel) => void;
 }
 
-export function RecipeFormEditor({ recipe, onChange }: RecipeFormEditorProps) {
+export function RecipeFormEditor({ recipe, assets, filePath, onChange }: RecipeFormEditorProps) {
   const [draft, setDraft] = useState<RecipeDraft>(() => recipeToDraft(recipe));
 
   const update = (next: RecipeDraft) => {
@@ -34,7 +37,7 @@ export function RecipeFormEditor({ recipe, onChange }: RecipeFormEditorProps) {
 
       <BasicsSection draft={draft} update={update} />
       <IngredientsSection draft={draft} update={update} />
-      <StepsSection draft={draft} update={update} />
+      <StepsSection draft={draft} update={update} assets={assets} filePath={filePath} />
       <DetailsSection draft={draft} update={update} />
     </form>
   );

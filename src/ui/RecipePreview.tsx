@@ -1,7 +1,9 @@
+import { AssetIO } from '../assets';
 import { RecipeModel } from '../parser/types';
 
 interface RecipePreviewProps {
   recipe: RecipeModel;
+  assets: AssetIO;
   onSwitchToForm?: () => void;
 }
 

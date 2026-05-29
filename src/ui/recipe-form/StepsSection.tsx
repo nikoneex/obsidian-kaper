@@ -1,9 +1,15 @@
 import { arrayMove } from '@dnd-kit/sortable';
+import { AssetIO } from '../../assets';
 import { RecipeStep } from '../../parser/types';
 import { TimeInput } from '../TimeInput';
 import { SectionProps } from './draft';
 
-export function StepsSection({ draft, update }: SectionProps) {
+interface StepsSectionProps extends SectionProps {
+  assets: AssetIO;
+  filePath: string;
+}
+
+export function StepsSection({ draft, update }: StepsSectionProps) {
   const addStep = () =>
     update({ ...draft, steps: [...draft.steps, { title: '' }] });
 

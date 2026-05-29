@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AssetIO } from '../assets';
 import { RecipeModel } from '../parser/types';
 import { RecipePreview } from './RecipePreview';
 import { RecipeFormEditor } from './RecipeFormEditor';
@@ -20,13 +21,14 @@ function writeTabPreference(filePath: string, tab: Tab): void {
 
 interface AppProps {
   filePath: string;
+  assets: AssetIO;
   recipe: RecipeModel | null;
   parseError?: string;
   onChange: (recipe: RecipeModel) => void;
   onCookMode: () => void;
 }
 
-export function App({ filePath, recipe, parseError, onChange, onCookMode }: AppProps) {
+export function App({ filePath, assets, recipe, parseError, onChange, onCookMode }: AppProps) {
   const defaultTab: Tab = isEmptyRecipe(recipe) ? 'form' : 'preview';
   const [tab, setTabLocal] = useState<Tab>(
     () => readTabPreference(filePath) ?? defaultTab,
@@ -71,9 +73,14 @@ export function App({ filePath, recipe, parseError, onChange, onCookMode }: AppP
       </div>
 
       {tab === 'preview' ? (
-        <RecipePreview recipe={recipe} onSwitchToForm={() => setTab('form')} />
+        <RecipePreview recipe={recipe} assets={assets} onSwitchToForm={() => setTab('form')} />
       ) : (
-        <RecipeFormEditor recipe={recipe} onChange={onChange} />
+        <RecipeFormEditor
+          recipe={recipe}
+          assets={assets}
+          filePath={filePath}
+          onChange={onChange}
+        />
       )}
     </div>
   );

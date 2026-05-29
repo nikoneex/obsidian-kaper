@@ -8,6 +8,7 @@ import {
   TFolder,
   normalizePath,
 } from 'obsidian';
+import { AssetIO } from './assets';
 import { kaperEditorExtension } from './editor-extension';
 import { FileLabelRewriter } from './file-label-rewriter';
 import { ensureKaperId, hasKaperFrontmatter } from './frontmatter';
@@ -54,7 +55,8 @@ export default class KaperPlugin extends Plugin {
   async onload() {
     await this.loadSettings();
 
-    this.registerEditorExtension([kaperEditorExtension]);
+    const assets = new AssetIO(this.app, (rel) => this.kaperPath(rel));
+    this.registerEditorExtension([kaperEditorExtension(assets)]);
 
     this.labelRewriter = new FileLabelRewriter(this);
     this.app.workspace.onLayoutReady(() => this.labelRewriter?.start());
