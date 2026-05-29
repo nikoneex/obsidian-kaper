@@ -1,4 +1,13 @@
-import { Notice, Plugin, TFile, TFolder, normalizePath } from 'obsidian';
+import {
+  App,
+  Notice,
+  Plugin,
+  PluginSettingTab,
+  Setting,
+  TFile,
+  TFolder,
+  normalizePath,
+} from 'obsidian';
 import { kaperEditorExtension } from './editor-extension';
 import { FileLabelRewriter } from './file-label-rewriter';
 import { ensureKaperId, hasKaperFrontmatter } from './frontmatter';
@@ -8,6 +17,15 @@ import { RecipeModel } from './parser/types';
 
 const RIBBON_ICON = 'utensils-crossed';
 const DEFAULT_BASE = 'Untitled';
+
+export interface KaperSettings {
+  /** Vault-relative folder Kaper treats as its library root. Empty = vault root. */
+  kaperRootFolder: string;
+}
+
+const DEFAULT_SETTINGS: KaperSettings = {
+  kaperRootFolder: '',
+};
 
 function emptyRecipe(title = 'Untitled'): RecipeModel {
   return {
@@ -31,12 +49,17 @@ function joinPath(folder: string, name: string): string {
 
 export default class KaperPlugin extends Plugin {
   private labelRewriter: FileLabelRewriter | null = null;
+  settings: KaperSettings = { ...DEFAULT_SETTINGS };
 
-  onload() {
+  async onload() {
+    await this.loadSettings();
+
     this.registerEditorExtension([kaperEditorExtension]);
 
     this.labelRewriter = new FileLabelRewriter(this);
     this.app.workspace.onLayoutReady(() => this.labelRewriter?.start());
+
+    this.addSettingTab(new KaperSettingTab(this.app, this));
 
     // Lazily migrate legacy `kaper: true` recipes to a stable id the first time
     // they are opened. New/already-stamped files are skipped — no bulk rewrite.
@@ -75,6 +98,32 @@ export default class KaperPlugin extends Plugin {
   onunload() {
     this.labelRewriter?.stop();
     this.labelRewriter = null;
+  }
+
+  async loadSettings(): Promise<void> {
+    this.settings = { ...DEFAULT_SETTINGS, ...(await this.loadData()) };
+  }
+
+  async saveSettings(): Promise<void> {
+    await this.saveData(this.settings);
+  }
+
+  /** Vault-relative Kaper root (`''` = vault root). Normalized, no trailing slash. */
+  kaperRoot(): string {
+    const raw = (this.settings.kaperRootFolder ?? '').trim();
+    if (!raw || raw === '/') return '';
+    return normalizePath(raw).replace(/\/+$/, '');
+  }
+
+  /**
+   * Joins a Kaper-root-relative path onto the configured root, returning a
+   * vault-relative path safe for the Vault/adapter APIs. When the root is the
+   * vault root (`''`), returns the relative path as-is — never a leading-slash
+   * path like `/_assets/...`, which Obsidian treats as invalid.
+   */
+  kaperPath(relative: string): string {
+    const root = this.kaperRoot();
+    return normalizePath(root ? `${root}/${relative}` : relative);
   }
 
   private async migrateRecipeId(file: TFile | null): Promise<void> {
@@ -137,5 +186,36 @@ export default class KaperPlugin extends Plugin {
       i++;
     }
     return candidate;
+  }
+}
+
+class KaperSettingTab extends PluginSettingTab {
+  constructor(
+    app: App,
+    private readonly plugin: KaperPlugin,
+  ) {
+    super(app, plugin);
+  }
+
+  display(): void {
+    const { containerEl } = this;
+    containerEl.empty();
+
+    new Setting(containerEl)
+      .setName('Kaper vault root folder')
+      .setDesc(
+        'Folder (relative to this vault) that Kaper web/desktop opens as its ' +
+          'library. Leave empty to use the vault root. Step images are stored in ' +
+          '_assets/ under this folder — it must match the folder you open in Kaper.',
+      )
+      .addText((text) =>
+        text
+          .setPlaceholder('e.g. Recipes (empty = vault root)')
+          .setValue(this.plugin.settings.kaperRootFolder)
+          .onChange(async (value) => {
+            this.plugin.settings.kaperRootFolder = value;
+            await this.plugin.saveSettings();
+          }),
+      );
   }
 }
