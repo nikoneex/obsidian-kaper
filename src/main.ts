@@ -2,6 +2,7 @@ import { Notice, Plugin, TFile, TFolder, normalizePath } from 'obsidian';
 import { kaperEditorExtension } from './editor-extension';
 import { FileLabelRewriter } from './file-label-rewriter';
 import { ensureKaperId, hasKaperFrontmatter } from './frontmatter';
+import { ensureRecipeId, readRecipeId } from './recipe-id';
 import { serializeKaperYaml } from './parser/recipe-parser';
 import { RecipeModel } from './parser/types';
 
@@ -37,6 +38,14 @@ export default class KaperPlugin extends Plugin {
     this.labelRewriter = new FileLabelRewriter(this);
     this.app.workspace.onLayoutReady(() => this.labelRewriter?.start());
 
+    // Lazily migrate legacy `kaper: true` recipes to a stable id the first time
+    // they are opened. New/already-stamped files are skipped — no bulk rewrite.
+    this.registerEvent(
+      this.app.workspace.on('file-open', (file) => {
+        void this.migrateRecipeId(file);
+      }),
+    );
+
     this.addRibbonIcon(RIBBON_ICON, 'Create recipe', () => {
       void this.createRecipe();
     });
@@ -66,6 +75,15 @@ export default class KaperPlugin extends Plugin {
   onunload() {
     this.labelRewriter?.stop();
     this.labelRewriter = null;
+  }
+
+  private async migrateRecipeId(file: TFile | null): Promise<void> {
+    if (!file || file.extension !== 'md') return;
+    const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
+    // Only touch kaper recipes that lack a stable id; skip everything else.
+    if (!fm || !('kaper' in fm)) return;
+    if (readRecipeId(this.app, file)) return;
+    await ensureRecipeId(this.app, file);
   }
 
   private async createRecipe(): Promise<void> {
