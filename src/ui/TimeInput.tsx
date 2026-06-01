@@ -47,8 +47,14 @@ interface TimeInputProps {
 }
 
 export function TimeInput({ value, onChange, id, disabled }: TimeInputProps) {
-  const [hoursText, setHoursText] = useState('');
-  const [minutesText, setMinutesText] = useState('');
+  const [hoursText, setHoursText] = useState(() => {
+    const p = rollover(parseDuration(value ?? ''));
+    return p.hours ? String(p.hours) : '';
+  });
+  const [minutesText, setMinutesText] = useState(() => {
+    const p = rollover(parseDuration(value ?? ''));
+    return p.minutes ? String(p.minutes) : '';
+  });
   const wrapperRef = useRef<HTMLDivElement>(null);
   // Tracks the last value we emitted so external resyncs don't snap-rollover mid-typing.
   const emittedRef = useRef<string>(value ?? '');

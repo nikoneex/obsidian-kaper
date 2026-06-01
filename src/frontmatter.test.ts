@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { ensureKaperFrontmatter, hasKaperFrontmatter } from './frontmatter';
+import {
+  ensureKaperFrontmatter,
+  hasKaperFrontmatter,
+  syncFrontmatterTags,
+} from './frontmatter';
 
 describe('hasKaperFrontmatter', () => {
   it('returns true for files with kaper: true frontmatter', () => {
@@ -25,6 +29,45 @@ describe('hasKaperFrontmatter', () => {
 
   it('returns false for kaper with empty value', () => {
     expect(hasKaperFrontmatter('---\nkaper:\n---\n\nbody')).toBe(false);
+  });
+});
+
+describe('syncFrontmatterTags', () => {
+  it('writes tags to frontmatter when provided', () => {
+    const input = '---\nkaper: true\n---\n\n```kaper\ntitle: x\n```';
+    const result = syncFrontmatterTags(input, ['dinner', 'quick']);
+    expect(result).toContain('tags:\n  - dinner\n  - quick');
+    expect(result).toContain('kaper: true');
+  });
+
+  it('merges with existing frontmatter tags', () => {
+    const input = '---\nkaper: true\ntags:\n  - existing\n---\n\nbody';
+    const result = syncFrontmatterTags(input, ['dinner']);
+    expect(result).toContain('tags:\n  - existing\n  - dinner');
+  });
+
+  it('strips leading hashes when syncing tags', () => {
+    const input = '---\nkaper: true\n---\n\nbody';
+    const result = syncFrontmatterTags(input, ['#dinner', '##quick']);
+    expect(result).toContain('tags:\n  - dinner\n  - quick');
+  });
+
+  it('deduplicates merged tags case-insensitively', () => {
+    const input = '---\nkaper: true\ntags:\n  - Dinner\n---\n\nbody';
+    const result = syncFrontmatterTags(input, ['dinner', 'quick']);
+    expect(result).toContain('tags:\n  - Dinner\n  - quick');
+  });
+
+  it('keeps existing tags when provided tags are empty', () => {
+    const input = '---\nkaper: true\ntags:\n  - dinner\n---\n\nbody';
+    const result = syncFrontmatterTags(input, []);
+    expect(result).toContain('tags:\n  - dinner');
+    expect(result).toContain('kaper: true');
+  });
+
+  it('returns original content when no frontmatter exists', () => {
+    const input = 'body\n\n```kaper\ntitle: x\n```';
+    expect(syncFrontmatterTags(input, ['dinner'])).toBe(input);
   });
 });
 

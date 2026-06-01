@@ -167,7 +167,7 @@
 }
 
 .kaper-block .kaper-preview__section-title {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -186,7 +186,7 @@
 }
 
 .kaper-block .kaper-preview__group-name {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-muted);
   margin: 0 0 8px;
@@ -217,7 +217,7 @@
   font-weight: 600;
   color: var(--interactive-accent);
   white-space: nowrap;
-  min-width: 72px;
+  min-width: 102px;
 }
 
 .kaper-preview__ingredient-name {
@@ -225,7 +225,7 @@
 }
 
 .kaper-preview__ingredient-sub {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
   font-style: italic;
 }
@@ -267,6 +267,25 @@
   flex-shrink: 0;
 }
 
+/* Center a standalone image horizontally */
+img.kaper-preview__cover, 
+img.kaper-preview__step-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+}
+
+img.kaper-preview__cover {
+  width: 86%;
+  max-width: 700px;
+  margin-bottom: 10px;
+}
+
+img.kaper-preview__step-image {
+  width: 75%;
+}
+
 .kaper-block .kaper-preview__step-title {
   font-size: 15px;
   font-weight: 600;
@@ -276,7 +295,7 @@
 }
 
 .kaper-preview__step-duration {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
   background: var(--background-secondary);
   padding: 2px 8px;

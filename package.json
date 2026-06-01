@@ -1,6 +1,6 @@
 {
-  "name": "obsidian-kaper",
-  "version": "1.1.0",
+  "name": "kaper-plus",
+  "version": "1.0.0",
   "description": "Edit and preview Kaper recipes inline as structured blocks.",
   "main": "main.js",
   "scripts": {
@@ -13,9 +13,9 @@
   "keywords": [
     "obsidian-plugin",
     "kaper",
-    "recipes"
+    "recipe"
   ],
-  "author": "neex",
+  "author": "Olivier & Niko",
   "license": "MIT",
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -26,8 +26,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@codemirror/state": "^6.6.0",
-    "@codemirror/view": "^6.41.1",
+    "@codemirror/state": "6.5.0",
+    "@codemirror/view": "6.38.6",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",

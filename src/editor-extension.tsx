@@ -102,11 +102,29 @@ class KaperWidget extends WidgetType {
 
   private render(root: Root, view: EditorView) {
     const parsed = parseKaperYaml(this.info.source);
+
+    const resolveImage = (path: string): string => {
+      if (!path) return path;
+      if (/^https?:\/\//i.test(path) || path.startsWith('data:')) return path;
+
+      const fileInfo = view.state.field(editorInfoField, false);
+      const app = fileInfo?.app;
+      if (!app) return path;
+
+      const file = app.metadataCache.getFirstLinkpathDest(path, this.info.filePath);
+      if (file) {
+        return app.vault.adapter.getResourcePath(file.path);
+      }
+      return path;
+    };
+
     root.render(
       <KaperApp
         filePath={this.info.filePath}
         recipe={parsed.recipe}
         parseError={parsed.parseError}
+        resolveImage={resolveImage}
+        mode="form"
         onChange={(recipe) => this.handleEdit(recipe, view)}
         onCookMode={() =>
           window.open('https://kaper.me?from=obsidian', '_blank', 'noopener,noreferrer')

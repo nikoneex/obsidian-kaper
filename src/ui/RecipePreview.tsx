@@ -2,6 +2,7 @@ import { RecipeModel } from '../parser/types';
 
 interface RecipePreviewProps {
   recipe: RecipeModel;
+  resolveImage?: (path: string) => string;
   onSwitchToForm?: () => void;
 }
 
@@ -41,7 +42,7 @@ const IconTimer = () => (
   </svg>
 );
 
-export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
+export function RecipePreview({ recipe, resolveImage, onSwitchToForm }: RecipePreviewProps) {
   // Filter empty groups so they don't render as blank sections.
   const groupEntries = Object.entries(recipe.ingredients).filter(
     ([, items]) => items.length > 0,
@@ -51,11 +52,20 @@ export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
   const hasSteps = recipe.steps.length > 0;
   const isEmpty = !hasIngredients && !hasSteps;
   const showServings = recipe.servings > 0;
+  const showPrepTime = !!recipe.time?.prep;
   const showCookTime = !!recipe.time?.cook;
+  const hasTime = showPrepTime || showCookTime;
   const showDifficulty = !!recipe.difficulty;
 
   return (
     <article className="kaper-preview">
+      {recipe.coverImage && (
+        <img
+          className="kaper-preview__cover"
+          src={resolveImage ? resolveImage(recipe.coverImage) : recipe.coverImage}
+          alt=""
+        />
+      )}
       <header className="kaper-preview__header">
         <h1 className="kaper-preview__title">{recipe.title}</h1>
 
@@ -66,18 +76,21 @@ export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
               {recipe.servings} servings
             </span>
           )}
-          {showCookTime && (
+          {hasTime && (
             <>
               {showServings && <span className="kaper-preview__meta-divider" aria-hidden="true" />}
               <span className="kaper-preview__meta-item">
                 <IconTimer />
-                {recipe.time?.cook}
+                {[
+                  showPrepTime ? `Prep: ${recipe.time?.prep}` : null,
+                  showCookTime ? `Cook: ${recipe.time?.cook}` : null,
+                ].filter(Boolean).join(' | ')}
               </span>
             </>
           )}
           {showDifficulty && (
             <>
-              {(showServings || showCookTime) && (
+              {(showServings || hasTime) && (
                 <span className="kaper-preview__meta-divider" aria-hidden="true" />
               )}
               <span
@@ -97,9 +110,14 @@ export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
         {recipe.tags && recipe.tags.length > 0 && (
           <div className="kaper-preview__tags">
             {recipe.tags.map((tag) => (
-              <span key={tag} className="kaper-preview__tag">
+              <a
+                key={tag}
+                className="tag internal-link kaper-preview__tag"
+                href={`#${tag}`}
+                data-href={`#${tag}`}
+              >
                 {tag}
-              </span>
+              </a>
             ))}
           </div>
         )}
@@ -166,6 +184,13 @@ export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
                     <div className="kaper-preview__callout kaper-preview__callout--warning">
                       <strong>Note</strong> {step.warning}
                     </div>
+                  )}
+                  {step.image && (
+                    <img
+                      className="kaper-preview__step-image"
+                      src={resolveImage ? resolveImage(step.image) : step.image}
+                      alt=""
+                    />
                   )}
                 </li>
               ))}

@@ -137,7 +137,7 @@ export function TagInput({
       <div className="kaper-tag-input__chips">
         {value.map((chip) => (
           <span key={chip} className="kaper-tag-input__chip">
-            <span className="kaper-tag-input__chip-label">#&nbsp;{chip}</span>
+            <span className="kaper-tag-input__chip-label">#{chip}</span>
             <button
               type="button"
               className="kaper-tag-input__chip-remove"

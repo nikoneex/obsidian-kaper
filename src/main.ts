@@ -1,8 +1,11 @@
-import { Notice, Plugin, TFile, TFolder, normalizePath } from 'obsidian';
+import { Notice, Plugin, TAbstractFile, TFile, TFolder, normalizePath } from 'obsidian';
+import { createElement } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App as KaperApp } from './ui/App';
 import { kaperEditorExtension } from './editor-extension';
 import { FileLabelRewriter } from './file-label-rewriter';
-import { ensureKaperFrontmatter, hasKaperFrontmatter } from './frontmatter';
-import { serializeKaperYaml } from './parser/recipe-parser';
+import { ensureKaperFrontmatter, hasKaperFrontmatter, extractTagsFromKaperBlock } from './frontmatter';
+import { parseKaperYaml, serializeKaperYaml } from './parser/recipe-parser';
 import { RecipeModel } from './parser/types';
 
 const RIBBON_ICON = 'utensils-crossed';
@@ -30,12 +33,67 @@ function joinPath(folder: string, name: string): string {
 
 export default class KaperPlugin extends Plugin {
   private labelRewriter: FileLabelRewriter | null = null;
+  private syncTimeouts = new Map<string, NodeJS.Timeout>();
 
   onload() {
     this.registerEditorExtension([kaperEditorExtension]);
 
+    this.registerMarkdownCodeBlockProcessor('kaper', (source, el, ctx) => {
+      const parsed = parseKaperYaml(source);
+
+      const resolveImage = (path: string): string => {
+        if (!path) return path;
+        if (/^https?:\/\//i.test(path) || path.startsWith('data:')) return path;
+
+        const file = this.app.metadataCache.getFirstLinkpathDest(path, ctx.sourcePath);
+        if (file) {
+          return this.app.vault.adapter.getResourcePath(file.path);
+        }
+        return path;
+      };
+
+      const root = createRoot(el);
+      root.render(
+        createElement(KaperApp, {
+          filePath: ctx.sourcePath,
+          recipe: parsed.recipe,
+          parseError: parsed.parseError,
+          resolveImage: resolveImage,
+          mode: 'preview',
+          onCookMode: () =>
+            window.open('https://kaper.me?from=obsidian', '_blank', 'noopener,noreferrer')
+        })
+      );
+    });
+
     this.labelRewriter = new FileLabelRewriter(this);
     this.app.workspace.onLayoutReady(() => this.labelRewriter?.start());
+
+    this.registerEvent(
+      this.app.workspace.on('active-leaf-change', () => {
+        const file = this.app.workspace.getActiveFile();
+        if (file && file.extension === 'md') {
+          void this.syncTagsForFile(file);
+        }
+      })
+    );
+
+    this.registerEvent(
+      this.app.vault.on('modify', (file: TAbstractFile) => {
+        if (!(file instanceof TFile) || file.extension !== 'md') return;
+        
+        const existing = this.syncTimeouts.get(file.path);
+        if (existing) clearTimeout(existing);
+
+        this.syncTimeouts.set(
+          file.path,
+          setTimeout(async () => {
+            this.syncTimeouts.delete(file.path);
+            await this.syncTagsForFile(file);
+          }, 2000)
+        );
+      })
+    );
 
     this.addRibbonIcon(RIBBON_ICON, 'Create recipe', () => {
       void this.createRecipe();
@@ -119,5 +177,58 @@ export default class KaperPlugin extends Plugin {
       i++;
     }
     return candidate;
+  }
+
+  private async syncTagsForFile(file: TFile) {
+    try {
+      const cache = this.app.metadataCache.getFileCache(file);
+      const kaperValue = cache?.frontmatter?.kaper;
+      if (kaperValue !== true && kaperValue !== 'true') {
+        return;
+      }
+
+      const content = await this.app.vault.read(file);
+      
+      const kaperTags = extractTagsFromKaperBlock(content);
+      
+      await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+        const currentTags = frontmatter.tags;
+        const existingTags = Array.isArray(currentTags)
+          ? currentTags.filter((t): t is string => typeof t === 'string')
+          : typeof currentTags === 'string'
+            ? [currentTags]
+            : [];
+        
+        // Compare accurately by stripping '#' and lowering case
+        const normalize = (t: string) => String(t).trim().toLowerCase().replace(/^#+/, '');
+        
+        const existingSet = new Set(existingTags.map(normalize));
+        
+        let needsUpdate = false;
+        
+        // Check if any kaper tags are missing from frontmatter
+        for (const tag of kaperTags) {
+          if (!existingSet.has(normalize(tag))) {
+            needsUpdate = true;
+            break;
+          }
+        }
+
+        // If no update needed, return early
+        if (!needsUpdate) return;
+        
+        const merged = new Set<string>();
+        // Keep all existing tags (even manual ones)
+        existingTags.forEach(t => merged.add(String(t).trim().replace(/^#+/, '')));
+        // Add all kaper tags
+        kaperTags.forEach(t => merged.add(t));
+        
+        if (merged.size > 0) {
+          frontmatter.tags = Array.from(merged);
+        }
+      });
+    } catch (err) {
+      console.error('Failed to sync tags from Kaper block', err);
+    }
   }
 }
