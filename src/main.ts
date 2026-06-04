@@ -1,6 +1,7 @@
 import {
   App,
   Notice,
+  Platform,
   Plugin,
   PluginSettingTab,
   Setting,
@@ -71,30 +72,34 @@ export default class KaperPlugin extends Plugin {
       }),
     );
 
-    this.addRibbonIcon(RIBBON_ICON, 'Create recipe', () => {
-      void this.createRecipe();
-    });
-
-    this.addCommand({
-      id: 'create-recipe',
-      name: 'Create recipe',
-      callback: () => {
+    // Creating/converting produces form-editable content; the form is hidden on
+    // mobile (read-only), so skip these affordances there.
+    if (!Platform.isMobile) {
+      this.addRibbonIcon(RIBBON_ICON, 'Create recipe', () => {
         void this.createRecipe();
-      },
-    });
+      });
 
-    this.addCommand({
-      id: 'convert-to-recipe',
-      name: 'Convert current note to recipe',
-      checkCallback: (checking) => {
-        const file = this.app.workspace.getActiveFile();
-        if (!file || file.extension !== 'md') return false;
-        if (!checking) {
-          void this.convertToRecipe(file);
-        }
-        return true;
-      },
-    });
+      this.addCommand({
+        id: 'create-recipe',
+        name: 'Create recipe',
+        callback: () => {
+          void this.createRecipe();
+        },
+      });
+
+      this.addCommand({
+        id: 'convert-to-recipe',
+        name: 'Convert current note to recipe',
+        checkCallback: (checking) => {
+          const file = this.app.workspace.getActiveFile();
+          if (!file || file.extension !== 'md') return false;
+          if (!checking) {
+            void this.convertToRecipe(file);
+          }
+          return true;
+        },
+      });
+    }
   }
 
   onunload() {
@@ -200,6 +205,17 @@ class KaperSettingTab extends PluginSettingTab {
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
+
+    // On mobile the form editor isn't supported yet, so recipes are read-only.
+    // Surface that here only on mobile — it's irrelevant on desktop.
+    if (Platform.isMobile) {
+      new Setting(containerEl)
+        .setName('Mobile is read-only')
+        .setDesc(
+          "Editing isn't available on mobile yet — recipes show as a read-only " +
+            'preview. Open the vault on desktop to use the form editor.',
+        );
+    }
 
     new Setting(containerEl)
       .setName('Kaper vault root folder')

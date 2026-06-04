@@ -15,6 +15,7 @@ the plugin's recipe format and code style.
 
 - Cover images and per-step images now render in the recipe preview — resolved from vault paths, `_assets/` uploads, or remote URLs, and hidden gracefully when an image can't be loaded. (#4)
 - Cover image upload in the recipe form's Basics section.
+- Mobile support (read-only): recipes render on Obsidian mobile. Editing — the form editor, Cook mode, and recipe creation/conversion — stays desktop-only for now while the form is redesigned for small screens.
 - Prep time now appears alongside cook time in the preview. (#4)
 
 ### Fixed

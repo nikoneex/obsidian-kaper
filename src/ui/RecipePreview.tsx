@@ -203,14 +203,20 @@ export function RecipePreview({ recipe, assets, filePath, onSwitchToForm }: Reci
 
         {isEmpty && (
           <div className="kaper-preview__nudge">
-            <p className="kaper-preview__nudge-msg">
-              This recipe is empty. Add ingredients or steps in the Form tab — or write freeform
-              notes around the kaper block.
-            </p>
-            {onSwitchToForm && (
-              <button type="button" className="kaper-preview__nudge-btn" onClick={onSwitchToForm}>
-                Switch to Form
-              </button>
+            {onSwitchToForm ? (
+              <>
+                <p className="kaper-preview__nudge-msg">
+                  This recipe is empty. Add ingredients or steps in the Form tab — or write freeform
+                  notes around the kaper block.
+                </p>
+                <button type="button" className="kaper-preview__nudge-btn" onClick={onSwitchToForm}>
+                  Switch to Form
+                </button>
+              </>
+            ) : (
+              <p className="kaper-preview__nudge-msg">
+                This recipe is empty. Open it on desktop to add ingredients and steps.
+              </p>
             )}
           </div>
         )}
