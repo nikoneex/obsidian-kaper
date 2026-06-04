@@ -1,10 +1,5 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import {
-  IngredientDraft,
-  IngredientGroupDraft,
-  SectionProps,
-  emptyIngredient,
-} from './draft';
+import { IngredientDraft, IngredientGroupDraft, SectionProps, emptyIngredient } from './draft';
 import { IngredientList } from './IngredientList';
 
 export function IngredientsSection({ draft, update }: SectionProps) {

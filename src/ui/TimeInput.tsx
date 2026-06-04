@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  FocusEvent,
-  KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ChangeEvent, FocusEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 interface Parts {
   hours: number;
@@ -138,7 +131,9 @@ export function TimeInput({ value, onChange, id, disabled }: TimeInputProps) {
         onKeyDown={onKeyDown}
         aria-label="Hours"
       />
-      <span className="kaper-time-input__unit" aria-hidden="true">hr</span>
+      <span className="kaper-time-input__unit" aria-hidden="true">
+        hr
+      </span>
       <input
         className="kaper-time-input__field"
         type="text"
@@ -151,7 +146,9 @@ export function TimeInput({ value, onChange, id, disabled }: TimeInputProps) {
         onKeyDown={onKeyDown}
         aria-label="Minutes"
       />
-      <span className="kaper-time-input__unit" aria-hidden="true">min</span>
+      <span className="kaper-time-input__unit" aria-hidden="true">
+        min
+      </span>
     </div>
   );
 }

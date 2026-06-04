@@ -59,9 +59,7 @@ function PreviewImage({ src, className }: { src: string; className: string }) {
 
 export function RecipePreview({ recipe, assets, filePath, onSwitchToForm }: RecipePreviewProps) {
   // Filter empty groups so they don't render as blank sections.
-  const groupEntries = Object.entries(recipe.ingredients).filter(
-    ([, items]) => items.length > 0,
-  );
+  const groupEntries = Object.entries(recipe.ingredients).filter(([, items]) => items.length > 0);
   const hasMultipleGroups = groupEntries.length > 1;
   const hasIngredients = groupEntries.length > 0;
   const hasSteps = recipe.steps.length > 0;
@@ -137,9 +135,7 @@ export function RecipePreview({ recipe, assets, filePath, onSwitchToForm }: Reci
             <h2 className="kaper-preview__section-title">Ingredients</h2>
             {groupEntries.map(([groupName, items]) => (
               <div key={groupName} className="kaper-preview__ingredient-group">
-                {hasMultipleGroups && (
-                  <h3 className="kaper-preview__group-name">{groupName}</h3>
-                )}
+                {hasMultipleGroups && <h3 className="kaper-preview__group-name">{groupName}</h3>}
                 <ul className="kaper-preview__ingredient-list">
                   {items.map((item, idx) => (
                     <li
@@ -208,15 +204,11 @@ export function RecipePreview({ recipe, assets, filePath, onSwitchToForm }: Reci
         {isEmpty && (
           <div className="kaper-preview__nudge">
             <p className="kaper-preview__nudge-msg">
-              This recipe is empty. Add ingredients or steps in the Form tab — or write
-              freeform notes around the kaper block.
+              This recipe is empty. Add ingredients or steps in the Form tab — or write freeform
+              notes around the kaper block.
             </p>
             {onSwitchToForm && (
-              <button
-                type="button"
-                className="kaper-preview__nudge-btn"
-                onClick={onSwitchToForm}
-              >
+              <button type="button" className="kaper-preview__nudge-btn" onClick={onSwitchToForm}>
                 Switch to Form
               </button>
             )}

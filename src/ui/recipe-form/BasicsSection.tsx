@@ -56,10 +56,7 @@ export function BasicsSection({ draft, update }: SectionProps) {
 
       <div className="kaper-form__field">
         <label>Tags</label>
-        <TagInput
-          value={draft.tags}
-          onChange={(next) => update({ ...draft, tags: next })}
-        />
+        <TagInput value={draft.tags} onChange={(next) => update({ ...draft, tags: next })} />
       </div>
     </section>
   );

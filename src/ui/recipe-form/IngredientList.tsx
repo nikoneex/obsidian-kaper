@@ -98,14 +98,18 @@ function IngredientRow({
         type="text"
         placeholder="Unit"
         value={ingredient.unit}
-        onChange={(e) => onUpdate(groupIndex, ingredientIndex, { ...ingredient, unit: e.target.value })}
+        onChange={(e) =>
+          onUpdate(groupIndex, ingredientIndex, { ...ingredient, unit: e.target.value })
+        }
       />
       <input
         className="kaper-form__input kaper-form__input--name"
         type="text"
         placeholder="Ingredient name"
         value={ingredient.name}
-        onChange={(e) => onUpdate(groupIndex, ingredientIndex, { ...ingredient, name: e.target.value })}
+        onChange={(e) =>
+          onUpdate(groupIndex, ingredientIndex, { ...ingredient, name: e.target.value })
+        }
       />
       <input
         className="kaper-form__input kaper-form__input--sub"
@@ -242,7 +246,7 @@ export function IngredientList({
     setActiveWidth(null);
   };
 
-  const activeIngredient = activeId ? ingredients.find((i) => i._id === activeId) ?? null : null;
+  const activeIngredient = activeId ? (ingredients.find((i) => i._id === activeId) ?? null) : null;
   const activeIndex = activeId ? ingredients.findIndex((i) => i._id === activeId) : -1;
 
   return (
@@ -269,10 +273,7 @@ export function IngredientList({
       {createPortal(
         <DragOverlay>
           {activeIngredient && (
-            <div
-              className="kaper-form__drag-overlay"
-              style={{ width: activeWidth ?? undefined }}
-            >
+            <div className="kaper-form__drag-overlay" style={{ width: activeWidth ?? undefined }}>
               <IngredientRow
                 ingredient={activeIngredient}
                 groupIndex={groupIndex}

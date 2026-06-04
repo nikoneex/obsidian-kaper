@@ -9,8 +9,18 @@ import {
 } from './types';
 
 const CORE_KEYS = new Set([
-  'version', 'title', 'servings', 'difficulty', 'tags',
-  'time', 'equipment', 'ingredients', 'steps', 'source', 'yield', 'coverImage',
+  'version',
+  'title',
+  'servings',
+  'difficulty',
+  'tags',
+  'time',
+  'equipment',
+  'ingredients',
+  'steps',
+  'source',
+  'yield',
+  'coverImage',
   '_app',
 ]);
 
@@ -64,13 +74,20 @@ function validateCore(data: Record<string, unknown>): string | null {
   if (data['servings'] === undefined || typeof data['servings'] !== 'number') {
     return 'Missing required field: servings (number)';
   }
-  if (!data['ingredients'] || typeof data['ingredients'] !== 'object' || Array.isArray(data['ingredients'])) {
+  if (
+    !data['ingredients'] ||
+    typeof data['ingredients'] !== 'object' ||
+    Array.isArray(data['ingredients'])
+  ) {
     return 'Missing required field: ingredients (object)';
   }
   if (!Array.isArray(data['steps'])) {
     return 'Missing required field: steps (array)';
   }
-  if (data['difficulty'] !== undefined && !['easy', 'medium', 'hard'].includes(data['difficulty'] as string)) {
+  if (
+    data['difficulty'] !== undefined &&
+    !['easy', 'medium', 'hard'].includes(data['difficulty'] as string)
+  ) {
     return 'difficulty must be one of: easy, medium, hard';
   }
   return null;
@@ -130,7 +147,9 @@ function parseSteps(raw: unknown[]): RecipeStep[] {
     const item = entry as Record<string, unknown>;
     return {
       title: typeof item['title'] === 'string' ? item['title'] : '',
-      ingredients: Array.isArray(item['ingredients']) ? (item['ingredients'] as string[]) : undefined,
+      ingredients: Array.isArray(item['ingredients'])
+        ? (item['ingredients'] as string[])
+        : undefined,
       duration: typeof item['duration'] === 'string' ? item['duration'] : undefined,
       tip: typeof item['tip'] === 'string' ? item['tip'] : undefined,
       warning: typeof item['warning'] === 'string' ? item['warning'] : undefined,

@@ -172,9 +172,7 @@ export default class KaperPlugin extends Plugin {
       new Notice('Already a recipe.');
       return;
     }
-    new Notice(
-      `Converted to recipe${added.block ? ' (starter block added)' : ''}.`,
-    );
+    new Notice(`Converted to recipe${added.block ? ' (starter block added)' : ''}.`);
   }
 
   private uniqueFileName(folderPath: string, base: string): string {

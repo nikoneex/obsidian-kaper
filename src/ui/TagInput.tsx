@@ -1,10 +1,4 @@
-import {
-  ChangeEvent,
-  KeyboardEvent,
-  MouseEvent,
-  useRef,
-  useState,
-} from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent, useRef, useState } from 'react';
 
 const HASHTAG_REGEX = /^#+/;
 
@@ -124,11 +118,7 @@ export function TagInput({
 
   const focusInput = () => inputRef.current?.focus();
 
-  const wrapperClass = [
-    'kaper-tag-input',
-    isFocused && 'is-focused',
-    isOpen && 'is-open',
-  ]
+  const wrapperClass = ['kaper-tag-input', isFocused && 'is-focused', isOpen && 'is-open']
     .filter(Boolean)
     .join(' ');
 

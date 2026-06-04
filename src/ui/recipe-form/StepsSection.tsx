@@ -16,8 +16,7 @@ export function StepsSection({ draft, update, assets, filePath }: StepsSectionPr
   const draftRef = useRef(draft);
   draftRef.current = draft;
 
-  const addStep = () =>
-    update({ ...draft, steps: [...draft.steps, { title: '' }] });
+  const addStep = () => update({ ...draft, steps: [...draft.steps, { title: '' }] });
 
   const updateStep = (si: number, step: RecipeStep) => {
     const steps = [...draft.steps];
@@ -104,9 +103,7 @@ export function StepsSection({ draft, update, assets, filePath }: StepsSectionPr
                 rows={2}
                 placeholder="Instructions or note…"
                 value={step.note ?? ''}
-                onChange={(e) =>
-                  updateStep(si, { ...step, note: e.target.value || undefined })
-                }
+                onChange={(e) => updateStep(si, { ...step, note: e.target.value || undefined })}
               />
             </div>
 
@@ -118,9 +115,7 @@ export function StepsSection({ draft, update, assets, filePath }: StepsSectionPr
                   type="text"
                   placeholder="Optional tip…"
                   value={step.tip ?? ''}
-                  onChange={(e) =>
-                    updateStep(si, { ...step, tip: e.target.value || undefined })
-                  }
+                  onChange={(e) => updateStep(si, { ...step, tip: e.target.value || undefined })}
                 />
               </div>
               <div className="kaper-form__field">

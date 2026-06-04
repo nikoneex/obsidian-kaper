@@ -30,9 +30,7 @@ interface AppProps {
 
 export function App({ filePath, assets, recipe, parseError, onChange, onCookMode }: AppProps) {
   const defaultTab: Tab = isEmptyRecipe(recipe) ? 'form' : 'preview';
-  const [tab, setTabLocal] = useState<Tab>(
-    () => readTabPreference(filePath) ?? defaultTab,
-  );
+  const [tab, setTabLocal] = useState<Tab>(() => readTabPreference(filePath) ?? defaultTab);
 
   const setTab = (t: Tab) => {
     writeTabPreference(filePath, t);
@@ -80,12 +78,7 @@ export function App({ filePath, assets, recipe, parseError, onChange, onCookMode
           onSwitchToForm={() => setTab('form')}
         />
       ) : (
-        <RecipeFormEditor
-          recipe={recipe}
-          assets={assets}
-          filePath={filePath}
-          onChange={onChange}
-        />
+        <RecipeFormEditor recipe={recipe} assets={assets} filePath={filePath} onChange={onChange} />
       )}
     </div>
   );

@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  ensureKaperId,
-  extractKaperId,
-  generateKaperId,
-  hasKaperFrontmatter,
-} from './frontmatter';
+import { ensureKaperId, extractKaperId, generateKaperId, hasKaperFrontmatter } from './frontmatter';
 
 const ID_RE = /^r_[A-Za-z0-9_-]{10}$/;
 
