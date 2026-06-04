@@ -76,6 +76,15 @@
   padding: var(--size-4-2) 0;
 }
 
+.kaper-preview__cover {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: var(--radius-m);
+  margin-bottom: 20px;
+}
+
 .kaper-preview__header {
   padding-bottom: 20px;
   border-bottom: 1px solid var(--background-modifier-border);
@@ -290,6 +299,13 @@
   line-height: 1.6;
   padding-left: 38px;
   margin: 0;
+}
+
+.kaper-preview__step-image {
+  display: block;
+  max-width: calc(100% - 38px);
+  margin: 12px 0 0 38px;
+  border-radius: var(--radius-m);
 }
 
 .kaper-preview__callout {

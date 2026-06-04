@@ -12,7 +12,7 @@ function imageToken(): string {
 
 /**
  * Reads and writes step images under the Kaper root's `_assets/` folder,
- * mirroring kaper web's AssetService contract (KPR-21). `step.image` stores the
+ * matching how the Kaper web app stores recipe assets. `step.image` stores the
  * Kaper-root-relative path `_assets/{recipeId}--step-{token}.ext`; resolution
  * just re-anchors that onto the configured root.
  */
@@ -26,6 +26,24 @@ export class AssetIO {
   /** Resolves a stored `step.image` to a displayable `app://` URL. */
   resolveUrl(image: string): string {
     return this.app.vault.adapter.getResourcePath(this.toVaultPath(image));
+  }
+
+  /**
+   * Resolves any image reference for display in the preview. Absolute URLs and
+   * `data:` URIs pass through untouched; a vault path or wikilink resolves
+   * relative to `notePath` via Obsidian's link resolver; anything left over
+   * falls back to the Kaper-root-relative `_assets/` convention that
+   * app-managed step images are stored under.
+   */
+  resolveImage(image: string, notePath: string): string {
+    if (!image) return image;
+    if (/^(?:https?:|data:)/i.test(image)) return image;
+
+    const linkpath = image.replace(/^\.\//, '');
+    const file = this.app.metadataCache.getFirstLinkpathDest(linkpath, notePath);
+    if (file) return this.app.vault.adapter.getResourcePath(file.path);
+
+    return this.app.vault.adapter.getResourcePath(this.toVaultPath(linkpath));
   }
 
   /**

@@ -73,7 +73,12 @@ export function App({ filePath, assets, recipe, parseError, onChange, onCookMode
       </div>
 
       {tab === 'preview' ? (
-        <RecipePreview recipe={recipe} assets={assets} onSwitchToForm={() => setTab('form')} />
+        <RecipePreview
+          recipe={recipe}
+          assets={assets}
+          filePath={filePath}
+          onSwitchToForm={() => setTab('form')}
+        />
       ) : (
         <RecipeFormEditor
           recipe={recipe}
