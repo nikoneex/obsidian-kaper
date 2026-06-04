@@ -308,27 +308,40 @@
   border-radius: var(--radius-m);
 }
 
+/* Matches kaper web: a left-border accent, no fill, with a small uppercase
+   label coloured per type. Colours use Obsidian's theme palette so callouts
+   stay native to whatever theme is installed. */
 .kaper-preview__callout {
   margin-left: 38px;
-  padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 13px;
+  padding: 6px 12px;
+  border-left: 2.5px solid;
+  font-size: 12px;
   line-height: 1.5;
+  color: var(--text-muted);
 }
 
 .kaper-preview__callout strong {
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin-right: 4px;
 }
 
 .kaper-preview__callout--tip {
-  background: rgba(var(--callout-tip, 0, 122, 255), 0.1);
-  color: rgb(var(--callout-tip, 0, 122, 255));
+  border-color: var(--color-blue);
+}
+
+.kaper-preview__callout--tip strong {
+  color: var(--color-blue);
 }
 
 .kaper-preview__callout--warning {
-  background: rgba(var(--callout-warning, 233, 151, 63), 0.1);
-  color: rgb(var(--callout-warning, 233, 151, 63));
+  border-color: var(--color-orange);
+}
+
+.kaper-preview__callout--warning strong {
+  color: var(--color-orange);
 }
 
 /* ── Empty-state nudge (no ingredients & no steps) ─────────────────────── */

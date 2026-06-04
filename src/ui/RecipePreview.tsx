@@ -186,7 +186,7 @@ export function RecipePreview({ recipe, assets, filePath, onSwitchToForm }: Reci
                   )}
                   {step.warning && (
                     <div className="kaper-preview__callout kaper-preview__callout--warning">
-                      <strong>Note</strong> {step.warning}
+                      <strong>Heads up</strong> {step.warning}
                     </div>
                   )}
                   {step.image && (
