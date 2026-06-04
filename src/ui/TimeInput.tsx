@@ -47,8 +47,16 @@ interface TimeInputProps {
 }
 
 export function TimeInput({ value, onChange, id, disabled }: TimeInputProps) {
-  const [hoursText, setHoursText] = useState('');
-  const [minutesText, setMinutesText] = useState('');
+  // Seed from the incoming value so a saved time shows on first render; the
+  // effect below keeps the fields synced on later external changes.
+  const [hoursText, setHoursText] = useState(() => {
+    const { hours } = rollover(parseDuration(value ?? ''));
+    return hours ? String(hours) : '';
+  });
+  const [minutesText, setMinutesText] = useState(() => {
+    const { minutes } = rollover(parseDuration(value ?? ''));
+    return minutes ? String(minutes) : '';
+  });
   const wrapperRef = useRef<HTMLDivElement>(null);
   // Tracks the last value we emitted so external resyncs don't snap-rollover mid-typing.
   const emittedRef = useRef<string>(value ?? '');
