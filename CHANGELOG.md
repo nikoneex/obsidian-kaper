@@ -14,6 +14,7 @@ the plugin's recipe format and code style.
 ### Added
 
 - Cover images and per-step images now render in the recipe preview — resolved from vault paths, `_assets/` uploads, or remote URLs, and hidden gracefully when an image can't be loaded. (#4)
+- Cover image upload in the recipe form's Basics section.
 - Prep time now appears alongside cook time in the preview. (#4)
 
 ### Fixed
@@ -22,4 +23,5 @@ the plugin's recipe format and code style.
 
 ### Changed
 
+- Step tip and warning callouts restyled to match the Kaper web app; the warning label is now "Heads up".
 - README: documented that a remote `coverImage`/step image URL is fetched directly by Obsidian from a host outside Kaper's control, and added a Contributing section.
