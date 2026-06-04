@@ -140,7 +140,7 @@ Thank you for the interest — it genuinely means a lot. This plugin is a one-pe
 
 - **Open an issue first.** Discuss any new feature, architecture change, or major refactor before writing code. Uncoordinated PRs get closed.
 - **No AI-generated bulk.** Large, AI-generated PRs aren't accepted. Code should be human-readable, minimal, and match the style already here.
-- **Pass the checks.** Your branch should type-check and build clean (`npm run build`) and pass the tests (`npm test`) before you push.
+- **Pass the checks.** Before you push, run Prettier (`npm run format`), make sure the branch type-checks and builds clean (`npm run build`), and the tests pass (`npm test`).
 - **Keep it small.** One PR, one issue.
 
 Bug fixes and pre-discussed features are always welcome.
