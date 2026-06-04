@@ -150,22 +150,14 @@ describe('parseKaperYaml', () => {
     });
   });
 
-  it('parses _app metadata as a core field, not a capability', () => {
+  it('drops legacy _app and equipment keys (neither core nor capability)', () => {
     const result = parseKaperYaml(
-      'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []\nsteps: []\n_app:\n  isFavorite: true\n  lastCooked: "2026-04-01T12:00:00Z"',
+      'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []\nsteps: []\nequipment:\n  - whisk\n_app:\n  isFavorite: true',
     );
-    expect(result.recipe!._app).toEqual({
-      isFavorite: true,
-      lastCooked: '2026-04-01T12:00:00Z',
-    });
     expect(result.recipe!.capabilities.has('_app')).toBe(false);
-  });
-
-  it('preserves unknown _app keys forward-compatibly', () => {
-    const result = parseKaperYaml(
-      'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []\nsteps: []\n_app:\n  isFavorite: true\n  futureField: "abc"',
-    );
-    expect(result.recipe!._app?.['futureField']).toBe('abc');
+    expect(result.recipe!.capabilities.has('equipment')).toBe(false);
+    expect(Object.keys(result.recipe!)).not.toContain('_app');
+    expect(Object.keys(result.recipe!)).not.toContain('equipment');
   });
 });
 
@@ -185,19 +177,13 @@ describe('serializeKaperYaml', () => {
     expect(result).toContain('calories: 500');
   });
 
-  it('emits _app at the end when present', () => {
-    const recipe = makeRecipe({ _app: { isFavorite: true } });
-    const result = serializeKaperYaml(recipe);
-    expect(result).toContain('_app:');
-    expect(result).toContain('isFavorite: true');
-    // _app should follow `version:` in serialized order.
-    expect(result.indexOf('_app:')).toBeGreaterThan(result.indexOf('version:'));
-  });
-
-  it('omits _app entirely when it has no keys', () => {
-    const recipe = makeRecipe({ _app: {} });
-    const result = serializeKaperYaml(recipe);
+  it('sheds legacy _app and equipment keys on serialize', () => {
+    const parsed = parseKaperYaml(
+      'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []\nsteps: []\nequipment:\n  - whisk\n_app:\n  isFavorite: true',
+    );
+    const result = serializeKaperYaml(parsed.recipe!);
     expect(result).not.toContain('_app');
+    expect(result).not.toContain('equipment');
   });
 });
 

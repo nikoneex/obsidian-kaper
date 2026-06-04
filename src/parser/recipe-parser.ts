@@ -1,12 +1,5 @@
 import { load as parseYaml, dump as dumpYaml } from 'js-yaml';
-import {
-  IngredientAmount,
-  IngredientGroup,
-  RecipeAppMeta,
-  RecipeCore,
-  RecipeModel,
-  RecipeStep,
-} from './types';
+import { IngredientAmount, IngredientGroup, RecipeCore, RecipeModel, RecipeStep } from './types';
 
 const CORE_KEYS = new Set([
   'version',
@@ -15,14 +8,19 @@ const CORE_KEYS = new Set([
   'difficulty',
   'tags',
   'time',
-  'equipment',
   'ingredients',
   'steps',
   'source',
   'yield',
   'coverImage',
-  '_app',
 ]);
+
+// Keys from an earlier schema that are no longer part of the format. Recognised
+// so they're neither treated as forward-compatible capability blocks nor
+// round-tripped — a recipe still carrying them sheds them on its next save.
+// Mirrors the Kaper web app: `_app` metadata (favourites, last-cooked) now lives
+// in the vault's meta.json, and `equipment` is parked until rendered again.
+const DROPPED_KEYS = new Set(['_app', 'equipment']);
 
 export interface ParsedKaperBlock {
   recipe: RecipeModel | null;
@@ -55,16 +53,15 @@ export function parseKaperYaml(yamlSource: string): ParsedKaperBlock {
 }
 
 export function serializeKaperYaml(recipe: RecipeModel): string {
-  const { capabilities, version, _app, ...core } = recipe;
+  const { capabilities, version, ...core } = recipe;
   const capabilityData: Record<string, unknown> = {};
   capabilities.forEach((value, key) => {
     capabilityData[key] = value;
   });
-  // Order: core fields → capabilities → version → optional `_app`. Mirrors
-  // kaper web so files round-trip identically. `_app` is omitted entirely
-  // when empty so titles/servings-only recipes don't carry dead metadata.
-  const appBlock = _app && Object.keys(_app).length > 0 ? { _app } : {};
-  return dumpYaml({ ...core, ...capabilityData, version, ...appBlock }, { lineWidth: 100 });
+  // Order: core fields → capabilities → version. Mirrors the Kaper web app so
+  // files round-trip identically. Dropped keys (`_app`, `equipment`) are never
+  // in the model, so they fall out of the file here.
+  return dumpYaml({ ...core, ...capabilityData, version }, { lineWidth: 100 });
 }
 
 function validateCore(data: Record<string, unknown>): string | null {
@@ -101,19 +98,12 @@ function extractCore(data: Record<string, unknown>): RecipeCore {
     difficulty: data['difficulty'] as RecipeCore['difficulty'],
     tags: Array.isArray(data['tags']) ? (data['tags'] as string[]) : undefined,
     time: data['time'] as RecipeCore['time'],
-    equipment: Array.isArray(data['equipment']) ? (data['equipment'] as string[]) : undefined,
     ingredients: parseIngredients(data['ingredients'] as Record<string, unknown>),
     steps: parseSteps(data['steps'] as unknown[]),
     source: typeof data['source'] === 'string' ? data['source'] : undefined,
     yield: typeof data['yield'] === 'string' ? data['yield'] : undefined,
     coverImage: typeof data['coverImage'] === 'string' ? data['coverImage'] : undefined,
-    _app: extractAppMeta(data['_app']),
   };
-}
-
-function extractAppMeta(value: unknown): RecipeAppMeta | undefined {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
-  return value as RecipeAppMeta;
 }
 
 function parseIngredients(raw: Record<string, unknown>): IngredientGroup {
@@ -163,7 +153,7 @@ function parseSteps(raw: unknown[]): RecipeStep[] {
 function parseCapabilities(data: Record<string, unknown>): Map<string, unknown> {
   const capabilities = new Map<string, unknown>();
   for (const [key, value] of Object.entries(data)) {
-    if (CORE_KEYS.has(key)) continue;
+    if (CORE_KEYS.has(key) || DROPPED_KEYS.has(key)) continue;
     capabilities.set(key, value);
   }
   return capabilities;

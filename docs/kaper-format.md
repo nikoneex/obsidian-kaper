@@ -2,7 +2,7 @@
 
 A Kaper recipe is a standard `.md` file with two markers:
 
-1. **Frontmatter `kaper: true`** — identifies the file as a recipe.
+1. **A `kaper:` frontmatter key** — identifies the file as a recipe. The canonical value is a stable id, `kaper: r_<id>` (an `r_` prefix plus 10 URL-safe characters). The legacy value `kaper: true` is still accepted; the app stamps it with a generated id on the next save.
 2. **A fenced ` ```kaper ``` ` code block of YAML** — holds the structured recipe data.
 
 Everything outside the YAML block is freeform Markdown (notes, backstory, photos).
@@ -11,7 +11,7 @@ Everything outside the YAML block is freeform Markdown (notes, backstory, photos
 
 ````markdown
 ---
-kaper: true
+kaper: r_V1StGXR8Z5
 ---
 
 <!-- Optional freeform Markdown before the block (preamble) -->
@@ -28,9 +28,6 @@ time:
   prep: 10m
   cook: 20m
   total: 30m
-equipment:
-  - large pot
-  - frying pan
 coverImage: ./cover.jpg
 source: https://example.com/carbonara
 yield: 2 large bowls
@@ -97,7 +94,6 @@ This recipe has been in the family for years. Use guanciale if you can find it.
 | `time.prep` | string | Prep time (e.g. `"15m"`, `"1h"`). |
 | `time.cook` | string | Active cook time. |
 | `time.total` | string | Total elapsed time. |
-| `equipment` | string[] | Kitchen tools or appliances needed. |
 | `coverImage` | string | Relative path to a cover image (e.g. `"./cover.jpg"`). |
 | `source` | string | Attribution URL. |
 | `yield` | string | Human-readable yield description (e.g. `"12 cookies"`, `"1 loaf"`). |
@@ -176,7 +172,16 @@ wine:
   white: ~
 ```
 
-Core field names that are reserved and cannot be used as capability names: `version`, `title`, `servings`, `difficulty`, `tags`, `time`, `equipment`, `ingredients`, `steps`, `source`, `yield`, `coverImage`.
+Core field names that are reserved and cannot be used as capability names: `version`, `title`, `servings`, `difficulty`, `tags`, `time`, `ingredients`, `steps`, `source`, `yield`, `coverImage`. The dropped keys `_app` and `equipment` (below) are also reserved — they are recognised and shed, never treated as capabilities.
+
+## Dropped / Legacy Fields
+
+These keys were part of an earlier schema and are no longer active. They are recognised by the parser so they're neither treated as capability blocks nor round-tripped — a recipe still carrying them sheds them on its next save:
+
+| Field | Notes |
+|-------|-------|
+| `_app` | Per-recipe app metadata (favourites, last-cooked). Now stored in the vault's `meta.json`, not in the recipe file. |
+| `equipment` | Kitchen tools/appliances. Parked until the app renders it again. |
 
 ## Full Minimal Example
 
@@ -205,11 +210,11 @@ New recipes default to `Untitled.md` with collision-suffix (`Untitled 2.md`, `Un
 
 ### Recipe identification
 
-A `.md` file is treated as a recipe iff its frontmatter contains `kaper: true`:
+A `.md` file is treated as a recipe iff its frontmatter contains a non-empty `kaper:` value — the canonical stable id (`kaper: r_<id>`) or the legacy `kaper: true`:
 
 ````markdown
 ---
-kaper: true
+kaper: r_V1StGXR8Z5
 ---
 
 ```kaper
@@ -217,7 +222,7 @@ kaper: true
 ```
 ````
 
-Other frontmatter keys you add (`tags`, `aliases`, etc.) are preserved on save.
+A file marked `kaper: true` is stamped with a generated `r_<id>` on its next save; the id is then stable across renames and edits. Other frontmatter keys you add (`tags`, `aliases`, etc.) are preserved on save.
 
 ### Legacy `.kaper.md` files
 

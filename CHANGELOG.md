@@ -24,5 +24,6 @@ the plugin's recipe format and code style.
 
 ### Changed
 
+- Recipe schema aligned with the Kaper web app: the legacy `equipment` and app-managed `_app` keys are no longer part of the format and are shed on save. The format doc now documents the canonical stable `kaper: r_<id>` marker.
 - Step tip and warning callouts restyled to match the Kaper web app; the warning label is now "Heads up".
 - README: documented that a remote `coverImage`/step image URL is fetched directly by Obsidian from a host outside Kaper's control, and added a Contributing section.
