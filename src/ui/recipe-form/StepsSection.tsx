@@ -4,6 +4,7 @@ import { AssetIO } from '../../assets';
 import { RecipeStep } from '../../parser/types';
 import { TimeInput } from '../TimeInput';
 import { SectionProps } from './draft';
+import { pickAndSaveImage } from './image-upload';
 
 interface StepsSectionProps extends SectionProps {
   assets: AssetIO;
@@ -25,10 +26,7 @@ export function StepsSection({ draft, update, assets, filePath }: StepsSectionPr
   };
 
   const pickImage = async (si: number, input: HTMLInputElement) => {
-    const file = input.files?.[0];
-    input.value = ''; // let the same file be re-picked after a remove
-    if (!file) return;
-    const image = await assets.saveStepImage(filePath, file);
+    const image = await pickAndSaveImage(assets, filePath, input, 'step');
     if (!image) return;
     // Merge into the freshest draft, not the render-time snapshot.
     const current = draftRef.current.steps[si];

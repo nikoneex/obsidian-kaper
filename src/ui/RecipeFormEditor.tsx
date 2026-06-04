@@ -35,7 +35,7 @@ export function RecipeFormEditor({ recipe, assets, filePath, onChange }: RecipeF
         />
       </div>
 
-      <BasicsSection draft={draft} update={update} />
+      <BasicsSection draft={draft} update={update} assets={assets} filePath={filePath} />
       <IngredientsSection draft={draft} update={update} />
       <StepsSection draft={draft} update={update} assets={assets} filePath={filePath} />
       <DetailsSection draft={draft} update={update} />

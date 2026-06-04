@@ -47,17 +47,23 @@ export class AssetIO {
   }
 
   /**
-   * Writes a step image for the recipe at `filePath`, stamping the recipe's id
-   * first if needed, and returns the Kaper-root-relative path to store in
-   * `step.image`. Returns null if the file can't be resolved.
+   * Writes a recipe image — a step photo (`step`) or the recipe's cover
+   * (`cover`) — for the recipe at `filePath`, stamping the recipe's id first if
+   * needed, and returns the Kaper-root-relative path to store in `step.image` or
+   * `coverImage`. Returns null if the file can't be resolved. The `--step-` /
+   * `--cover-` filename prefix mirrors the Kaper web app's asset contract.
    */
-  async saveStepImage(filePath: string, file: File): Promise<string | null> {
+  async saveImage(
+    filePath: string,
+    file: File,
+    kind: 'step' | 'cover' = 'step',
+  ): Promise<string | null> {
     const tfile = this.app.vault.getAbstractFileByPath(filePath);
     if (!(tfile instanceof TFile)) return null;
 
     const recipeId = await ensureRecipeId(this.app, tfile);
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
-    const rootRelative = `_assets/${recipeId}--step-${imageToken()}.${ext}`;
+    const rootRelative = `_assets/${recipeId}--${kind}-${imageToken()}.${ext}`;
 
     await this.ensureFolder(this.toVaultPath('_assets'));
     const buffer = await file.arrayBuffer();
