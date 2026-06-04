@@ -7,7 +7,7 @@ import { generateKaperId } from './frontmatter';
  * resolved id. Idempotent — an existing id is read back, not replaced.
  *
  * This is the single point that guarantees an id when one is needed (image
- * upload) and the migration primitive for legacy `kaper: true` files (KPR-21).
+ * upload) and the migration primitive for legacy `kaper: true` files.
  * Uses `processFrontMatter` rather than string surgery so it stays safe against
  * the live CodeMirror document.
  */

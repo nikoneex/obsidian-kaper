@@ -12,7 +12,7 @@ export function hasKaperFrontmatter(content: string): boolean {
   return KAPER_VALUE_REGEX.test(match[1]);
 }
 
-/** URL-safe id, `r_` + 10 chars (~60 bits). Matches kaper web's KPR-13 scheme. */
+/** URL-safe id, `r_` + 10 chars (~60 bits). Matches the Kaper web app's id scheme. */
 export function generateKaperId(): string {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-';
   const bytes = crypto.getRandomValues(new Uint8Array(10));
@@ -37,7 +37,7 @@ export function extractKaperId(content: string): string | null {
  * existing id is preserved; legacy `kaper: true` (or any non-id value) is
  * upgraded to a fresh id; a missing marker or missing frontmatter is created.
  * This is how Obsidian-first recipes get an id and how `kaper: true` files
- * migrate (KPR-21).
+ * migrate.
  */
 export function ensureKaperId(content: string): string {
   if (extractKaperId(content)) return content;
