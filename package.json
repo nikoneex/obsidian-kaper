@@ -1,6 +1,6 @@
 {
   "name": "obsidian-kaper",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Edit and preview Kaper recipes inline as structured blocks.",
   "main": "main.js",
   "scripts": {
