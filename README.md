@@ -86,9 +86,11 @@ There's no sync layer to set up. Your files move through whatever you already us
 
 ## Privacy
 
-This plugin makes no network requests. The only outbound link is the **Cook Mode** button, which opens `kaper.me?from=obsidian` in your browser — and even that only carries the URL parameter telling the web app where you arrived from. Your recipe files never leave your vault.
+The plugin makes no network requests of its own. The only outbound link it adds is the **Cook Mode** button, which opens `kaper.me?from=obsidian` in your browser — and even that only carries the URL parameter telling the web app where you arrived from. Your recipe files never leave your vault.
 
 There is no Kaper server. We literally cannot read your files.
+
+**One exception, and it's yours to make.** You can point a recipe's `coverImage` or a step `image` at a remote `http(s)` URL if you like — and when the recipe renders, Obsidian will load that image straight from wherever it points. That request goes to a host we have no connection to, so whatever it logs or tracks is strictly between you and that server, not us. Use remote URLs only for sources you trust; to keep everything local, point images at vault-relative paths or use the form's image upload instead.
 
 ## Installation
 
@@ -131,6 +133,17 @@ Run tests:
 ```bash
 npm test
 ```
+
+## Contributing
+
+Thank you for the interest — it genuinely means a lot. This plugin is a one-person, spare-time project, so a few guidelines help me keep it clean and stable for everyone. If you'd like to contribute:
+
+- **Open an issue first.** Discuss any new feature, architecture change, or major refactor before writing code. Uncoordinated PRs get closed.
+- **No AI-generated bulk.** Large, AI-generated PRs aren't accepted. Code should be human-readable, minimal, and match the style already here.
+- **Pass the checks.** Before you push, run Prettier (`npm run format`), make sure the branch type-checks and builds clean (`npm run build`), and the tests pass (`npm test`).
+- **Keep it small.** One PR, one issue.
+
+Bug fixes and pre-discussed features are always welcome.
 
 ## License
 

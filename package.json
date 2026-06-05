@@ -1,6 +1,6 @@
 {
   "name": "obsidian-kaper",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Edit and preview Kaper recipes inline as structured blocks.",
   "main": "main.js",
   "scripts": {
@@ -8,6 +8,8 @@
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "test": "vitest run",
     "test:watch": "vitest",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"*.mjs\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"*.mjs\"",
     "version": "node version-bump.mjs && git add manifest.json versions.json"
   },
   "keywords": [
@@ -34,6 +36,7 @@
     "@types/react-dom": "^18.2.0",
     "esbuild": "^0.20.0",
     "obsidian": "^1.4.11",
+    "prettier": "^3.8.3",
     "tslib": "^2.6.0",
     "typescript": "^5.3.0",
     "vitest": "^1.2.0"

@@ -1,12 +1,33 @@
-import { Notice, Plugin, TFile, TFolder, normalizePath } from 'obsidian';
+import {
+  App,
+  Notice,
+  Platform,
+  Plugin,
+  PluginSettingTab,
+  Setting,
+  TFile,
+  TFolder,
+  normalizePath,
+} from 'obsidian';
+import { AssetIO } from './assets';
 import { kaperEditorExtension } from './editor-extension';
 import { FileLabelRewriter } from './file-label-rewriter';
-import { ensureKaperFrontmatter, hasKaperFrontmatter } from './frontmatter';
+import { ensureKaperId, hasKaperFrontmatter } from './frontmatter';
+import { ensureRecipeId, readRecipeId } from './recipe-id';
 import { serializeKaperYaml } from './parser/recipe-parser';
 import { RecipeModel } from './parser/types';
 
 const RIBBON_ICON = 'utensils-crossed';
 const DEFAULT_BASE = 'Untitled';
+
+export interface KaperSettings {
+  /** Vault-relative folder Kaper treats as its library root. Empty = vault root. */
+  kaperRootFolder: string;
+}
+
+const DEFAULT_SETTINGS: KaperSettings = {
+  kaperRootFolder: '',
+};
 
 function emptyRecipe(title = 'Untitled'): RecipeModel {
   return {
@@ -30,42 +51,95 @@ function joinPath(folder: string, name: string): string {
 
 export default class KaperPlugin extends Plugin {
   private labelRewriter: FileLabelRewriter | null = null;
+  settings: KaperSettings = { ...DEFAULT_SETTINGS };
 
-  onload() {
-    this.registerEditorExtension([kaperEditorExtension]);
+  async onload() {
+    await this.loadSettings();
+
+    const assets = new AssetIO(this.app, (rel) => this.kaperPath(rel));
+    this.registerEditorExtension([kaperEditorExtension(assets)]);
 
     this.labelRewriter = new FileLabelRewriter(this);
     this.app.workspace.onLayoutReady(() => this.labelRewriter?.start());
 
-    this.addRibbonIcon(RIBBON_ICON, 'Create recipe', () => {
-      void this.createRecipe();
-    });
+    this.addSettingTab(new KaperSettingTab(this.app, this));
 
-    this.addCommand({
-      id: 'create-recipe',
-      name: 'Create recipe',
-      callback: () => {
+    // Lazily migrate legacy `kaper: true` recipes to a stable id the first time
+    // they are opened. New/already-stamped files are skipped — no bulk rewrite.
+    this.registerEvent(
+      this.app.workspace.on('file-open', (file) => {
+        void this.migrateRecipeId(file);
+      }),
+    );
+
+    // Creating/converting produces form-editable content; the form is hidden on
+    // mobile (read-only), so skip these affordances there.
+    if (!Platform.isMobile) {
+      this.addRibbonIcon(RIBBON_ICON, 'Create recipe', () => {
         void this.createRecipe();
-      },
-    });
+      });
 
-    this.addCommand({
-      id: 'convert-to-recipe',
-      name: 'Convert current note to recipe',
-      checkCallback: (checking) => {
-        const file = this.app.workspace.getActiveFile();
-        if (!file || file.extension !== 'md') return false;
-        if (!checking) {
-          void this.convertToRecipe(file);
-        }
-        return true;
-      },
-    });
+      this.addCommand({
+        id: 'create-recipe',
+        name: 'Create recipe',
+        callback: () => {
+          void this.createRecipe();
+        },
+      });
+
+      this.addCommand({
+        id: 'convert-to-recipe',
+        name: 'Convert current note to recipe',
+        checkCallback: (checking) => {
+          const file = this.app.workspace.getActiveFile();
+          if (!file || file.extension !== 'md') return false;
+          if (!checking) {
+            void this.convertToRecipe(file);
+          }
+          return true;
+        },
+      });
+    }
   }
 
   onunload() {
     this.labelRewriter?.stop();
     this.labelRewriter = null;
+  }
+
+  async loadSettings(): Promise<void> {
+    this.settings = { ...DEFAULT_SETTINGS, ...(await this.loadData()) };
+  }
+
+  async saveSettings(): Promise<void> {
+    await this.saveData(this.settings);
+  }
+
+  /** Vault-relative Kaper root (`''` = vault root). Normalized, no trailing slash. */
+  kaperRoot(): string {
+    const raw = (this.settings.kaperRootFolder ?? '').trim();
+    if (!raw || raw === '/') return '';
+    return normalizePath(raw).replace(/\/+$/, '');
+  }
+
+  /**
+   * Joins a Kaper-root-relative path onto the configured root, returning a
+   * vault-relative path safe for the Vault/adapter APIs. When the root is the
+   * vault root (`''`), returns the relative path as-is — never a leading-slash
+   * path like `/_assets/...`, which Obsidian treats as invalid.
+   */
+  kaperPath(relative: string): string {
+    const root = this.kaperRoot();
+    return normalizePath(root ? `${root}/${relative}` : relative);
+  }
+
+  private async migrateRecipeId(file: TFile | null): Promise<void> {
+    if (!file || file.extension !== 'md') return;
+    const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
+    // Only touch kaper recipes that lack a stable id; skip everything else.
+    if (!fm || !('kaper' in fm)) return;
+    if (readRecipeId(this.app, file)) return;
+    await ensureRecipeId(this.app, file);
   }
 
   private async createRecipe(): Promise<void> {
@@ -75,7 +149,7 @@ export default class KaperPlugin extends Plugin {
     const fileName = this.uniqueFileName(folder.path, DEFAULT_BASE);
     const path = joinPath(folder.path, fileName);
 
-    const initialContent = ensureKaperFrontmatter(starterBlock());
+    const initialContent = ensureKaperId(starterBlock());
 
     const file = await this.app.vault.create(path, initialContent);
     const leaf = this.app.workspace.getLeaf(false);
@@ -88,7 +162,7 @@ export default class KaperPlugin extends Plugin {
     await this.app.vault.process(file, (data) => {
       let updated = data;
       if (!hasKaperFrontmatter(updated)) {
-        updated = ensureKaperFrontmatter(updated);
+        updated = ensureKaperId(updated);
         added.frontmatter = true;
       }
       if (!updated.includes('```kaper')) {
@@ -103,9 +177,7 @@ export default class KaperPlugin extends Plugin {
       new Notice('Already a recipe.');
       return;
     }
-    new Notice(
-      `Converted to recipe${added.block ? ' (starter block added)' : ''}.`,
-    );
+    new Notice(`Converted to recipe${added.block ? ' (starter block added)' : ''}.`);
   }
 
   private uniqueFileName(folderPath: string, base: string): string {
@@ -119,5 +191,47 @@ export default class KaperPlugin extends Plugin {
       i++;
     }
     return candidate;
+  }
+}
+
+class KaperSettingTab extends PluginSettingTab {
+  constructor(
+    app: App,
+    private readonly plugin: KaperPlugin,
+  ) {
+    super(app, plugin);
+  }
+
+  display(): void {
+    const { containerEl } = this;
+    containerEl.empty();
+
+    // On mobile the form editor isn't supported yet, so recipes are read-only.
+    // Surface that here only on mobile — it's irrelevant on desktop.
+    if (Platform.isMobile) {
+      new Setting(containerEl)
+        .setName('Mobile is read-only')
+        .setDesc(
+          "Editing isn't available on mobile yet — recipes show as a read-only " +
+            'preview. Open the vault on desktop to use the form editor.',
+        );
+    }
+
+    new Setting(containerEl)
+      .setName('Kaper vault root folder')
+      .setDesc(
+        'Folder (relative to this vault) that Kaper web/desktop opens as its ' +
+          'library. Leave empty to use the vault root. Step images are stored in ' +
+          '_assets/ under this folder — it must match the folder you open in Kaper.',
+      )
+      .addText((text) =>
+        text
+          .setPlaceholder('e.g. Recipes (empty = vault root)')
+          .setValue(this.plugin.settings.kaperRootFolder)
+          .onChange(async (value) => {
+            this.plugin.settings.kaperRootFolder = value;
+            await this.plugin.saveSettings();
+          }),
+      );
   }
 }

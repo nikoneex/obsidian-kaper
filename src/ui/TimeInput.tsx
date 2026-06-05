@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  FocusEvent,
-  KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ChangeEvent, FocusEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 interface Parts {
   hours: number;
@@ -47,8 +40,16 @@ interface TimeInputProps {
 }
 
 export function TimeInput({ value, onChange, id, disabled }: TimeInputProps) {
-  const [hoursText, setHoursText] = useState('');
-  const [minutesText, setMinutesText] = useState('');
+  // Seed from the incoming value so a saved time shows on first render; the
+  // effect below keeps the fields synced on later external changes.
+  const [hoursText, setHoursText] = useState(() => {
+    const { hours } = rollover(parseDuration(value ?? ''));
+    return hours ? String(hours) : '';
+  });
+  const [minutesText, setMinutesText] = useState(() => {
+    const { minutes } = rollover(parseDuration(value ?? ''));
+    return minutes ? String(minutes) : '';
+  });
   const wrapperRef = useRef<HTMLDivElement>(null);
   // Tracks the last value we emitted so external resyncs don't snap-rollover mid-typing.
   const emittedRef = useRef<string>(value ?? '');
@@ -130,7 +131,9 @@ export function TimeInput({ value, onChange, id, disabled }: TimeInputProps) {
         onKeyDown={onKeyDown}
         aria-label="Hours"
       />
-      <span className="kaper-time-input__unit" aria-hidden="true">hr</span>
+      <span className="kaper-time-input__unit" aria-hidden="true">
+        hr
+      </span>
       <input
         className="kaper-time-input__field"
         type="text"
@@ -143,7 +146,9 @@ export function TimeInput({ value, onChange, id, disabled }: TimeInputProps) {
         onKeyDown={onKeyDown}
         aria-label="Minutes"
       />
-      <span className="kaper-time-input__unit" aria-hidden="true">min</span>
+      <span className="kaper-time-input__unit" aria-hidden="true">
+        min
+      </span>
     </div>
   );
 }

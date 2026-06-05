@@ -1,4 +1,6 @@
+import { Platform } from 'obsidian';
 import { useState } from 'react';
+import { AssetIO } from '../assets';
 import { RecipeModel } from '../parser/types';
 import { RecipePreview } from './RecipePreview';
 import { RecipeFormEditor } from './RecipeFormEditor';
@@ -20,22 +22,25 @@ function writeTabPreference(filePath: string, tab: Tab): void {
 
 interface AppProps {
   filePath: string;
+  assets: AssetIO;
   recipe: RecipeModel | null;
   parseError?: string;
   onChange: (recipe: RecipeModel) => void;
   onCookMode: () => void;
 }
 
-export function App({ filePath, recipe, parseError, onChange, onCookMode }: AppProps) {
+export function App({ filePath, assets, recipe, parseError, onChange, onCookMode }: AppProps) {
   const defaultTab: Tab = isEmptyRecipe(recipe) ? 'form' : 'preview';
-  const [tab, setTabLocal] = useState<Tab>(
-    () => readTabPreference(filePath) ?? defaultTab,
-  );
+  const [tab, setTabLocal] = useState<Tab>(() => readTabPreference(filePath) ?? defaultTab);
 
   const setTab = (t: Tab) => {
     writeTabPreference(filePath, t);
     setTabLocal(t);
   };
+
+  // Mobile is preview-only for now: the form isn't built for small screens yet,
+  // and Cook mode's mobile site isn't available.
+  const mobile = Platform.isMobile;
 
   if (parseError) {
     return (
@@ -52,28 +57,35 @@ export function App({ filePath, recipe, parseError, onChange, onCookMode }: AppP
 
   return (
     <div className="kaper-view-content">
-      <div className="kaper-tabs">
-        <button
-          className={`kaper-tab ${tab === 'preview' ? 'is-active' : ''}`}
-          onClick={() => setTab('preview')}
-        >
-          Preview
-        </button>
-        <button
-          className={`kaper-tab ${tab === 'form' ? 'is-active' : ''}`}
-          onClick={() => setTab('form')}
-        >
-          Form
-        </button>
-        <button className="kaper-cook-mode-button" onClick={onCookMode}>
-          Cook mode
-        </button>
-      </div>
+      {!mobile && (
+        <div className="kaper-tabs">
+          <button
+            className={`kaper-tab ${tab === 'preview' ? 'is-active' : ''}`}
+            onClick={() => setTab('preview')}
+          >
+            Preview
+          </button>
+          <button
+            className={`kaper-tab ${tab === 'form' ? 'is-active' : ''}`}
+            onClick={() => setTab('form')}
+          >
+            Form
+          </button>
+          <button className="kaper-cook-mode-button" onClick={onCookMode}>
+            Cook mode
+          </button>
+        </div>
+      )}
 
-      {tab === 'preview' ? (
-        <RecipePreview recipe={recipe} onSwitchToForm={() => setTab('form')} />
+      {!mobile && tab === 'form' ? (
+        <RecipeFormEditor recipe={recipe} assets={assets} filePath={filePath} onChange={onChange} />
       ) : (
-        <RecipeFormEditor recipe={recipe} onChange={onChange} />
+        <RecipePreview
+          recipe={recipe}
+          assets={assets}
+          filePath={filePath}
+          onSwitchToForm={mobile ? undefined : () => setTab('form')}
+        />
       )}
     </div>
   );

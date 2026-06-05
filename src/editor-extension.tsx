@@ -3,6 +3,7 @@ import { Decoration, DecorationSet, EditorView, WidgetType } from '@codemirror/v
 import { editorInfoField, editorLivePreviewField } from 'obsidian';
 import { Root, createRoot } from 'react-dom/client';
 import { App as KaperApp } from './ui/App';
+import { AssetIO } from './assets';
 import { parseKaperYaml, serializeKaperYaml } from './parser/recipe-parser';
 import { RecipeModel } from './parser/types';
 
@@ -52,7 +53,10 @@ function hasKaperFrontmatter(doc: Text): boolean {
 }
 
 class KaperWidget extends WidgetType {
-  constructor(private readonly info: BlockInfo) {
+  constructor(
+    private readonly info: BlockInfo,
+    private readonly assets: AssetIO,
+  ) {
     super();
   }
 
@@ -105,6 +109,7 @@ class KaperWidget extends WidgetType {
     root.render(
       <KaperApp
         filePath={this.info.filePath}
+        assets={this.assets}
         recipe={parsed.recipe}
         parseError={parsed.parseError}
         onChange={(recipe) => this.handleEdit(recipe, view)}
@@ -124,7 +129,7 @@ class KaperWidget extends WidgetType {
   }
 }
 
-function buildDecorations(state: EditorState): DecorationSet {
+function buildDecorations(state: EditorState, assets: AssetIO): DecorationSet {
   if (!state.field(editorLivePreviewField, false)) return Decoration.none;
   if (!hasKaperFrontmatter(state.doc)) return Decoration.none;
 
@@ -138,7 +143,7 @@ function buildDecorations(state: EditorState): DecorationSet {
       range.blockFrom,
       range.blockTo,
       Decoration.replace({
-        widget: new KaperWidget({ ...range, source, filePath }),
+        widget: new KaperWidget({ ...range, source, filePath }, assets),
         block: true,
       }),
     );
@@ -146,21 +151,23 @@ function buildDecorations(state: EditorState): DecorationSet {
   return builder.finish();
 }
 
-const kaperField = StateField.define<DecorationSet>({
-  create(state) {
-    return buildDecorations(state);
-  },
-  update(decorations, tr) {
-    const wasLivePreview = tr.startState.field(editorLivePreviewField, false);
-    const isLivePreview = tr.state.field(editorLivePreviewField, false);
-    if (tr.docChanged || wasLivePreview !== isLivePreview) {
-      return buildDecorations(tr.state);
-    }
-    return decorations.map(tr.changes);
-  },
-  provide(field) {
-    return EditorView.decorations.from(field);
-  },
-});
+export function kaperEditorExtension(assets: AssetIO): Extension {
+  const kaperField = StateField.define<DecorationSet>({
+    create(state) {
+      return buildDecorations(state, assets);
+    },
+    update(decorations, tr) {
+      const wasLivePreview = tr.startState.field(editorLivePreviewField, false);
+      const isLivePreview = tr.state.field(editorLivePreviewField, false);
+      if (tr.docChanged || wasLivePreview !== isLivePreview) {
+        return buildDecorations(tr.state, assets);
+      }
+      return decorations.map(tr.changes);
+    },
+    provide(field) {
+      return EditorView.decorations.from(field);
+    },
+  });
 
-export const kaperEditorExtension: Extension = Prec.highest(kaperField);
+  return Prec.highest(kaperField);
+}

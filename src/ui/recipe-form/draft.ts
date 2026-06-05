@@ -16,6 +16,7 @@ export interface RecipeDraft {
   servings: number;
   difficulty: '' | 'easy' | 'medium' | 'hard';
   tags: string[];
+  coverImage: string;
   timePrep: string;
   timeCook: string;
   source: string;
@@ -57,6 +58,7 @@ export function recipeToDraft(recipe: RecipeModel): RecipeDraft {
     servings: recipe.servings,
     difficulty: recipe.difficulty ?? '',
     tags: recipe.tags ?? [],
+    coverImage: recipe.coverImage ?? '',
     timePrep: recipe.time?.prep ?? '',
     timeCook: recipe.time?.cook ?? '',
     source: recipe.source ?? '',
@@ -108,6 +110,7 @@ export function draftToRecipe(draft: RecipeDraft, original: RecipeModel): Recipe
     servings: draft.servings,
     difficulty: draft.difficulty || undefined,
     tags: tags.length ? tags : undefined,
+    coverImage: draft.coverImage || undefined,
     time: Object.keys(time).length ? (time as RecipeModel['time']) : undefined,
     source: draft.source || undefined,
     ingredients,

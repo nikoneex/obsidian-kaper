@@ -1,7 +1,11 @@
+import { useEffect, useState } from 'react';
+import { AssetIO } from '../assets';
 import { RecipeModel } from '../parser/types';
 
 interface RecipePreviewProps {
   recipe: RecipeModel;
+  assets: AssetIO;
+  filePath: string;
   onSwitchToForm?: () => void;
 }
 
@@ -41,21 +45,41 @@ const IconTimer = () => (
   </svg>
 );
 
-export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
+/**
+ * Renders an image that quietly removes itself if the source fails to load
+ * (missing file, unreachable URL), so a bad path shows nothing rather than a
+ * broken-image icon. Resets on `src` change so fixing the path re-attempts it.
+ */
+function PreviewImage({ src, className }: { src: string; className: string }) {
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [src]);
+  if (!src || failed) return null;
+  return <img className={className} src={src} alt="" onError={() => setFailed(true)} />;
+}
+
+export function RecipePreview({ recipe, assets, filePath, onSwitchToForm }: RecipePreviewProps) {
   // Filter empty groups so they don't render as blank sections.
-  const groupEntries = Object.entries(recipe.ingredients).filter(
-    ([, items]) => items.length > 0,
-  );
+  const groupEntries = Object.entries(recipe.ingredients).filter(([, items]) => items.length > 0);
   const hasMultipleGroups = groupEntries.length > 1;
   const hasIngredients = groupEntries.length > 0;
   const hasSteps = recipe.steps.length > 0;
   const isEmpty = !hasIngredients && !hasSteps;
   const showServings = recipe.servings > 0;
-  const showCookTime = !!recipe.time?.cook;
+  const times = [
+    recipe.time?.prep ? `Prep ${recipe.time.prep}` : null,
+    recipe.time?.cook ? `Cook ${recipe.time.cook}` : null,
+  ].filter(Boolean);
+  const hasTime = times.length > 0;
   const showDifficulty = !!recipe.difficulty;
 
   return (
     <article className="kaper-preview">
+      {recipe.coverImage && (
+        <PreviewImage
+          className="kaper-preview__cover"
+          src={assets.resolveImage(recipe.coverImage, filePath)}
+        />
+      )}
       <header className="kaper-preview__header">
         <h1 className="kaper-preview__title">{recipe.title}</h1>
 
@@ -66,18 +90,18 @@ export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
               {recipe.servings} servings
             </span>
           )}
-          {showCookTime && (
+          {hasTime && (
             <>
               {showServings && <span className="kaper-preview__meta-divider" aria-hidden="true" />}
               <span className="kaper-preview__meta-item">
                 <IconTimer />
-                {recipe.time?.cook}
+                {times.join(' · ')}
               </span>
             </>
           )}
           {showDifficulty && (
             <>
-              {(showServings || showCookTime) && (
+              {(showServings || hasTime) && (
                 <span className="kaper-preview__meta-divider" aria-hidden="true" />
               )}
               <span
@@ -111,9 +135,7 @@ export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
             <h2 className="kaper-preview__section-title">Ingredients</h2>
             {groupEntries.map(([groupName, items]) => (
               <div key={groupName} className="kaper-preview__ingredient-group">
-                {hasMultipleGroups && (
-                  <h3 className="kaper-preview__group-name">{groupName}</h3>
-                )}
+                {hasMultipleGroups && <h3 className="kaper-preview__group-name">{groupName}</h3>}
                 <ul className="kaper-preview__ingredient-list">
                   {items.map((item, idx) => (
                     <li
@@ -164,8 +186,14 @@ export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
                   )}
                   {step.warning && (
                     <div className="kaper-preview__callout kaper-preview__callout--warning">
-                      <strong>Note</strong> {step.warning}
+                      <strong>Heads up</strong> {step.warning}
                     </div>
+                  )}
+                  {step.image && (
+                    <PreviewImage
+                      className="kaper-preview__step-image"
+                      src={assets.resolveImage(step.image, filePath)}
+                    />
                   )}
                 </li>
               ))}
@@ -175,18 +203,20 @@ export function RecipePreview({ recipe, onSwitchToForm }: RecipePreviewProps) {
 
         {isEmpty && (
           <div className="kaper-preview__nudge">
-            <p className="kaper-preview__nudge-msg">
-              This recipe is empty. Add ingredients or steps in the Form tab — or write
-              freeform notes around the kaper block.
-            </p>
-            {onSwitchToForm && (
-              <button
-                type="button"
-                className="kaper-preview__nudge-btn"
-                onClick={onSwitchToForm}
-              >
-                Switch to Form
-              </button>
+            {onSwitchToForm ? (
+              <>
+                <p className="kaper-preview__nudge-msg">
+                  This recipe is empty. Add ingredients or steps in the Form tab — or write freeform
+                  notes around the kaper block.
+                </p>
+                <button type="button" className="kaper-preview__nudge-btn" onClick={onSwitchToForm}>
+                  Switch to Form
+                </button>
+              </>
+            ) : (
+              <p className="kaper-preview__nudge-msg">
+                This recipe is empty. Open it on desktop to add ingredients and steps.
+              </p>
             )}
           </div>
         )}

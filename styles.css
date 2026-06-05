@@ -76,6 +76,15 @@
   padding: var(--size-4-2) 0;
 }
 
+.kaper-preview__cover {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: var(--radius-m);
+  margin-bottom: 20px;
+}
+
 .kaper-preview__header {
   padding-bottom: 20px;
   border-bottom: 1px solid var(--background-modifier-border);
@@ -292,27 +301,47 @@
   margin: 0;
 }
 
+.kaper-preview__step-image {
+  display: block;
+  max-width: calc(100% - 38px);
+  margin: 12px 0 0 38px;
+  border-radius: var(--radius-m);
+}
+
+/* Matches kaper web: a left-border accent, no fill, with a small uppercase
+   label coloured per type. Colours use Obsidian's theme palette so callouts
+   stay native to whatever theme is installed. */
 .kaper-preview__callout {
   margin-left: 38px;
-  padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 13px;
+  padding: 6px 12px;
+  border-left: 2.5px solid;
+  font-size: 12px;
   line-height: 1.5;
+  color: var(--text-muted);
 }
 
 .kaper-preview__callout strong {
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin-right: 4px;
 }
 
 .kaper-preview__callout--tip {
-  background: rgba(var(--callout-tip, 0, 122, 255), 0.1);
-  color: rgb(var(--callout-tip, 0, 122, 255));
+  border-color: var(--color-blue);
+}
+
+.kaper-preview__callout--tip strong {
+  color: var(--color-blue);
 }
 
 .kaper-preview__callout--warning {
-  background: rgba(var(--callout-warning, 233, 151, 63), 0.1);
-  color: rgb(var(--callout-warning, 233, 151, 63));
+  border-color: var(--color-orange);
+}
+
+.kaper-preview__callout--warning strong {
+  color: var(--color-orange);
 }
 
 /* ── Empty-state nudge (no ingredients & no steps) ─────────────────────── */
@@ -802,6 +831,43 @@
 .kaper-form__add-step-btn:hover {
   border-color: var(--text-accent);
   color: var(--text-accent);
+}
+
+/* ── Step image upload ─────────────────────────────────────────────────── */
+
+.kaper-form__image-row {
+  display: flex;
+  align-items: center;
+  gap: var(--size-2-2);
+}
+
+.kaper-form__image-thumb {
+  max-width: 120px;
+  max-height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.kaper-form__image-add {
+  display: inline-block;
+  width: fit-content;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.1s, color 0.1s;
+}
+
+.kaper-form__image-add:hover {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+}
+
+.kaper-form__image-input {
+  display: none;
 }
 
 /* ── Steps ─────────────────────────────────────────────────────────────── */

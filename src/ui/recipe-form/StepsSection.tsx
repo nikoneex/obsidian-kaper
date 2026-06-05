@@ -1,16 +1,39 @@
+import { useRef } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
+import { AssetIO } from '../../assets';
 import { RecipeStep } from '../../parser/types';
 import { TimeInput } from '../TimeInput';
 import { SectionProps } from './draft';
+import { pickAndSaveImage } from './image-upload';
 
-export function StepsSection({ draft, update }: SectionProps) {
-  const addStep = () =>
-    update({ ...draft, steps: [...draft.steps, { title: '' }] });
+interface StepsSectionProps extends SectionProps {
+  assets: AssetIO;
+  filePath: string;
+}
+
+export function StepsSection({ draft, update, assets, filePath }: StepsSectionProps) {
+  // pickImage awaits the vault write, so its captured `draft` can go stale if the
+  // user edits during the upload. Read the latest draft from this ref at write-time.
+  const draftRef = useRef(draft);
+  draftRef.current = draft;
+
+  const addStep = () => update({ ...draft, steps: [...draft.steps, { title: '' }] });
 
   const updateStep = (si: number, step: RecipeStep) => {
     const steps = [...draft.steps];
     steps[si] = step;
     update({ ...draft, steps });
+  };
+
+  const pickImage = async (si: number, input: HTMLInputElement) => {
+    const image = await pickAndSaveImage(assets, filePath, input, 'step');
+    if (!image) return;
+    // Merge into the freshest draft, not the render-time snapshot.
+    const current = draftRef.current.steps[si];
+    if (!current) return; // step was removed mid-upload
+    const steps = [...draftRef.current.steps];
+    steps[si] = { ...current, image };
+    update({ ...draftRef.current, steps });
   };
 
   const removeStep = (si: number) =>
@@ -78,9 +101,7 @@ export function StepsSection({ draft, update }: SectionProps) {
                 rows={2}
                 placeholder="Instructions or note…"
                 value={step.note ?? ''}
-                onChange={(e) =>
-                  updateStep(si, { ...step, note: e.target.value || undefined })
-                }
+                onChange={(e) => updateStep(si, { ...step, note: e.target.value || undefined })}
               />
             </div>
 
@@ -92,9 +113,7 @@ export function StepsSection({ draft, update }: SectionProps) {
                   type="text"
                   placeholder="Optional tip…"
                   value={step.tip ?? ''}
-                  onChange={(e) =>
-                    updateStep(si, { ...step, tip: e.target.value || undefined })
-                  }
+                  onChange={(e) => updateStep(si, { ...step, tip: e.target.value || undefined })}
                 />
               </div>
               <div className="kaper-form__field">
@@ -109,6 +128,37 @@ export function StepsSection({ draft, update }: SectionProps) {
                   }
                 />
               </div>
+            </div>
+
+            <div className="kaper-form__field">
+              <label>Image</label>
+              {step.image ? (
+                <div className="kaper-form__image-row">
+                  <img
+                    className="kaper-form__image-thumb"
+                    src={assets.resolveUrl(step.image)}
+                    alt=""
+                  />
+                  <button
+                    type="button"
+                    className="kaper-form__remove-btn"
+                    onClick={() => updateStep(si, { ...step, image: undefined })}
+                    aria-label="Remove image"
+                  >
+                    ×
+                  </button>
+                </div>
+              ) : (
+                <label className="kaper-form__image-add">
+                  + Image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="kaper-form__image-input"
+                    onChange={(e) => void pickImage(si, e.currentTarget)}
+                  />
+                </label>
+              )}
             </div>
           </div>
         </div>
