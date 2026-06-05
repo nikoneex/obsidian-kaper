@@ -4,6 +4,12 @@ All notable changes to the Kaper plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] — 2026-06-05
+
+### Fixed
+
+- `minAppVersion` raised to `1.4.4` to match the `app.fileManager.processFrontMatter` API the plugin relies on (added in Obsidian 1.4.4). The previous `1.4.0` floor would let the plugin install on app versions where recipe-id stamping throws.
+
 ## [1.2.0] — 2026-06-03
 
 Thanks to [@bluelephant825](https://github.com/bluelephant825), whose
