@@ -4,6 +4,16 @@ All notable changes to the Kaper plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.2] — 2026-06-06
+
+### Fixed
+
+- Timer and animation-frame calls now go through `window` (`window.setTimeout`, `window.requestAnimationFrame`) for correct behaviour in popped-out windows.
+
+### Changed
+
+- Internal: added an ESLint guardrail (`eslint-plugin-obsidianmd` + `typescript-eslint`) that reproduces the Obsidian plugin-review checks and runs in CI, plus type-safety cleanups across the recipe-id, settings, and form code paths.
+
 ## [1.2.1] — 2026-06-05
 
 ### Fixed
