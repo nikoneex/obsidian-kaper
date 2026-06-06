@@ -61,7 +61,7 @@ export class FileLabelRewriter {
   private scheduleRewrite(): void {
     if (this.rewriteScheduled) return;
     this.rewriteScheduled = true;
-    requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
       this.rewriteScheduled = false;
       this.rewriteAll();
     });
@@ -122,6 +122,6 @@ export class FileLabelRewriter {
   private handleFocusOut(e: Event): void {
     const target = e.target as HTMLElement | null;
     if (!target?.matches?.(RENAMEABLE_SELECTOR)) return;
-    activeWindow.setTimeout(() => this.scheduleRewrite(), 50);
+    window.setTimeout(() => this.scheduleRewrite(), 50);
   }
 }

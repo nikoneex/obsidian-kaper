@@ -111,7 +111,7 @@ export function draftToRecipe(draft: RecipeDraft, original: RecipeModel): Recipe
     difficulty: draft.difficulty || undefined,
     tags: tags.length ? tags : undefined,
     coverImage: draft.coverImage || undefined,
-    time: Object.keys(time).length ? (time as RecipeModel['time']) : undefined,
+    time: Object.keys(time).length ? time : undefined,
     source: draft.source || undefined,
     ingredients,
     steps,

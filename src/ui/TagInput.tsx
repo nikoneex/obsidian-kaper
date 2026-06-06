@@ -104,7 +104,7 @@ export function TagInput({
 
   const onBlur = () => {
     // Delay so a dropdown option's mousedown can fire before we tear it down.
-    setTimeout(() => {
+    window.setTimeout(() => {
       setIsFocused(false);
       commitText();
     }, 150);

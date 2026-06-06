@@ -108,7 +108,8 @@ export default class KaperPlugin extends Plugin {
   }
 
   async loadSettings(): Promise<void> {
-    this.settings = { ...DEFAULT_SETTINGS, ...(await this.loadData()) };
+    const stored = (await this.loadData()) as Partial<KaperSettings> | null;
+    this.settings = { ...DEFAULT_SETTINGS, ...stored };
   }
 
   async saveSettings(): Promise<void> {
@@ -226,7 +227,7 @@ class KaperSettingTab extends PluginSettingTab {
       )
       .addText((text) =>
         text
-          .setPlaceholder('e.g. Recipes (empty = vault root)')
+          .setPlaceholder('E.g. Recipes (empty = vault root)')
           .setValue(this.plugin.settings.kaperRootFolder)
           .onChange(async (value) => {
             this.plugin.settings.kaperRootFolder = value;

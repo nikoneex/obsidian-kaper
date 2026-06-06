@@ -26,6 +26,9 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
+      - name: Lint (Obsidian review guardrail)
+        run: npm run lint
+
       - name: Run tests
         run: npm test
 

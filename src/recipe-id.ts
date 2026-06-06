@@ -13,7 +13,7 @@ import { generateKaperId } from './frontmatter';
  */
 export async function ensureRecipeId(app: App, file: TFile): Promise<string> {
   let resolved = '';
-  await app.fileManager.processFrontMatter(file, (fm) => {
+  await app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
     const existing = fm.kaper;
     if (typeof existing === 'string' && existing.startsWith('r_')) {
       resolved = existing;
@@ -27,6 +27,6 @@ export async function ensureRecipeId(app: App, file: TFile): Promise<string> {
 
 /** Reads the stable id from the metadata cache without writing. Null if absent. */
 export function readRecipeId(app: App, file: TFile): string | null {
-  const value = app.metadataCache.getFileCache(file)?.frontmatter?.kaper;
+  const value: unknown = app.metadataCache.getFileCache(file)?.frontmatter?.kaper;
   return typeof value === 'string' && value.startsWith('r_') ? value : null;
 }
