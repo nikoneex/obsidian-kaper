@@ -76,7 +76,7 @@ the plugin.
 | # | Category                                   | Files | Status | Enforced by |
 |---|--------------------------------------------|-------|--------|-------------|
 | 1 | Unsafe assignment of `any`                 | 3     | ✅ fixed | `@typescript-eslint/no-unsafe-assignment` (error) |
-| 2 | Replace `js-yaml`                           | 2     | ⚠️ tracked | `no-restricted-imports` (warn) |
+| 2 | Replace `js-yaml`                           | 2     | ✅ fixed | `no-restricted-imports` (error) |
 | 3 | Unsafe member access on `any`              | 2     | ✅ fixed | `@typescript-eslint/no-unsafe-member-access` (error) |
 | 4 | `window.requestAnimationFrame()`           | 1     | ✅ fixed | `obsidianmd/prefer-window-timers` (error) |
 | 5 | `window.setTimeout()` (vs `activeWindow`)  | 1     | ✅ fixed | `obsidianmd/prefer-window-timers` (error) |
@@ -84,10 +84,11 @@ the plugin.
 | 7 | README placeholder text                    | 1     | ✅ clean | manual review (README is fully written; not reproducible) |
 
 `npm run lint` is now wired into CI ([.github/workflows/ci.yml](../.github/workflows/ci.yml))
-and runs green: **0 errors, 1 warning**. The remaining warning is the `js-yaml`
-migration (#2) — it stays a `warn` rather than `error` so it surfaces on every
-run without blocking, because moving the parser to Obsidian's `parseYaml` /
-`stringifyYaml` touches the vitest mocks and is best done as its own change.
+and runs green: **0 errors, 0 warnings**. Item #2 is done — the parser uses
+Obsidian's built-in YAML engine via [yaml-engine.ts](../src/parser/yaml-engine.ts),
+js-yaml is gone from shipped code (devDependency only, for the test stub), and
+the `no-restricted-imports` rule is now an `error` to prevent regressions. See
+[spike-obsidian-yaml-parser.md](spike-obsidian-yaml-parser.md) for the analysis.
 
 The recommended `eslint-plugin-obsidianmd` ruleset enforces far more than the
 seven items above (e.g. `no-unsupported-api`, which caught the 1.4.4 issue in

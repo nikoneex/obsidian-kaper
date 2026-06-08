@@ -1,4 +1,4 @@
-import { load as parseYaml, dump as dumpYaml } from 'js-yaml';
+import { parseYamlSource, serializeYamlObject } from './yaml-engine';
 import { IngredientAmount, IngredientGroup, RecipeCore, RecipeModel, RecipeStep } from './types';
 
 const CORE_KEYS = new Set([
@@ -30,7 +30,7 @@ export interface ParsedKaperBlock {
 export function parseKaperYaml(yamlSource: string): ParsedKaperBlock {
   let raw: unknown;
   try {
-    raw = parseYaml(yamlSource);
+    raw = parseYamlSource(yamlSource);
   } catch (e) {
     return { recipe: null, parseError: `YAML parse error: ${(e as Error).message}` };
   }
@@ -61,7 +61,7 @@ export function serializeKaperYaml(recipe: RecipeModel): string {
   // Order: core fields → capabilities → version. Mirrors the Kaper web app so
   // files round-trip identically. Dropped keys (`_app`, `equipment`) are never
   // in the model, so they fall out of the file here.
-  return dumpYaml({ ...core, ...capabilityData, version }, { lineWidth: 100 });
+  return serializeYamlObject({ ...core, ...capabilityData, version });
 }
 
 function validateCore(data: Record<string, unknown>): string | null {
