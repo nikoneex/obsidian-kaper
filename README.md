@@ -80,7 +80,7 @@ Kaper recipe files are 100% portable. The same `.md` file works in:
 
 - This Obsidian plugin
 - The Kaper web app at [kaper.me](https://kaper.me)
-- The Kaper desktop app (coming soon)
+- The Kaper desktop app, in active development
 
 There's no sync layer to set up. Your files move through whatever you already use — iCloud, Dropbox, Syncthing, git, USB stick. Open the same folder anywhere.
 
@@ -96,11 +96,13 @@ There is no Kaper server. We literally cannot read your files.
 
 ### Community Plugins
 
-*Pending submission to the Obsidian Community Plugin registry.*
+1. Open **Settings → Community plugins**.
+2. Click **Browse**, search for **Kaper**, and click **Install**.
+3. Click **Enable**.
 
 ### Manual
 
-1. Download `main.js`, `manifest.json`, and `styles.css` from the latest GitHub release.
+1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest GitHub release](https://github.com/nikoneex/obsidian-kaper/releases/latest).
 2. Drop them into your vault's `.obsidian/plugins/kaper/` folder.
 3. Settings → Community plugins → enable **Kaper**.
 
