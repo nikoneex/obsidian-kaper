@@ -1,7 +1,20 @@
+/* ── Reading mode ──────────────────────────────────────────────────────── */
+
+/* Hide the frontmatter Properties panel in Reading mode for recipe docs so the
+   rendered recipe stands alone. Scoped via the `kaper-recipe-doc` class the
+   reading-mode processor tags onto the container — Live Preview is untouched and
+   keeps showing Properties as the natural editing affordance. `.metadata-*`
+   covers modern Properties; `.frontmatter` covers the legacy YAML table. */
+.markdown-preview-view.kaper-recipe-doc .metadata-container,
+.markdown-preview-view.kaper-recipe-doc .frontmatter,
+.markdown-reading-view.kaper-recipe-doc .metadata-container,
+.markdown-reading-view.kaper-recipe-doc .frontmatter {
+  display: none;
+}
+
 /* ── Block container ───────────────────────────────────────────────────── */
 
 .kaper-block {
-  padding: var(--size-4-8) var(--size-4-3) var(--size-4-4);
   background: var(--background-primary);
   color: var(--text-normal);
 }
@@ -91,12 +104,78 @@
   margin-bottom: 28px;
 }
 
+.kaper-preview__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
 .kaper-block .kaper-preview__title {
   font-size: 26px;
   font-weight: 700;
   letter-spacing: -0.3px;
   color: var(--text-normal);
   margin: 0 0 10px;
+}
+
+.kaper-preview__title-row .kaper-preview__title {
+  margin-bottom: 0;
+}
+
+/* On mobile the title can be long; let the Start Cooking button wrap under it
+   instead of being squeezed beside the title. */
+.is-mobile .kaper-preview__title-row {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Obsidian core indents `.markdown-rendered ol > li` by 3ch; drop it on mobile
+   for recipe steps so they line up with the rest of the preview. */
+.is-mobile .kaper-preview ol > li {
+  margin-inline-start: 0;
+}
+
+.kaper-preview__cook-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--size-2-3) var(--size-4-3);
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: var(--radius-m);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.kaper-preview__cook-btn:hover {
+  background: var(--interactive-accent-hover);
+}
+
+.kaper-preview__kaper-link {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--link-color, var(--text-accent));
+  text-decoration: var(--link-decoration, underline);
+  cursor: pointer;
+}
+
+.kaper-preview__kaper-link:hover {
+  color: var(--link-color-hover, var(--text-accent-hover));
+  text-decoration: var(--link-decoration-hover, underline);
+}
+
+/* Cook mode's web view is desktop-only, so hide its link on mobile. */
+.is-mobile .kaper-preview__kaper-link {
+  display: none;
 }
 
 .kaper-preview__meta {
@@ -311,37 +390,40 @@
 /* Matches kaper web: a left-border accent, no fill, with a small uppercase
    label coloured per type. Colours use Obsidian's theme palette so callouts
    stay native to whatever theme is installed. */
+/* Shared callout accent + label typography for both the preview and cook
+   surfaces. One source of truth for the tip/warning colors (via the inherited
+   --kaper-callout-accent custom property) so the two can't drift apart; each
+   surface keeps its own spacing/scale in its own rules. */
+.kaper-preview__callout--tip,
+.kaper-cook__callout--tip {
+  --kaper-callout-accent: var(--color-blue);
+}
+
+.kaper-preview__callout--warning,
+.kaper-cook__callout--warning {
+  --kaper-callout-accent: var(--color-orange);
+}
+
+.kaper-preview__callout-label,
+.kaper-cook__callout-label {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kaper-callout-accent);
+}
+
 .kaper-preview__callout {
   margin-left: 38px;
   padding: 6px 12px;
-  border-left: 2.5px solid;
+  border-left: 2.5px solid var(--kaper-callout-accent);
   font-size: 12px;
   line-height: 1.5;
   color: var(--text-muted);
 }
 
-.kaper-preview__callout strong {
+.kaper-preview__callout-label {
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   margin-right: 4px;
-}
-
-.kaper-preview__callout--tip {
-  border-color: var(--color-blue);
-}
-
-.kaper-preview__callout--tip strong {
-  color: var(--color-blue);
-}
-
-.kaper-preview__callout--warning {
-  border-color: var(--color-orange);
-}
-
-.kaper-preview__callout--warning strong {
-  color: var(--color-orange);
 }
 
 /* ── Empty-state nudge (no ingredients & no steps) ─────────────────────── */
@@ -917,4 +999,236 @@
 .kaper-form__callout-row {
   display: flex;
   gap: var(--size-4-2);
+}
+
+/* ── Cook mode ─────────────────────────────────────────────────────────── */
+
+/* Desktop side-panel view: let the cook UI own the full leaf, no view padding. */
+.view-content.kaper-cook-view {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.kaper-cook-view__empty {
+  padding: var(--size-4-6) var(--size-4-4);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.modal.kaper-cook-modal {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: var(--background-primary);
+  animation: kaper-cook-slide-up 0.22s ease-out;
+}
+
+@keyframes kaper-cook-slide-up {
+  from {
+    transform: translateY(2%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.kaper-cook-modal .modal-close-button {
+  display: none;
+}
+
+.kaper-cook-modal .modal-content {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.kaper-cook {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+.kaper-cook__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: calc(var(--size-4-3) + env(safe-area-inset-top, 0px)) var(--size-4-4)
+    var(--size-4-3);
+}
+
+.kaper-cook__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.kaper-cook__icon-btn:hover {
+  color: var(--text-normal);
+}
+
+.kaper-cook__title {
+  flex: 1;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kaper-cook__progress {
+  height: 4px;
+  margin: 0 var(--size-4-4);
+  background: var(--background-modifier-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.kaper-cook__progress-fill {
+  width: var(--kaper-progress, 0%);
+  height: 100%;
+  background: var(--interactive-accent);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.kaper-cook__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--size-4-6) var(--size-4-4);
+}
+
+.kaper-cook__kicker {
+  margin-bottom: var(--size-4-2);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.kaper-cook__step-title {
+  margin: 0 0 var(--size-4-4);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text-normal);
+}
+
+.kaper-cook__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--background-secondary);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.kaper-cook__chip svg {
+  color: var(--text-faint);
+}
+
+.kaper-cook__divider {
+  border: none;
+  border-top: 1px solid var(--background-modifier-border);
+  margin: var(--size-4-5) 0;
+}
+
+.kaper-cook__note {
+  margin: 0 0 var(--size-4-4);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-normal);
+}
+
+.kaper-cook__callout {
+  display: flex;
+  align-items: baseline;
+  gap: var(--size-4-3);
+  margin-bottom: var(--size-4-4);
+  padding: var(--size-2-3) 0 var(--size-2-3) var(--size-4-3);
+  border-left: 3px solid var(--kaper-callout-accent);
+}
+
+.kaper-cook__callout-label {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.kaper-cook__callout-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-normal);
+}
+
+.kaper-cook__image {
+  display: block;
+  width: 100%;
+  margin-top: var(--size-4-2);
+  border-radius: var(--radius-m);
+}
+
+.kaper-cook__nav {
+  display: flex;
+  gap: var(--size-4-3);
+  padding: var(--size-4-3) var(--size-4-4)
+    calc(var(--size-4-10) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.kaper-cook__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--size-4-3);
+  border: none;
+  border-radius: var(--radius-m);
+  box-shadow: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.kaper-cook__btn--prev {
+  flex: 1;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+}
+
+.kaper-cook__btn--prev:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.kaper-cook__btn--next {
+  flex: 1.6;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.kaper-cook__btn--next:hover {
+  background: var(--interactive-accent-hover);
 }
