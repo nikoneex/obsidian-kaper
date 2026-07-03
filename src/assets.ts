@@ -10,11 +10,19 @@ function imageToken(): string {
   return token;
 }
 
+/** Per-recipe asset folder, Kaper-root-relative. Mirrors the Kaper app's `recipeAssetDir`. */
+function recipeAssetDir(recipeId: string): string {
+  return `_assets/${recipeId}`;
+}
+
 /**
- * Reads and writes step images under the Kaper root's `_assets/` folder,
- * matching how the Kaper web app stores recipe assets. `step.image` stores the
- * Kaper-root-relative path `_assets/{recipeId}--step-{token}.ext`; resolution
- * just re-anchors that onto the configured root.
+ * Reads and writes recipe images under the Kaper root's `_assets/` folder,
+ * matching how the Kaper web app stores recipe assets. Images are stored under a
+ * per-recipe folder, with `step.image` / `coverImage` holding the
+ * Kaper-root-relative path `_assets/{recipeId}/{kind}-{token}.ext`; resolution
+ * just re-anchors that onto the configured root. Old flat paths
+ * (`_assets/{recipeId}--{kind}-{token}.ext`) written by earlier versions resolve
+ * the same way and are left in place — migrating them is the Kaper app's job.
  */
 export class AssetIO {
   constructor(
@@ -50,8 +58,9 @@ export class AssetIO {
    * Writes a recipe image — a step photo (`step`) or the recipe's cover
    * (`cover`) — for the recipe at `filePath`, stamping the recipe's id first if
    * needed, and returns the Kaper-root-relative path to store in `step.image` or
-   * `coverImage`. Returns null if the file can't be resolved. The `--step-` /
-   * `--cover-` filename prefix mirrors the Kaper web app's asset contract.
+   * `coverImage`. Returns null if the file can't be resolved. Images land in the
+   * recipe's `_assets/{recipeId}/` folder as `{kind}-{token}.ext`, mirroring the
+   * Kaper web app's asset contract.
    */
   async saveImage(
     filePath: string,
@@ -63,9 +72,11 @@ export class AssetIO {
 
     const recipeId = await ensureRecipeId(this.app, tfile);
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
-    const rootRelative = `_assets/${recipeId}--${kind}-${imageToken()}.${ext}`;
+    const dir = recipeAssetDir(recipeId);
+    const rootRelative = `${dir}/${kind}-${imageToken()}.${ext}`;
 
     await this.ensureFolder(this.toVaultPath('_assets'));
+    await this.ensureFolder(this.toVaultPath(dir));
     const buffer = await file.arrayBuffer();
     await this.app.vault.createBinary(this.toVaultPath(rootRelative), buffer);
     return rootRelative;
