@@ -10,7 +10,9 @@ import {
   normalizePath,
 } from 'obsidian';
 import { AssetIO } from './assets';
+import { COOK_VIEW_TYPE, KaperCookView } from './cook-view';
 import { kaperEditorExtension } from './editor-extension';
+import { registerKaperReadingMode } from './reading-mode';
 import { FileLabelRewriter } from './file-label-rewriter';
 import { ensureKaperId, hasKaperFrontmatter } from './frontmatter';
 import { ensureRecipeId, readRecipeId } from './recipe-id';
@@ -57,7 +59,9 @@ export default class KaperPlugin extends Plugin {
     await this.loadSettings();
 
     const assets = new AssetIO(this.app, (rel) => this.kaperPath(rel));
-    this.registerEditorExtension([kaperEditorExtension(assets)]);
+    this.registerEditorExtension([kaperEditorExtension(this.app, assets)]);
+    registerKaperReadingMode(this, assets);
+    this.registerView(COOK_VIEW_TYPE, (leaf) => new KaperCookView(leaf, assets));
 
     this.labelRewriter = new FileLabelRewriter(this);
     this.app.workspace.onLayoutReady(() => this.labelRewriter?.start());

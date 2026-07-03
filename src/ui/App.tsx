@@ -2,6 +2,7 @@ import { Platform } from 'obsidian';
 import { useState } from 'react';
 import { AssetIO } from '../assets';
 import { RecipeModel } from '../parser/types';
+import { isRecipeEmpty } from '../recipe-model';
 import { RecipePreview } from './RecipePreview';
 import { RecipeFormEditor } from './RecipeFormEditor';
 
@@ -30,7 +31,7 @@ interface AppProps {
 }
 
 export function App({ filePath, assets, recipe, parseError, onChange, onCookMode }: AppProps) {
-  const defaultTab: Tab = isEmptyRecipe(recipe) ? 'form' : 'preview';
+  const defaultTab: Tab = isRecipeEmpty(recipe) ? 'form' : 'preview';
   const [tab, setTabLocal] = useState<Tab>(() => readTabPreference(filePath) ?? defaultTab);
 
   const setTab = (t: Tab) => {
@@ -72,7 +73,7 @@ export function App({ filePath, assets, recipe, parseError, onChange, onCookMode
             Form
           </button>
           <button className="kaper-cook-mode-button" onClick={onCookMode}>
-            Cook mode
+            Start Cooking
           </button>
         </div>
       )}
@@ -91,11 +92,3 @@ export function App({ filePath, assets, recipe, parseError, onChange, onCookMode
   );
 }
 
-function isEmptyRecipe(recipe: RecipeModel | null | undefined): boolean {
-  if (!recipe) return true;
-  const ingredientCount = Object.values(recipe.ingredients).reduce(
-    (sum, list) => sum + list.length,
-    0,
-  );
-  return ingredientCount === 0 && recipe.steps.length === 0;
-}
