@@ -27,9 +27,7 @@ export function registerKaperReadingMode(plugin: Plugin, assets: AssetIO): void 
         assets={assets}
         recipe={parsed.recipe}
         parseError={parsed.parseError}
-        onStartCooking={() =>
-          openCookMode(plugin.app, parsed.recipe, assets, ctx.sourcePath)
-        }
+        onStartCooking={() => openCookMode(plugin.app, parsed.recipe, assets, ctx.sourcePath)}
       />,
     );
 

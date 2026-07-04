@@ -91,4 +91,3 @@ export function App({ filePath, assets, recipe, parseError, onChange, onCookMode
     </div>
   );
 }
-

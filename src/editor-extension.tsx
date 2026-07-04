@@ -115,9 +115,7 @@ class KaperWidget extends WidgetType {
         recipe={parsed.recipe}
         parseError={parsed.parseError}
         onChange={(recipe) => this.handleEdit(recipe, view)}
-        onCookMode={() =>
-          openCookMode(this.app, parsed.recipe, this.assets, this.info.filePath)
-        }
+        onCookMode={() => openCookMode(this.app, parsed.recipe, this.assets, this.info.filePath)}
       />,
     );
   }
