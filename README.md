@@ -13,13 +13,13 @@ A markdown file with a ` ```kaper ` block becomes a structured recipe — previe
 You already chose Obsidian because your notes belong on your disk. Recipes deserve the same treatment. Kaper turns plain `.md` files into a real recipe manager:
 
 - **Lives in your vault.** A recipe is a markdown file with `kaper: true` in frontmatter and a YAML block in the body. That's it. Anything outside the block is normal markdown — notes, intros, links, photos.
-- **Renders inline in Live Preview.** No separate panel, no modal. The kaper block becomes a rendered recipe right where it sits. Switch to Source mode to see the raw YAML any time.
+- **Renders inline in Live Preview and Reading view.** No separate panel, no modal. The kaper block becomes a rendered recipe right where it sits, in both editing and Reading mode. Switch to Source mode to see the raw YAML any time.
 - **Form editor for the YAML-shy.** Title, servings, prep/cook time, tags, ingredient groups (drag to reorder), steps with notes, tips, warnings, durations. Auto-saves on every change.
 - **Themed by Obsidian.** Uses your accent color and surface palette. Looks at home in any theme you've installed.
 
-## Cook Mode at kaper.me
+## Cook Mode
 
-When it's time to actually cook, click **Cook mode** in any rendered Kaper block. You'll land in [kaper.me](https://kaper.me?from=obsidian) with that recipe loaded in big-text, hands-free, gesture-friendly view. No copy-paste. No app switch. Just the recipe ready to follow at the stove.
+When it's time to actually cook, click **Start Cooking** on any rendered recipe. Kaper steps you through the recipe one step at a time, right in Obsidian — a full-screen sheet on mobile, a dockable side panel on desktop — with a progress bar and arrow-key navigation. Nothing leaves your vault to get there. If you'd rather use the full Kaper web app instead, **View on Kaper** opens the same recipe at [kaper.me](https://kaper.me?from=obsidian).
 
 <p align="center"><img src="assets/demo.gif" alt="Editing a recipe" width="500"></p>
 
@@ -69,9 +69,9 @@ Required keys: `title`, `servings`, `ingredients`, `steps`. Everything else is o
 ## Use it
 
 - **New recipe** — click the utensils icon in the left ribbon, or run **Kaper: Create recipe** from the command palette.
-- **Convert a note** — run **Kaper: Convert current note to Kaper recipe** to add the frontmatter and starter block to any open `.md` file.
+- **Convert a note** — run **Kaper: Convert current note to recipe** to add the frontmatter and starter block to any open `.md` file.
 - **Edit** — open any kaper file in Live Preview. Toggle **Preview** and **Form** at the top of the rendered block.
-- **Cook** — click **Cook mode** to launch [kaper.me](https://kaper.me?from=obsidian).
+- **Cook** — click **Start Cooking** for the in-app, step-by-step view, or **View on Kaper** to cook from the web app instead.
 - **Raw YAML** — switch to Source mode (top-right pane icon).
 
 ## Works with the rest of Kaper
@@ -86,7 +86,7 @@ There's no sync layer to set up. Your files move through whatever you already us
 
 ## Privacy
 
-The plugin makes no network requests of its own. The only outbound link it adds is the **Cook Mode** button, which opens `kaper.me?from=obsidian` in your browser — and even that only carries the URL parameter telling the web app where you arrived from. Your recipe files never leave your vault.
+The plugin makes no network requests of its own. Cook Mode runs entirely in-app — nothing is sent anywhere to step through a recipe. The only outbound link it adds is the **View on Kaper** button, which opens `kaper.me?from=obsidian` in your browser — and even that only carries the URL parameter telling the web app where you arrived from. Your recipe files never leave your vault.
 
 There is no Kaper server. We literally cannot read your files.
 
@@ -113,7 +113,8 @@ Obsidian's editor is built on [CodeMirror 6](https://codemirror.net/). This plug
 Open-source pieces under the hood:
 
 - **[@dnd-kit/sortable](https://dndkit.com/)** — accessible drag-and-drop for ingredient reordering (keyboard, touch, mouse).
-- **[js-yaml](https://github.com/nodeca/js-yaml)** — YAML parsing and round-trip serialization.
+
+YAML parsing and serialization go through Obsidian's own built-in engine (`parseYaml`/`stringifyYaml`) rather than a bundled library.
 
 ## Development
 
