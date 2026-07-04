@@ -1017,7 +1017,9 @@
   font-size: 14px;
 }
 
-.modal.kaper-cook-modal {
+/* Shared full-screen sheet frame for React-hosting modals (Cook mode, the
+   mobile recipe form). Per-modal classes layer content styling on top. */
+.modal.kaper-sheet-modal {
   width: 100vw;
   height: 100vh;
   max-width: 100vw;
@@ -1027,10 +1029,10 @@
   border: none;
   border-radius: 0;
   background: var(--background-primary);
-  animation: kaper-cook-slide-up 0.22s ease-out;
+  animation: kaper-sheet-slide-up 0.22s ease-out;
 }
 
-@keyframes kaper-cook-slide-up {
+@keyframes kaper-sheet-slide-up {
   from {
     transform: translateY(2%);
     opacity: 0;
@@ -1041,15 +1043,16 @@
   }
 }
 
-.kaper-cook-modal .modal-close-button {
-  display: none;
-}
-
-.kaper-cook-modal .modal-content {
+.kaper-sheet-modal .modal-content {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+/* Cook mode has its own in-bar exit; hide the default close button there. */
+.kaper-cook-modal .modal-close-button {
+  display: none;
 }
 
 .kaper-cook {

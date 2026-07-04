@@ -1,8 +1,9 @@
-import { App, Modal, Notice, Platform } from 'obsidian';
-import { Root, createRoot } from 'react-dom/client';
+import { App, Notice, Platform } from 'obsidian';
+import { ReactNode } from 'react';
 import { AssetIO } from './assets';
 import { COOK_VIEW_TYPE } from './cook-view';
 import { RecipeModel } from './parser/types';
+import { ReactModal } from './react-modal';
 import { hasSteps } from './recipe-model';
 import { CookMode } from './ui/CookMode';
 
@@ -11,9 +12,7 @@ import { CookMode } from './ui/CookMode';
  * UI lives in the React {@link CookMode} component; this just owns the modal
  * shell and the React root's lifetime.
  */
-class CookModeModal extends Modal {
-  private root: Root | null = null;
-
+class CookModeModal extends ReactModal {
   constructor(
     app: App,
     private readonly recipe: RecipeModel,
@@ -23,24 +22,20 @@ class CookModeModal extends Modal {
     super(app);
   }
 
-  onOpen(): void {
-    this.modalEl.addClass('kaper-cook-modal');
-    this.root = createRoot(this.contentEl);
-    this.root.render(
+  protected modalClasses(): string[] {
+    return ['kaper-sheet-modal', 'kaper-cook-modal'];
+  }
+
+  protected renderContent(): ReactNode {
+    return (
       <CookMode
         recipe={this.recipe}
         assets={this.assets}
         filePath={this.filePath}
         onExit={() => this.close()}
         onBack={() => this.close()}
-      />,
+      />
     );
-  }
-
-  onClose(): void {
-    this.root?.unmount();
-    this.root = null;
-    this.contentEl.empty();
   }
 }
 
