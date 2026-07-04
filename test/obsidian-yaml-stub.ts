@@ -14,3 +14,8 @@ export function parseYaml(src: string): unknown {
 export function stringifyYaml(obj: unknown): string {
   return dump(obj);
 }
+
+// Minimal runtime stand-in so modules that `instanceof TFile` (e.g.
+// src/recipe-file.ts) can be imported by unit tests that only exercise their
+// pure functions. Not a functional TFile.
+export class TFile {}
