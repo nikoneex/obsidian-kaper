@@ -1,8 +1,10 @@
 # Obsidian Plugin Guidelines
 
 Distilled from the official [Obsidian developer docs](https://docs.obsidian.md/Plugins/Getting+started/Build+a+plugin)
-(`obsidianmd/obsidian-developer-docs`, pulled 2026-07-03), organized around Kaper's
-actual surfaces: recipe editing/reading (`editor-extension.tsx`, `reading-mode.tsx`,
+and the [Plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines)
+submission checklist (`obsidianmd/obsidian-developer-docs`, pulled 2026-07-03 /
+2026-07-05), organized around Kaper's actual surfaces: recipe editing/reading
+(`editor-extension.tsx`, `reading-mode.tsx`,
 `RecipePreview.tsx`), cook mode (`cook-mode.tsx`, `cook-view.tsx`, `ui/CookMode.tsx`),
 the recipe form (`ui/recipe-form/`), and vault/frontmatter I/O (`recipe-file.ts`,
 `frontmatter.ts`, `recipe-model.ts`).
@@ -55,11 +57,27 @@ explicit cleanup in the owning `onClose`/`onunload`.
 **Never reference the global `app`** (or `window.app`) — it's a debug-only escape
 hatch that may be removed. Always use `this.app` from the plugin/view instance.
 
+**Keep the console to real errors.** The developer console should default to
+showing only failures — `console.error` for a genuine problem (e.g. `AssetIO`'s
+save failure in `image-upload.ts`) is fine; don't leave `console.log`/`console.debug`
+instrumentation in shipped code.
+
 One hard exception to "clean everything up": **never detach workspace leaves in
 `onunload`**. Obsidian reinitializes open leaves at their original position on
 plugin update — detaching them on unload breaks that. Leaf cleanup belongs in the
 code path that closes the leaf intentionally (e.g. a "close cook mode" action), not
 in the plugin's own unload.
+
+**Not everything needs explicit removal.** A listener attached to an element that
+is itself wholly discarded (never reused, never outlives the code that created it)
+doesn't need a paired `removeEventListener` — the listener goes with it. This is
+why `KaperWidget.toDOM()` in `editor-extension.tsx` calls
+`container.addEventListener('focusin', ...)` directly, with no cleanup in
+`destroy(dom)`: `container` is the widget's own throwaway root, destroyed as a
+unit by CM6. The distinction that matters: a listener on a **long-lived** target
+the code doesn't own outright (`window`, `document`, `activeWindow`) always needs
+explicit teardown — see [§14](#14-react-integration) for how that looks from a
+React component, which has no `registerDomEvent` of its own to lean on.
 
 ## 2. Vault I/O
 
@@ -194,6 +212,30 @@ Performance rule directly relevant to any ingredient/step decoration in Live
 Preview: walk `view.visibleRanges` in a view plugin, not the full syntax tree on
 every keystroke. The docs call out full-document walks on every transaction as the
 explicit performance mistake to avoid.
+
+### Reconfiguring an extension after registration
+
+`registerEditorExtension([...])` in `onload()` covers the common case — the
+extension array itself never needs to change again. If a *setting* ever needs to
+toggle the editor extension's behavior at runtime (e.g. a future "disable Live
+Preview widget" option), don't re-register; **reconfigure the existing
+registration**:
+```ts
+// Keep a reference to the same array Obsidian was given...
+private editorExtension: Extension[] = [];
+
+// ...onload(): this.registerEditorExtension(this.editorExtension);
+
+updateExtension() {
+  this.editorExtension.length = 0; // empty in place — don't replace the reference
+  this.editorExtension.push(kaperEditorExtension(this.app, this.assets));
+  this.app.workspace.updateOptions(); // flushes the change to every open editor
+}
+```
+Replacing `this.editorExtension` with a new array instead of emptying it in place
+means Obsidian is still holding the old reference — `updateOptions()` would flush
+nothing. Not currently exercised (Kaper's extension is static after `onload()`),
+but the pattern to reach for the moment that changes.
 
 ## 5. Reading-mode rendering
 
@@ -342,8 +384,13 @@ tab in the repo, but these rules apply the moment one is added).
   - No top-level heading repeating the plugin name/"Settings" — the sidebar tab
     title already names it.
   - Group headings only once there are 2+ sections; leave general settings
-    unheaded at the top.
+    unheaded at the top (Kaper's `KaperSettingTab` currently has two ungrouped
+    rows and correctly has no heading at all yet).
   - Don't repeat "settings" in a heading ("Advanced", not "Advanced settings").
+  - **When a group heading is needed, use `new Setting(containerEl).setHeading()`**
+    (a `Setting` with no control, styled as a heading) — never a raw `createEl('h1'
+    | 'h2', ...)`. This keeps heading typography consistent with every other
+    settings tab in the app, which a hand-built heading element won't match.
   - Save on every change, not a submit button.
   - One control per row — never combine two inputs in one `Setting`; collect
     multi-field input in a `Modal` instead.
@@ -361,6 +408,20 @@ tab in the repo, but these rules apply the moment one is added).
   and snippets can target/override. **Use Obsidian's CSS variables** (e.g.
   `var(--background-modifier-border)`, `var(--text-muted)`) instead of hardcoded
   colors — this is explicitly what lets a plugin look correct under any theme.
+  - **Narrow exception**: a per-render *numeric* value with nowhere else to live
+    (drag position, a progress percentage) can cross into `style` as long as it's
+    the value alone, set through a custom property, with every real style rule
+    still living in `styles.css`. `CookMode.tsx`'s progress bar is the pattern:
+    ```tsx
+    <div style={{ '--kaper-progress': `${progress}%` } as CSSProperties} />
+    ```
+    ```css
+    .kaper-cook__progress-fill { width: var(--kaper-progress, 0%); }
+    ```
+    This is not the same thing the rule prohibits — no color, spacing, or theme
+    value is hardcoded, only a computed number the stylesheet can't derive on its
+    own. Reach for it only when the value is truly per-instance/per-render;
+    anything static belongs in a class, full stop.
 - `element.toggleClass('some-class', condition)` for conditional styling instead
   of manual add/remove or inline style toggling.
 - **Icons**: choose names from the Lucide set (lucide.dev), up to the version
@@ -455,6 +516,23 @@ custom view/component:
   a `createContext<App | undefined>(undefined)`, a `<AppContext.Provider
   value={this.app}>` at the mount site, and a `useApp()` hook wrapping
   `useContext`. Components then call `useApp()` to reach `app.vault` etc.
+- **A React component has no `registerDomEvent`** — that method exists on
+  `Component`/`Plugin` instances, not on a function component. For a listener a
+  component adds to a target it doesn't own outright and that outlives the
+  component (`window`, `document`, `activeWindow` — anything *not* an element the
+  component created and controls the lifetime of), the React-idiomatic equivalent
+  is a `useEffect` whose cleanup function removes it:
+  ```tsx
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { /* ... */ };
+    activeWindow.addEventListener('keydown', onKey);
+    return () => activeWindow.removeEventListener('keydown', onKey);
+  }, [/* deps */]);
+  ```
+  `CookMode.tsx`'s arrow-key navigation is exactly this. Contrast with a listener
+  on a node the component itself created and unmounts as a unit — that one can
+  skip the explicit cleanup (see the "not everything needs explicit removal" note
+  in [§1](#1-plugin-lifecycle)).
 
 ## 15. Load-time performance
 
