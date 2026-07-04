@@ -4,6 +4,21 @@ All notable changes to the Kaper plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] — 2026-07-04
+
+### Added
+
+- **In-app Cook Mode.** Step through a recipe one step at a time without leaving Obsidian — a full-screen sheet on mobile, a dockable side panel on desktop — with a progress bar and ← / → arrow-key navigation. Replaces the previous behaviour of opening kaper.me in the browser.
+- **Reading-mode rendering.** Recipes now render as a read-only preview in Reading view, not just Live Preview, with a "Start Cooking" action there too.
+- **"View on Kaper" link.** The recipe preview links out to the full Kaper web app at kaper.me, for anyone who still wants the browser experience.
+- Recipe images now save under a per-recipe `_assets/{recipeId}/` folder, matching the Kaper web app's layout. Existing flat-named images from earlier versions still resolve correctly.
+
+### Changed
+
+- Internal: consolidated duplicated icon/callout/image-handling code across the preview and Cook mode into shared components; recipe "is this empty / does it have steps" logic is now a single set of helpers instead of being re-derived per call site.
+- Internal: the Kaper tab strip now follows Obsidian's `--tab-*` theme variables, so themes that restyle tabs apply to Kaper's Preview/Form tabs too.
+- Internal: the recipe parser's YAML round-trip now goes through Obsidian's own `parseYaml`/`stringifyYaml` instead of a bundled `js-yaml` dependency.
+
 ## [1.2.2] — 2026-06-06
 
 ### Fixed
