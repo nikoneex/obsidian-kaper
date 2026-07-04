@@ -49,18 +49,21 @@
   margin-bottom: var(--size-4-3);
 }
 
+/* Consumes Obsidian's --tab-* theme variables so themes that restyle tabs flow
+   into ours; fallbacks preserve our previous hardcoded look. */
 .kaper-tab {
   padding: var(--size-2-2) var(--size-4-2);
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
-  color: var(--text-muted);
+  color: var(--tab-text-color, var(--text-muted));
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--tab-font-size, 13px);
+  font-weight: var(--tab-font-weight, inherit);
 }
 
 .kaper-tab.is-active {
-  color: var(--text-normal);
+  color: var(--tab-text-color-focused-active-current, var(--text-normal));
   border-bottom-color: var(--interactive-accent);
 }
 
