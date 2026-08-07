@@ -90,6 +90,18 @@ function IngredientRow({
         }
       />
       <input
+        className="kaper-form__input kaper-form__input--note"
+        type="text"
+        placeholder="e.g. finely chopped"
+        value={ingredient.note ?? ''}
+        onChange={(e) =>
+          onUpdate(groupIndex, ingredientIndex, {
+            ...ingredient,
+            note: e.target.value || undefined,
+          })
+        }
+      />
+      <input
         className="kaper-form__input kaper-form__input--sub"
         type="text"
         placeholder="or…"

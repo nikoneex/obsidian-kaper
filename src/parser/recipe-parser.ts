@@ -124,6 +124,7 @@ function parseIngredientAmount(raw: unknown): IngredientAmount {
     amount: typeof item['amount'] === 'number' ? item['amount'] : 0,
     unit: typeof item['unit'] === 'string' ? item['unit'] : '',
     name: typeof item['name'] === 'string' ? item['name'] : '',
+    note: typeof item['note'] === 'string' ? item['note'] : undefined,
     sub: typeof item['sub'] === 'string' ? item['sub'] : undefined,
     optional: typeof item['optional'] === 'boolean' ? item['optional'] : undefined,
   };

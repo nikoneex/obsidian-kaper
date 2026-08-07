@@ -29,7 +29,14 @@ export function IngredientSection({ ingredients }: { ingredients: IngredientGrou
                 <span className="kaper-preview__ingredient-amount">
                   {item.amount} {item.unit}
                 </span>
-                <span className="kaper-preview__ingredient-name">{item.name}</span>
+                <span className="kaper-preview__ingredient-name">
+                  {item.name}
+                  {/* Nested rather than a sibling so the comma sits tight against the
+                      name — the list item is a flex row with a gap between children. */}
+                  {item.note && (
+                    <span className="kaper-preview__ingredient-note">, {item.note}</span>
+                  )}
+                </span>
                 {item.optional && <i>(optional)</i>}
                 {item.sub && <span className="kaper-preview__ingredient-sub">or {item.sub}</span>}
               </li>

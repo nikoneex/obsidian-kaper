@@ -2,6 +2,9 @@ export interface IngredientAmount {
   amount: number;
   unit: string;
   name: string;
+  /** Prep or state detail shown after the name, e.g. "finely chopped". */
+  note?: string;
+  /** Substitution hint, rendered with a leading "or". */
   sub?: string;
   optional?: boolean;
 }

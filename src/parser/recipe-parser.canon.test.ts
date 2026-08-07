@@ -191,7 +191,7 @@ describe('canon: exact serialized output (locks key order, quoting, indentation,
       time: { prep: '10m', cook: '20m' },
       tags: ['italian', 'pasta'],
       ingredients: {
-        sauce: [{ amount: 100, unit: 'g', name: 'guanciale', sub: 'pancetta' }],
+        sauce: [{ amount: 100, unit: 'g', name: 'guanciale', note: 'diced', sub: 'pancetta' }],
       },
       steps: [{ title: 'Boil water', duration: '5m', note: 'salt heavily' }],
       source: 'nonna',
@@ -205,6 +205,7 @@ describe('canon: exact serialized output (locks key order, quoting, indentation,
           - amount: 100
             unit: g
             name: guanciale
+            note: diced
             sub: pancetta
       steps:
         - title: Boil water
