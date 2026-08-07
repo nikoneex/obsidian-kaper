@@ -39,14 +39,14 @@ ingredients:
     - amount: 100
       unit: g
       name: guanciale
-      sub: or use pancetta
+      sub: pancetta
     - amount: 2
       unit: ""
       name: egg yolks
     - amount: 50
       unit: g
       name: Pecorino Romano
-      sub: or use Parmesan
+      sub: Parmesan
       optional: false
 steps:
   - title: Boil the pasta
@@ -112,7 +112,8 @@ ingredients:
     - amount: 2
       unit: ""
       name: egg yolks
-      sub: or use 1 whole egg
+      note: at room temperature
+      sub: 1 whole egg
       optional: true
 ```
 
@@ -124,8 +125,9 @@ A recipe with a single group can use any name (e.g. `Main`, `Ingredients`, or th
 |-------|------|----------|-------------|
 | `amount` | number | yes | Numeric quantity. Used for math-based scaling. Use `0` for uncountable items. |
 | `unit` | string | yes | Unit of measure (e.g. `"g"`, `"cup"`, `"tbsp"`). Use `""` for countable items with no unit. |
-| `name` | string | yes | Ingredient name. Referenced by steps via the `ingredients` list. |
-| `sub` | string | no | Substitution hint (e.g. `"or use pancetta"`). |
+| `name` | string | yes | Ingredient name. Referenced by steps via the `ingredients` list. Keep prep detail out of this field so steps can match it. |
+| `note` | string | no | Prep or state detail (e.g. `"finely chopped"`, `"room temperature"`). Rendered after the name as `Walnuts, finely chopped`. |
+| `sub` | string | no | Substitution hint (e.g. `"pancetta"`). Rendered with a leading "or" — do not write the word yourself. |
 | `optional` | boolean | no | Whether the ingredient is optional. Defaults to `false`. |
 
 ## Steps

@@ -50,6 +50,7 @@ ingredients:
     - amount: 100
       unit: g
       name: guanciale
+      note: diced
       sub: pancetta
 steps:
   - title: Bring a large pot of salted water to a boil.

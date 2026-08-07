@@ -68,6 +68,9 @@ function validateCore(data: Record<string, unknown>): string | null {
   // Title is optional — extractCore normalises undefined/null/non-string to
   // an empty string. UI surfaces fall back to the filename or a placeholder
   // when the title is blank.
+  //
+  // Steps are optional too, matching the Kaper web app — extractCore treats a
+  // missing/malformed `steps` the same as an empty array, rather than erroring.
   if (data['servings'] === undefined || typeof data['servings'] !== 'number') {
     return 'Missing required field: servings (number)';
   }
@@ -77,9 +80,6 @@ function validateCore(data: Record<string, unknown>): string | null {
     Array.isArray(data['ingredients'])
   ) {
     return 'Missing required field: ingredients (object)';
-  }
-  if (!Array.isArray(data['steps'])) {
-    return 'Missing required field: steps (array)';
   }
   if (
     data['difficulty'] !== undefined &&
@@ -99,7 +99,7 @@ function extractCore(data: Record<string, unknown>): RecipeCore {
     tags: Array.isArray(data['tags']) ? (data['tags'] as string[]) : undefined,
     time: data['time'] as RecipeCore['time'],
     ingredients: parseIngredients(data['ingredients'] as Record<string, unknown>),
-    steps: parseSteps(data['steps'] as unknown[]),
+    steps: Array.isArray(data['steps']) ? parseSteps(data['steps']) : [],
     source: typeof data['source'] === 'string' ? data['source'] : undefined,
     yield: typeof data['yield'] === 'string' ? data['yield'] : undefined,
     coverImage: typeof data['coverImage'] === 'string' ? data['coverImage'] : undefined,
@@ -124,6 +124,7 @@ function parseIngredientAmount(raw: unknown): IngredientAmount {
     amount: typeof item['amount'] === 'number' ? item['amount'] : 0,
     unit: typeof item['unit'] === 'string' ? item['unit'] : '',
     name: typeof item['name'] === 'string' ? item['name'] : '',
+    note: typeof item['note'] === 'string' ? item['note'] : undefined,
     sub: typeof item['sub'] === 'string' ? item['sub'] : undefined,
     optional: typeof item['optional'] === 'boolean' ? item['optional'] : undefined,
   };

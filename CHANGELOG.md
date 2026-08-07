@@ -4,6 +4,17 @@ All notable changes to the Kaper plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] — 2026-08-06
+
+### Added
+
+- **Ingredient `note` field.** Ingredients can carry a prep or state detail — `note: finely chopped`, `note: room temperature` — rendered after the name as "Walnuts, finely chopped". Previously the only free-text slot was `sub`, which renders as a substitution ("or …") and read oddly when used for prep detail.
+
+### Fixed
+
+- The format docs showed `sub: or use pancetta`, but the renderer supplies the leading "or" itself, so those examples would have rendered as "or or use pancetta". The examples now match the README and the plugin's actual behaviour.
+- Recipes without a `steps` array now open as empty drafts instead of being rejected, matching the Kaper web app's handling of work-in-progress recipes.
+
 ## [1.3.0] — 2026-07-04
 
 ### Added

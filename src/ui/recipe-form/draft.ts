@@ -78,6 +78,7 @@ export function draftToRecipe(draft: RecipeDraft, original: RecipeModel): Recipe
           amount: i.amount,
           unit: i.unit,
           name: i.name,
+          note: i.note,
           sub: i.sub,
           optional: i.optional,
         }),

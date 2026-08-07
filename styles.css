@@ -315,6 +315,13 @@
   color: var(--text-normal);
 }
 
+/* Prep/state detail. Muted like the substitution hint, but upright rather than
+   italic so the two stay distinguishable on an ingredient that has both. */
+.kaper-preview__ingredient-note {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 .kaper-preview__ingredient-sub {
   font-size: 12px;
   color: var(--text-muted);
@@ -585,6 +592,7 @@
 .kaper-form__input--amount { width: 72px; flex: none; }
 .kaper-form__input--unit { width: 80px; flex: none; }
 .kaper-form__input--name { flex: 1; }
+.kaper-form__input--note { width: 140px; flex: none; }
 .kaper-form__input--sub { width: 100px; flex: none; }
 .kaper-form__input--step-title { flex: 1; }
 

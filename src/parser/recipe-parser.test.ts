@@ -22,6 +22,10 @@ ingredients:
       unit: g
       name: guanciale
       sub: pancetta
+    - amount: 50
+      unit: g
+      name: walnuts
+      note: finely chopped
     - amount: 25
       unit: g
       name: parmesan
@@ -91,11 +95,18 @@ describe('parseKaperYaml', () => {
     expect(result.parseError).toBe('Missing required field: ingredients (object)');
   });
 
-  it('returns error when steps are not an array', () => {
+  it('normalizes missing steps to an empty array instead of erroring', () => {
+    const result = parseKaperYaml('version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []');
+    expect(result.parseError).toBeUndefined();
+    expect(result.recipe?.steps).toEqual([]);
+  });
+
+  it('normalizes a malformed steps value to an empty array instead of erroring', () => {
     const result = parseKaperYaml(
       'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []\nsteps: oops',
     );
-    expect(result.parseError).toBe('Missing required field: steps (array)');
+    expect(result.parseError).toBeUndefined();
+    expect(result.recipe?.steps).toEqual([]);
   });
 
   it('returns error when difficulty is invalid', () => {
@@ -108,7 +119,7 @@ describe('parseKaperYaml', () => {
   it('parses multiple ingredient groups in YAML order', () => {
     const result = parseKaperYaml(FULL_YAML);
     expect(Object.keys(result.recipe!.ingredients)).toEqual(['pasta', 'sauce']);
-    expect(result.recipe!.ingredients.sauce).toHaveLength(2);
+    expect(result.recipe!.ingredients.sauce).toHaveLength(3);
   });
 
   it('parses optional and substitution flags on ingredients', () => {
@@ -116,7 +127,15 @@ describe('parseKaperYaml', () => {
     const sauce = result.recipe!.ingredients.sauce;
     expect(sauce[0].sub).toBe('pancetta');
     expect(sauce[0].optional).toBeUndefined();
-    expect(sauce[1].optional).toBe(true);
+    expect(sauce[2].optional).toBe(true);
+  });
+
+  it('parses the prep note on an ingredient independently of sub', () => {
+    const result = parseKaperYaml(FULL_YAML);
+    const sauce = result.recipe!.ingredients.sauce;
+    expect(sauce[1].note).toBe('finely chopped');
+    expect(sauce[1].sub).toBeUndefined();
+    expect(sauce[0].note).toBeUndefined();
   });
 
   it('parses all step callout types (note, tip, warning, technique, image, duration, ingredients)', () => {
