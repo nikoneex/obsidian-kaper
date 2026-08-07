@@ -91,11 +91,18 @@ describe('parseKaperYaml', () => {
     expect(result.parseError).toBe('Missing required field: ingredients (object)');
   });
 
-  it('returns error when steps are not an array', () => {
+  it('normalizes missing steps to an empty array instead of erroring', () => {
+    const result = parseKaperYaml('version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []');
+    expect(result.parseError).toBeUndefined();
+    expect(result.recipe?.steps).toEqual([]);
+  });
+
+  it('normalizes a malformed steps value to an empty array instead of erroring', () => {
     const result = parseKaperYaml(
       'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: []\nsteps: oops',
     );
-    expect(result.parseError).toBe('Missing required field: steps (array)');
+    expect(result.parseError).toBeUndefined();
+    expect(result.recipe?.steps).toEqual([]);
   });
 
   it('returns error when difficulty is invalid', () => {
