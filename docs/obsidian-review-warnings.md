@@ -96,3 +96,18 @@ seven items above (e.g. `no-unsupported-api`, which caught the 1.4.4 issue in
 `npm run lint` locally before opening a PR; `npm run lint:fix` auto-fixes what it
 can. Categories the linter can't see — #7 README placeholders — stay a manual
 pre-submission check.
+
+## 2026-09 plugin-health review round (against 1.4.0)
+
+A later plugin-health scan surfaced five more findings. Unlike the 2026-06 set,
+some of these are not reproduced by `npm run lint` — the scanner also inspects
+the built `main.js` and `package.json`, which ESLint (scoped to `src/**`) does
+not. Resolution:
+
+| # | Finding | Fix | Proof |
+|---|---------|-----|-------|
+| 1 | Replace `js-yaml` | Shipped code already uses Obsidian's `parseYaml`/`stringifyYaml` (bundle has 0 js-yaml). Removed `js-yaml`/`@types/js-yaml` from `package.json`. The test stub ([test/obsidian-yaml-stub.ts](../test/obsidian-yaml-stub.ts)) now uses `yaml` (eemeli) as a devDependency — which is what Obsidian 1.13+ actually calls at runtime (disassembled from `obsidian-1.13.7.asar`; earlier belief that Obsidian used js-yaml applied to 1.12.x only). Three canon tests were rewritten to reflect eemeli's behavior: bare `YYYY-MM-DD` stays a string (was Date), `<<` merge keys don't resolve (YAML 1.1 feature), and long strings don't fold (Obsidian passes `lineWidth: 0`). | `grep -c js-yaml main.js` → `0`; `grep -c keepUndefined main.js` → `0` (eemeli not bundled either); `npm test` (92/92 green); `package.json` declares no js-yaml. Residual: eslint still pulls js-yaml transitively (dev-only, never shipped). |
+| 2 | `document.createElement` vs `createEl` | No change. Our one call ([editor-extension.tsx](../src/editor-extension.tsx)) uses `ownerDocument.createElement` for a detached, popout-correct widget root — `createEl`/`createDiv` append and throw. The `prefer-create-el` rule only fires on the global `document`/`activeDocument`, so ESLint is clean; a disable directive would be unused. The bundle hits are React internals. | ESLint clean on the file; the bare-`document.createElement` hits in `main.js` are bundled React. |
+| 3 | `PluginSettingTab` lacks `getSettingDefinitions()` | Added declarative `getSettingDefinitions()` (folder control) to `KaperSettingTab`; kept `display()` as the pre-1.13 fallback (not called when definitions are returned). Bumped `obsidian` devDependency to `^1.13.1` for the API types. | `npm run build` (tsc) passes against 1.13.1 types; declarative render is searchable on 1.13+. |
+| 4 | Missing release attestations | Added an `actions/attest-build-provenance@v2` step and `id-token`/`attestations` permissions to [release.yml](../.github/workflows/release.yml). | After a tagged release, `gh attestation verify main.js` passes (pending next release). |
+| 5 | Uses web storage | Replaced the `sessionStorage` tab-preference in [App.tsx](../src/ui/App.tsx) with an in-memory `Map` (same per-session lifetime). | `grep -rn "localStorage\|sessionStorage" src` → empty. |
