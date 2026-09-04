@@ -72,14 +72,10 @@ class KaperWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
-    // CodeMirror requires `toDOM()` to return a detached element — it inserts
-    // the widget itself. Obsidian's `createDiv`/`Node.createDiv` helpers all
-    // *append* the new element to their receiver, so on a Document they throw
-    // HierarchyRequestError (only one root element allowed). We need plain
-    // `createElement` here; the lint warning to prefer `createDiv` doesn't
-    // apply to widget DOM construction.
-    const container = view.dom.ownerDocument.createElement('div');
-    container.className = 'kaper-block';
+    // Obsidian's global `createDiv` returns a detached element — matches
+    // CodeMirror's `toDOM()` contract (CM inserts the widget itself; Node
+    // prototype's `createDiv` would append and can't be used here).
+    const container = createDiv({ cls: 'kaper-block' });
     // Prevent focus on inputs inside the widget from bubbling to CM's contentDOM,
     // which otherwise treats it as "editor focused" and scrolls the doc cursor
     // (often near the closing fence) into view — manifesting as a jump to the
