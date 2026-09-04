@@ -5,21 +5,26 @@ import { RecipeModel } from './types';
 /**
  * CANON / characterization tests.
  *
- * These pin the *current* YAML engine's observable behavior (js-yaml 4.1.x)
- * so that swapping the engine — e.g. to Obsidian's `parseYaml`/`stringifyYaml`
- * — is caught the moment it changes anything a recipe author can observe.
+ * These pin the observable behavior of Obsidian's built-in YAML engine so any
+ * change a recipe author can see is caught. Obsidian's `parseYaml` /
+ * `stringifyYaml` are backed by eemeli/yaml (npm `yaml`, YAML 1.2 core schema),
+ * disassembled from obsidian-1.13.7.asar (bL calls
+ * `new Document(o, r, {nullStr:"", lineWidth:0, aliasDuplicateObjects:false})`).
+ * The test stub in test/obsidian-yaml-stub.ts calls the same package with the
+ * same options.
  *
  * They assert what the parser DOES today, not necessarily what is ideal. A
  * failure here after an engine swap is a signal to decide intentionally
  * ("is this divergence acceptable?"), not to blindly edit the expectation.
  *
- * The engine-sensitive surfaces, confirmed empirically against js-yaml 4.1.1:
- *   - yes/no/on/off are STRINGS (only true/false are booleans)   [YAML 1.1 differs]
- *   - bare dates (2021-01-01) parse to Date objects, so they are LOST from
- *     string-typed fields like `source`                          [engine-specific]
+ * The engine-sensitive surfaces, under eemeli/yaml 2.x:
+ *   - yes/no/on/off are STRINGS (only true/false are booleans; YAML 1.2)
+ *   - bare dates (2021-01-01) stay STRINGS (no auto-Date cast under YAML 1.2
+ *     core schema)                                               [changed from js-yaml]
  *   - duplicate keys and tab indentation THROW
- *   - merge keys (<<) and anchors/aliases (&/*) are RESOLVED
- *   - dump() QUOTES ambiguous strings so they round-trip as strings
+ *   - anchors/aliases (&/*) RESOLVE; merge keys (<<) do NOT      [changed from js-yaml]
+ *   - stringify() uses `lineWidth: 0` — long strings NEVER fold  [changed from js-yaml]
+ *   - stringify() QUOTES ambiguous strings so they round-trip as strings
  */
 
 // Minimal valid doc with extra top-level lines appended.
@@ -70,10 +75,15 @@ describe('canon: boolean-ish scalars (yes/no/on/off are strings, not booleans)',
   });
 });
 
-describe('canon: bare dates parse to Date and are lost from string fields', () => {
-  it('drops a bare ISO date from `source` (Date is not a string)', () => {
+describe('canon: bare dates are preserved as strings (YAML 1.2 core schema)', () => {
+  // ENGINE NOTE: Obsidian's YAML is eemeli/yaml (YAML 1.2 core schema), which
+  // does NOT auto-cast bare `YYYY-MM-DD` to a Date. The old js-yaml 4.x path
+  // parsed the same input as a Date and our parser then dropped `source`
+  // because a Date is not a string — a silent footgun. The current engine
+  // preserves the user's typed value.
+  it('keeps a bare ISO date in `source` as a string', () => {
     const r = parseKaperYaml(doc('source: 2021-01-01'));
-    expect(r.recipe?.source).toBeUndefined();
+    expect(r.recipe?.source).toBe('2021-01-01');
   });
 
   it('keeps a QUOTED date string in `source`', () => {
@@ -137,7 +147,7 @@ describe('canon: structural errors throw → parseError', () => {
   });
 });
 
-describe('canon: anchors, aliases and merge keys are resolved', () => {
+describe('canon: anchors and aliases resolve; merge keys do NOT (YAML 1.2)', () => {
   it('resolves an aliased ingredient group', () => {
     const r = parseKaperYaml(
       'version: 1\ntitle: x\nservings: 2\ningredients:\n  main: &m\n    - amount: 1\n      unit: g\n      name: salt\n  extra: *m\nsteps: []',
@@ -145,12 +155,19 @@ describe('canon: anchors, aliases and merge keys are resolved', () => {
     expect(r.recipe?.ingredients.extra[0].name).toBe('salt');
   });
 
-  it('resolves a merge key on an ingredient item', () => {
+  // ENGINE NOTE: `<<` merge keys are a YAML 1.1 feature and are NOT part of
+  // the YAML 1.2 core schema. Obsidian's engine (eemeli/yaml, YAML 1.2) does
+  // not merge — the second item is just `{ name: 'pepper' }` with no inherited
+  // amount/unit. The old js-yaml 4.x path resolved merge keys as a legacy
+  // convenience; recipes must not rely on that.
+  it('does NOT resolve `<<` merge keys — the second item has only its own fields', () => {
     const r = parseKaperYaml(
       'version: 1\ntitle: x\nservings: 2\ningredients:\n  main:\n    - &base\n      amount: 1\n      unit: g\n      name: salt\n    - <<: *base\n      name: pepper\nsteps: []',
     );
     const main = r.recipe!.ingredients.main;
-    expect(main[1]).toMatchObject({ amount: 1, unit: 'g', name: 'pepper' });
+    expect(main[1].name).toBe('pepper');
+    expect(main[1].amount).toBe(0); // NOT inherited from &base
+    expect(main[1].unit).toBe(''); //  NOT inherited from &base
   });
 });
 
@@ -232,18 +249,18 @@ describe('canon: exact serialized output (locks key order, quoting, indentation,
     expect(out).not.toContain('```');
   });
 
-  // ENGINE-SENSITIVE: line wrapping. Obsidian's stringifyYaml exposes no
-  // options and uses js-yaml's default lineWidth of 80, so an ~90-char field
-  // folds with a `>-` block scalar. (Under the old js-yaml lineWidth:100 path
-  // this stayed on one line — the divergence the swap introduces. Cosmetic:
-  // the folded form round-trips to the same string.)
-  it('folds a ~90-char source with `>-` at lineWidth 80', () => {
+  // ENGINE-SENSITIVE: line wrapping. Obsidian's stringifyYaml calls eemeli/yaml
+  // with `lineWidth: 0` (disassembled from obsidian-1.13.7.asar), so long
+  // strings are NEVER folded — they stay on one line no matter how long. The
+  // old js-yaml 4.x default (lineWidth: 80) would have folded a ~90-char value
+  // with `>-`; that no longer happens on Obsidian 1.13+.
+  it('does NOT fold a long source — Obsidian passes lineWidth:0 (unlimited)', () => {
     const longSource =
       'https://example.com/recipes/2026/the-very-long-canonical-slug-for-this-dish-name-x';
     expect(longSource.length).toBeGreaterThan(80);
-    expect(longSource.length).toBeLessThan(100);
     const out = serializeKaperYaml(makeRecipe({ title: 'T', source: longSource }));
-    expect(out).toContain('source: >-\n');
+    expect(out).toContain(`source: ${longSource}\n`);
+    expect(out).not.toContain('>-');
     // …and it still round-trips back to the original string.
     expect(parseKaperYaml(out).recipe?.source).toBe(longSource);
   });
