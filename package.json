@@ -1,6 +1,6 @@
 {
   "name": "obsidian-kaper",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Edit and preview Kaper recipes inline as structured blocks.",
   "main": "main.js",
   "scripts": {
@@ -31,20 +31,19 @@
   "devDependencies": {
     "@codemirror/state": "^6.6.0",
     "@codemirror/view": "^6.41.1",
-    "@types/js-yaml": "^4.0.9",
-    "js-yaml": "^4.1.0",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "esbuild": "^0.20.0",
     "eslint": "^9.39.4",
     "eslint-plugin-obsidianmd": "^0.3.0",
-    "obsidian": "^1.4.11",
+    "obsidian": "^1.13.1",
     "prettier": "^3.8.3",
     "tslib": "^2.6.0",
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.60.1",
-    "vitest": "^1.2.0"
+    "vitest": "^1.2.0",
+    "yaml": "^2.9.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

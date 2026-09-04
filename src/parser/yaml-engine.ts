@@ -3,19 +3,21 @@ import { parseYaml, stringifyYaml } from 'obsidian';
 /**
  * The single seam for the YAML engine.
  *
- * SWAPPED (spike): now backed by Obsidian's built-in `parseYaml` /
- * `stringifyYaml` instead of a bundled `js-yaml`. Verified against the bundled
- * app (obsidian-1.12.7): these are js-yaml 4.1.0 under the hood, with
- * `parseYaml(src) = load(src, null, {})` (default DEFAULT_SCHEMA), so parsing
- * matches the previous js-yaml 4.1.1 behavior exactly.
- *
- * Note: `stringifyYaml(obj)` takes no options and uses js-yaml's default
- * `lineWidth: 80` (we previously pinned 100), so long single-line fields wrap
- * sooner. This is cosmetic — output stays valid YAML and round-trips.
+ * Backed by Obsidian's built-in `parseYaml` / `stringifyYaml`. As of Obsidian
+ * 1.13.x these are backed by eemeli/yaml (npm `yaml`, YAML 1.2 core schema) —
+ * verified by disassembling obsidian-1.13.7.asar:
+ *   parseYaml     → yL:  return wT(src, null, {})
+ *   stringifyYaml → bL:  new Document(obj, replacer,
+ *                          { nullStr: '', lineWidth: 0,
+ *                            aliasDuplicateObjects: false }).toString(...)
+ * (Note: earlier Obsidian versions — 1.12.x and below — used js-yaml 4.1.x
+ * instead. If future compatibility with those becomes a concern, revisit
+ * `recipe-parser.canon.test.ts` which pins the engine-visible behavior.)
  *
  * Tests resolve `obsidian` to test/obsidian-yaml-stub.ts (see vitest.config.ts),
- * a faithful js-yaml-backed stand-in, since the npm `obsidian` package is
- * types-only with no runtime.
+ * which calls the `yaml` package with the same stringify options Obsidian does.
+ * The npm `obsidian` package is types-only with no runtime, so the alias is
+ * required.
  */
 
 export function parseYamlSource(src: string): unknown {

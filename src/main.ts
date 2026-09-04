@@ -5,6 +5,7 @@ import {
   Plugin,
   PluginSettingTab,
   Setting,
+  SettingDefinitionItem,
   TFile,
   TFolder,
   normalizePath,
@@ -205,6 +206,44 @@ class KaperSettingTab extends PluginSettingTab {
     private readonly plugin: KaperPlugin,
   ) {
     super(app, plugin);
+  }
+
+  /**
+   * Declarative settings for Obsidian 1.13.0+. A non-empty return renders the
+   * settings declaratively and lists them in the global settings search. When
+   * this returns items, Obsidian does not call `display()` — that method stays
+   * only as the fallback for Obsidian versions below 1.13.0 (our minAppVersion
+   * is older). The control `key` maps to `plugin.settings` through the default
+   * `getControlValue`/`setControlValue`, which read and persist it for us.
+   */
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    const definitions: SettingDefinitionItem[] = [];
+
+    // On mobile the form editor isn't supported yet, so recipes are read-only.
+    // Surface that here only on mobile — it's irrelevant on desktop.
+    if (Platform.isMobile) {
+      definitions.push({
+        name: 'Mobile is read-only',
+        desc:
+          "Editing isn't available on mobile yet — recipes show as a read-only " +
+          'preview. Open the vault on desktop to use the form editor.',
+      });
+    }
+
+    definitions.push({
+      name: 'Kaper vault root folder',
+      desc:
+        'Folder (relative to this vault) that Kaper web/desktop opens as its ' +
+        'library. Leave empty to use the vault root. Step images are stored in ' +
+        '_assets/ under this folder — it must match the folder you open in Kaper.',
+      control: {
+        type: 'folder',
+        key: 'kaperRootFolder',
+        placeholder: 'E.g. Recipes (empty = vault root)',
+      },
+    });
+
+    return definitions;
   }
 
   display(): void {

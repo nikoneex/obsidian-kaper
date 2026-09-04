@@ -10,11 +10,11 @@ A markdown file with a ` ```kaper ` block becomes a structured recipe — previe
 
 ## Why bother
 
-You already chose Obsidian because your notes belong on your disk. Recipes deserve the same treatment. Kaper turns plain `.md` files into a real recipe manager:
+You already chose Obsidian because your notes belong on your disk. That's Kepano's [file over app](https://stephango.com/file-over-app) bet — outlive the app, keep the notes. Recipes deserve the same treatment. Kaper turns plain `.md` files into a real recipe manager:
 
 - **Lives in your vault.** A recipe is a markdown file with `kaper: true` in frontmatter and a YAML block in the body. That's it. Anything outside the block is normal markdown — notes, intros, links, photos.
 - **Renders inline in Live Preview and Reading view.** No separate panel, no modal. The kaper block becomes a rendered recipe right where it sits, in both editing and Reading mode. Switch to Source mode to see the raw YAML any time.
-- **Form editor for the YAML-shy.** Title, servings, prep/cook time, tags, ingredient groups (drag to reorder), steps with notes, tips, warnings, durations. Auto-saves on every change.
+- **Form editor for the YAML-shy.** Title, servings, prep/cook time, tags, ingredient groups (drag to reorder), steps with notes, tips, warnings, durations. Auto-saves on every change. *Desktop only — mobile shows a read-only preview.*
 - **Themed by Obsidian.** Uses your accent color and surface palette. Looks at home in any theme you've installed.
 
 ## Cook Mode
@@ -65,15 +65,23 @@ Tips and notes go here as regular markdown.
 
 Required keys: `title`, `servings`, `ingredients`, `steps`. Everything else is optional.
 
+The `kaper:` frontmatter value can be anything non-empty. New recipes created by the plugin get a stable id (`kaper: r_<nanoid>`) so the file survives being renamed or moved; existing `kaper: true` files keep working and are upgraded lazily the first time you open them.
+
 <p align="center"><img src="assets/form.png" alt="Form editor" width="500"></p>
 
 ## Use it
 
-- **New recipe** — click the utensils icon in the left ribbon, or run **Kaper: Create recipe** from the command palette.
-- **Convert a note** — run **Kaper: Convert current note to recipe** to add the frontmatter and starter block to any open `.md` file.
-- **Edit** — open any kaper file in Live Preview. Toggle **Preview** and **Form** at the top of the rendered block.
+- **New recipe** *(desktop)* — click the utensils icon in the left ribbon, or run **Kaper: Create recipe** from the command palette.
+- **Convert a note** *(desktop)* — run **Kaper: Convert current note to recipe** to add the frontmatter and starter block to any open `.md` file.
+- **Edit** *(desktop)* — open any kaper file in Live Preview. Toggle **Preview** and **Form** at the top of the rendered block.
 - **Cook** — click **Start Cooking** for the in-app, step-by-step view, or **View on Kaper** to cook from the web app instead.
 - **Raw YAML** — switch to Source mode (top-right pane icon).
+
+On **mobile**, recipes render as a read-only preview and Cook Mode still works — creating, converting, and form editing are desktop-only for now.
+
+## Settings
+
+**Kaper vault root folder** — the folder Kaper's web and desktop apps open as their library. Leave it empty to use the vault root. Step images are stored under `_assets/` inside this folder, so the setting has to match the folder you open in Kaper elsewhere. That's the only setting.
 
 ## Works with the rest of Kaper
 
@@ -136,6 +144,12 @@ Run tests:
 
 ```bash
 npm test
+```
+
+Lint (same rules CI enforces — [`eslint-plugin-obsidianmd`](https://github.com/obsidianmd/eslint-plugin) plus `typescript-eslint`):
+
+```bash
+npm run lint
 ```
 
 ## Contributing

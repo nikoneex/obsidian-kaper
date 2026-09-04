@@ -8,17 +8,20 @@ import { RecipeFormEditor } from './RecipeFormEditor';
 
 type Tab = 'preview' | 'form';
 
-const TAB_PREFIX = 'kaper:tab:';
+// Per-session tab preference, keyed by file path. Held in memory rather than
+// browser web storage (which Obsidian discourages for plugin state). The
+// lifetime matches the previous behavior: it survives widget remounts within
+// the session and clears on reload.
+const tabPreferences = new Map<string, Tab>();
 
 function readTabPreference(filePath: string): Tab | null {
   if (!filePath) return null;
-  const value = sessionStorage.getItem(TAB_PREFIX + filePath);
-  return value === 'preview' || value === 'form' ? value : null;
+  return tabPreferences.get(filePath) ?? null;
 }
 
 function writeTabPreference(filePath: string, tab: Tab): void {
   if (!filePath) return;
-  sessionStorage.setItem(TAB_PREFIX + filePath, tab);
+  tabPreferences.set(filePath, tab);
 }
 
 interface AppProps {

@@ -1,5 +1,14 @@
 # Spike: swapping the recipe parser to Obsidian's YAML engine
 
+> **SUPERSEDED (2026-09-03).** The parity claim below was true against
+> **obsidian-1.12.7** but is no longer true: Obsidian **1.13.x** switched its
+> built-in YAML engine from js-yaml 4.1.x to **eemeli/yaml (npm `yaml`,
+> YAML 1.2 core schema)**. Both engines are bundled inside the modern asar, but
+> the exported `parseYaml`/`stringifyYaml` now call eemeli. See the
+> "2026-09 plugin-health review round" section of
+> [obsidian-review-warnings.md](obsidian-review-warnings.md) for the current
+> engine story and the canon-suite behaviors that changed as a result.
+
 **Branch:** `worktree-spike+obsidian-yaml-parser` · **Date:** 2026-06-07
 **Goal:** De-risk migrating `src/parser/recipe-parser.ts` off the bundled
 `js-yaml` package (flagged by the Obsidian review bot, item #2 in
