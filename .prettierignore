@@ -5,3 +5,4 @@ build/
 main.js
 main.js.map
 package-lock.json
+styles.css

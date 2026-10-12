@@ -5,7 +5,7 @@ import obsidianmd from 'eslint-plugin-obsidianmd';
 export default [
   {
     // Build output and tooling scripts are not plugin source — don't lint them.
-    ignores: ['main.js', 'node_modules/**', '*.mjs'],
+    ignores: ['main.js', 'styles.css', 'node_modules/**', '*.mjs'],
   },
 
   // Official Obsidian ruleset: no-unsupported-api, prefer-window-timers,

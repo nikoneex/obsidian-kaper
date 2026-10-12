@@ -1,0 +1,9 @@
+/* Entry point for the plugin stylesheet. esbuild bundles these, in this order,
+   into the root styles.css that Obsidian loads — order is the cascade order. */
+@import './reading-mode.css';
+@import './block.css';
+@import './preview.css';
+@import './form.css';
+@import './form-inputs.css';
+@import './form-sections.css';
+@import './cook.css';

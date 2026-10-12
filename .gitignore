@@ -4,6 +4,7 @@ build/
 
 main.js
 main.js.map
+styles.css
 *.log
 
 .DS_Store

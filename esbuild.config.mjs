@@ -4,7 +4,7 @@ import { builtinModules as builtins } from 'node:module';
 
 const prod = process.argv[2] === 'production';
 
-const context = await esbuild.context({
+const scripts = await esbuild.context({
   entryPoints: ['src/main.ts'],
   bundle: true,
   external: [
@@ -33,9 +33,20 @@ const context = await esbuild.context({
   minify: prod,
 });
 
+// Obsidian loads a single styles.css from the plugin root; the source is split
+// across src/styles and bundled here (unminified, so themes can read it).
+const styles = await esbuild.context({
+  entryPoints: ['src/styles/index.css'],
+  bundle: true,
+  logLevel: 'info',
+  outfile: 'styles.css',
+});
+
+const contexts = [scripts, styles];
+
 if (prod) {
-  await context.rebuild();
+  await Promise.all(contexts.map((c) => c.rebuild()));
   process.exit(0);
 } else {
-  await context.watch();
+  await Promise.all(contexts.map((c) => c.watch()));
 }

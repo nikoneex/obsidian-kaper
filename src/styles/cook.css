@@ -1,0 +1,234 @@
+/* ── Cook mode ─────────────────────────────────────────────────────────── */
+
+/* Desktop side-panel view: let the cook UI own the full leaf, no view padding. */
+.view-content.kaper-cook-view {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.kaper-cook-view__empty {
+  padding: var(--size-4-6) var(--size-4-4);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Shared full-screen sheet frame for React-hosting modals (Cook mode, the
+   mobile recipe form). Per-modal classes layer content styling on top. */
+.modal.kaper-sheet-modal {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: var(--background-primary);
+  animation: kaper-sheet-slide-up 0.22s ease-out;
+}
+
+@keyframes kaper-sheet-slide-up {
+  from {
+    transform: translateY(2%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.kaper-sheet-modal .modal-content {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Cook mode has its own in-bar exit; hide the default close button there. */
+.kaper-cook-modal .modal-close-button {
+  display: none;
+}
+
+.kaper-cook {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+.kaper-cook__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: calc(var(--size-4-3) + env(safe-area-inset-top, 0px)) var(--size-4-4)
+    var(--size-4-3);
+}
+
+.kaper-cook__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.kaper-cook__icon-btn:hover {
+  color: var(--text-normal);
+}
+
+.kaper-cook__title {
+  flex: 1;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kaper-cook__progress {
+  height: 4px;
+  margin: 0 var(--size-4-4);
+  background: var(--background-modifier-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.kaper-cook__progress-fill {
+  width: var(--kaper-progress, 0%);
+  height: 100%;
+  background: var(--interactive-accent);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.kaper-cook__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--size-4-6) var(--size-4-4);
+}
+
+.kaper-cook__kicker {
+  margin-bottom: var(--size-4-2);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.kaper-cook__step-title {
+  margin: 0 0 var(--size-4-4);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text-normal);
+}
+
+.kaper-cook__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--background-secondary);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.kaper-cook__chip svg {
+  color: var(--text-faint);
+}
+
+.kaper-cook__divider {
+  border: none;
+  border-top: 1px solid var(--background-modifier-border);
+  margin: var(--size-4-5) 0;
+}
+
+.kaper-cook__note {
+  margin: 0 0 var(--size-4-4);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-normal);
+}
+
+.kaper-cook__callout {
+  display: flex;
+  align-items: baseline;
+  gap: var(--size-4-3);
+  margin-bottom: var(--size-4-4);
+  padding: var(--size-2-3) 0 var(--size-2-3) var(--size-4-3);
+  border-left: 3px solid var(--kaper-callout-accent);
+}
+
+.kaper-cook__callout-label {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.kaper-cook__callout-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-normal);
+}
+
+.kaper-cook__image {
+  display: block;
+  width: 100%;
+  margin-top: var(--size-4-2);
+  border-radius: var(--radius-m);
+}
+
+.kaper-cook__nav {
+  display: flex;
+  gap: var(--size-4-3);
+  padding: var(--size-4-3) var(--size-4-4)
+    calc(var(--size-4-10) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.kaper-cook__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--size-4-3);
+  border: none;
+  border-radius: var(--radius-m);
+  box-shadow: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.kaper-cook__btn--prev {
+  flex: 1;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+}
+
+.kaper-cook__btn--prev:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.kaper-cook__btn--next {
+  flex: 1.6;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.kaper-cook__btn--next:hover {
+  background: var(--interactive-accent-hover);
+}
