@@ -1,4 +1,4 @@
-import { AssetIO } from '../assets';
+import { AssetIO } from '../obsidian/assets';
 import { RecipeModel } from '../recipe/parser/types';
 import { RecipePreview } from './RecipePreview';
 

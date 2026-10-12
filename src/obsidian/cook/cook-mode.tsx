@@ -1,11 +1,11 @@
 import { App, Notice, Platform } from 'obsidian';
 import { ReactNode } from 'react';
-import { AssetIO } from './assets';
+import { AssetIO } from '../assets';
 import { COOK_VIEW_TYPE } from './cook-view';
-import { RecipeModel } from './recipe/parser/types';
-import { ReactModal } from './react-modal';
-import { hasSteps } from './recipe/model';
-import { CookMode } from './ui/CookMode';
+import { RecipeModel } from '../../recipe/parser/types';
+import { ReactModal } from '../react-modal';
+import { hasSteps } from '../../recipe/model';
+import { CookMode } from '../../ui/CookMode';
 
 /**
  * Hosts the in-plugin Cook mode as a full-screen, bottom-sheet modal. The step

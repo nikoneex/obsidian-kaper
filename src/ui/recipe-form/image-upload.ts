@@ -1,5 +1,5 @@
 import { Notice } from 'obsidian';
-import { AssetIO } from '../../assets';
+import { AssetIO } from '../../obsidian/assets';
 
 /**
  * Reads the picked file from a file input and saves it via AssetIO, returning

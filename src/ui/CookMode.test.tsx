@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import type { AssetIO } from '../assets';
+import type { AssetIO } from '../obsidian/assets';
 import type { RecipeModel, RecipeStep } from '../recipe/parser/types';
 import { CookMode } from './CookMode';
 

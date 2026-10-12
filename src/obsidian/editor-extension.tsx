@@ -2,11 +2,11 @@ import { EditorState, Extension, Prec, RangeSetBuilder, StateField, Text } from 
 import { Decoration, DecorationSet, EditorView, WidgetType } from '@codemirror/view';
 import { App, editorInfoField, editorLivePreviewField } from 'obsidian';
 import { Root, createRoot } from 'react-dom/client';
-import { App as KaperApp } from './ui/App';
+import { App as KaperApp } from '../ui/App';
 import { AssetIO } from './assets';
-import { openCookMode } from './cook-mode';
-import { parseKaperYaml, serializeKaperYaml } from './recipe/parser/recipe-parser';
-import { RecipeModel } from './recipe/parser/types';
+import { openCookMode } from './cook/cook-mode';
+import { parseKaperYaml, serializeKaperYaml } from '../recipe/parser/recipe-parser';
+import { RecipeModel } from '../recipe/parser/types';
 
 const FENCE_OPEN = '```kaper';
 const FENCE_CLOSE = '```';

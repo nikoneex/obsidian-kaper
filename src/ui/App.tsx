@@ -1,6 +1,6 @@
 import { Platform } from 'obsidian';
 import { useState } from 'react';
-import { AssetIO } from '../assets';
+import { AssetIO } from '../obsidian/assets';
 import { RecipeModel } from '../recipe/parser/types';
 import { isRecipeEmpty } from '../recipe/model';
 import { RecipePreview } from './RecipePreview';

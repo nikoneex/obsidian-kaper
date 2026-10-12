@@ -1,5 +1,5 @@
 import { App, TFile } from 'obsidian';
-import { generateKaperId } from './recipe/frontmatter';
+import { generateKaperId } from '../recipe/frontmatter';
 
 /**
  * Ensures a recipe file carries a stable `kaper: r_<id>`, stamping a fresh one

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
-import { AssetIO } from '../../assets';
+import { AssetIO } from '../../obsidian/assets';
 import { RecipeStep } from '../../recipe/parser/types';
 import { TimeInput } from '../TimeInput';
 import { SectionProps } from './draft';

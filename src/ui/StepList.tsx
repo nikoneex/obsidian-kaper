@@ -1,4 +1,4 @@
-import { AssetIO } from '../assets';
+import { AssetIO } from '../obsidian/assets';
 import { RecipeStep } from '../recipe/parser/types';
 import { PreviewImage } from './PreviewImage';
 import { StepCallout } from './StepCallout';

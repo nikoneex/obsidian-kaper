@@ -1,4 +1,4 @@
-import { AssetIO } from '../assets';
+import { AssetIO } from '../obsidian/assets';
 import { KAPER_WEB_URL } from '../constants';
 import { RecipeModel } from '../recipe/parser/types';
 import { isRecipeEmpty } from '../recipe/model';

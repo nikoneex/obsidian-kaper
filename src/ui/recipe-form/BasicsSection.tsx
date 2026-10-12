@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { AssetIO } from '../../assets';
+import { AssetIO } from '../../obsidian/assets';
 import { TagInput } from '../TagInput';
 import { TimeInput } from '../TimeInput';
 import { RecipeDraft, SectionProps } from './draft';
