@@ -1,7 +1,7 @@
 import obsidianmd from 'eslint-plugin-obsidianmd';
 
 // Guardrail against the checks the Obsidian plugin-review bot runs.
-// See docs/obsidian-review-warnings.md for the catalogue this enforces.
+// See docs/dev/review-warnings.md for the catalogue this enforces.
 export default [
   {
     // Build output and tooling scripts are not plugin source — don't lint them.

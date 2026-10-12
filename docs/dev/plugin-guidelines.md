@@ -4,14 +4,14 @@ Distilled from the official [Obsidian developer docs](https://docs.obsidian.md/P
 and the [Plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines)
 submission checklist (`obsidianmd/obsidian-developer-docs`, pulled 2026-07-03 /
 2026-07-05), organized around Kaper's actual surfaces: recipe editing/reading
-(`editor-extension.tsx`, `reading-mode.tsx`,
-`RecipePreview.tsx`), cook mode (`cook-mode.tsx`, `cook-view.tsx`, `ui/CookMode.tsx`),
-the recipe form (`ui/recipe-form/`), and vault/frontmatter I/O (`recipe-file.ts`,
-`frontmatter.ts`, `recipe-model.ts`).
+(`obsidian/editor-extension.tsx`, `obsidian/reading-mode.tsx`,
+`ui/preview/`), cook mode (`obsidian/cook/`, `ui/cook/`),
+the recipe form (`ui/form/`), and vault/frontmatter I/O (`obsidian/recipe-file.ts`,
+`recipe/frontmatter.ts`, `recipe/model.ts`). Paths are relative to `src/`.
 
 This is the "what does Obsidian *want* a plugin to look/feel/behave like" reference.
 Lint-enforced rules (unsafe `any`, `window.setTimeout`, no-placeholder-readme, etc.)
-already live in [obsidian-review-warnings.md](obsidian-review-warnings.md) and
+already live in [review-warnings.md](review-warnings.md) and
 `eslint-plugin-obsidianmd` — this doc covers what the linter can't check: API choice,
 lifecycle discipline, and native-feel UI conventions.
 
@@ -81,7 +81,7 @@ React component, which has no `registerDomEvent` of its own to lean on.
 
 ## 2. Vault I/O
 
-Applies to `recipe-file.ts`, `frontmatter.ts`, `recipe-model.ts` — anywhere Kaper
+Applies to `obsidian/recipe-file.ts`, `recipe/frontmatter.ts`, `recipe/model.ts` — anywhere Kaper
 reads or writes a `.kaper.md` file.
 
 - **Prefer `Vault.process(file, data => newData)` over `read()` + `modify()`** for
@@ -486,7 +486,7 @@ tab in the repo, but these rules apply the moment one is added).
   (`SubtleCrypto` over Node `crypto`, `navigator.clipboard` over Electron
   clipboard).
 - **Regex lookbehind** (`(?<=...)`, `(?<!...)`) only works on iOS ≥ 16.4 — relevant
-  if the recipe parser (`src/parser/`) uses lookbehind; feature-detect or gate
+  if the recipe parser (`src/recipe/parser/`) uses lookbehind; feature-detect or gate
   with `Platform` checks rather than assuming support.
 - Test mobile behavior via `this.app.emulateMobile(true/false)` from DevTools, or
   remote-inspect a real device (`chrome://inspect/` for Android, Safari Web
@@ -574,7 +574,7 @@ same credential per plugin.
 
 ## 17. Releasing
 
-Covered operationally in [obsidian-review-warnings.md](obsidian-review-warnings.md);
+Covered operationally in [review-warnings.md](review-warnings.md);
 process specifics not duplicated there:
 
 - **Manifest**: `minAppVersion` should reflect the actual minimum version needed

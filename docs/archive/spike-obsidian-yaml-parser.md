@@ -6,7 +6,7 @@
 > YAML 1.2 core schema)**. Both engines are bundled inside the modern asar, but
 > the exported `parseYaml`/`stringifyYaml` now call eemeli. See the
 > "2026-09 plugin-health review round" section of
-> [obsidian-review-warnings.md](obsidian-review-warnings.md) for the current
+> [review-warnings.md](../dev/review-warnings.md) for the current
 > engine story and the canon-suite behaviors that changed as a result.
 
 **Branch:** `worktree-spike+obsidian-yaml-parser` · **Date:** 2026-06-07
