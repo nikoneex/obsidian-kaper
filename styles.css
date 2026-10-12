@@ -80,8 +80,17 @@
 .kaper-parse-error {
   padding: var(--size-4-3);
   border-radius: var(--radius-m);
-  background-color: var(--background-modifier-error);
+  border: 1px solid var(--text-error);
+  background-color: rgba(var(--color-red-rgb), 0.1);
+  color: var(--text-normal);
+}
+
+.kaper-parse-error strong {
   color: var(--text-error);
+}
+
+.kaper-parse-error p {
+  margin: var(--size-4-1) 0 0;
 }
 
 /* ── Preview ──────────────────────────────────────────────────────────── */
