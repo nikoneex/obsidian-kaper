@@ -24,7 +24,7 @@ export interface RecipeDraft {
   steps: RecipeStep[];
 }
 
-// Shared contract used by every section component in `recipe-form/`.
+// Shared contract used by every section component in `ui/form/`.
 export interface SectionProps {
   draft: RecipeDraft;
   update: (next: RecipeDraft) => void;

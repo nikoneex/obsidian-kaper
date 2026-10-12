@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { AssetIO } from '../../obsidian/assets';
-import { TagInput } from '../TagInput';
-import { TimeInput } from '../TimeInput';
+import { TagInput } from '../shared/TagInput';
+import { TimeInput } from '../shared/TimeInput';
 import { RecipeDraft, SectionProps } from './draft';
 import { pickAndSaveImage } from './image-upload';
 

@@ -1,10 +1,10 @@
 import { CSSProperties, useCallback, useEffect, useState } from 'react';
-import { AssetIO } from '../obsidian/assets';
-import { RecipeModel } from '../recipe/parser/types';
+import { AssetIO } from '../../obsidian/assets';
+import { RecipeModel } from '../../recipe/parser/types';
 import { isLastStep, nextIndex, prevIndex, progressPercent } from './cook-mode-nav';
-import { IconChevronLeft, IconChevronRight, IconTimer } from './icons';
-import { PreviewImage } from './PreviewImage';
-import { StepCallout } from './StepCallout';
+import { IconChevronLeft, IconChevronRight, IconTimer } from '../shared/icons';
+import { PreviewImage } from '../shared/PreviewImage';
+import { StepCallout } from '../shared/StepCallout';
 
 interface CookModeProps {
   recipe: RecipeModel;

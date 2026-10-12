@@ -1,11 +1,13 @@
-import { AssetIO } from '../obsidian/assets';
-import { KAPER_WEB_URL } from '../constants';
-import { RecipeModel } from '../recipe/parser/types';
-import { isRecipeEmpty } from '../recipe/model';
-import { IconExternalLink, IconPlay, IconTimer, IconUsers } from './icons';
+import { AssetIO } from '../../obsidian/assets';
+import { RecipeModel } from '../../recipe/parser/types';
+import { isRecipeEmpty } from '../../recipe/model';
+import { IconExternalLink, IconPlay, IconTimer, IconUsers } from '../shared/icons';
 import { IngredientSection } from './IngredientSection';
-import { PreviewImage } from './PreviewImage';
+import { PreviewImage } from '../shared/PreviewImage';
 import { StepList } from './StepList';
+
+/** The Kaper web app. The `?from=obsidian` query tags traffic that opens from the plugin. */
+const KAPER_WEB_URL = 'https://kaper.me?from=obsidian';
 
 interface RecipePreviewProps {
   recipe: RecipeModel;

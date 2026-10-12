@@ -19,7 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { IngredientDraft } from './draft';
-import { IconGrip } from '../icons';
+import { IconGrip } from '../shared/icons';
 
 // ── Presentational row (private) ────────────────────────────────────────────
 

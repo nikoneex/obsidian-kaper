@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { AssetIO } from './assets';
 import { openCookMode } from './cook/cook-mode';
 import { parseKaperYaml } from '../recipe/parser/recipe-parser';
-import { ReadingPreview } from '../ui/ReadingPreview';
+import { ReadingPreview } from '../ui/preview/ReadingPreview';
 
 /**
  * Renders ```kaper blocks in Reading mode as a read-only preview.

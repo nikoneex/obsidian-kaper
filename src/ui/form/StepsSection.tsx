@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
 import { AssetIO } from '../../obsidian/assets';
 import { RecipeStep } from '../../recipe/parser/types';
-import { TimeInput } from '../TimeInput';
+import { TimeInput } from '../shared/TimeInput';
 import { SectionProps } from './draft';
 import { pickAndSaveImage } from './image-upload';
 

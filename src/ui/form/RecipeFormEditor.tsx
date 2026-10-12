@@ -1,11 +1,11 @@
-import { AssetIO } from '../obsidian/assets';
-import { RecipeModel } from '../recipe/parser/types';
-import { BasicsSection } from './recipe-form/BasicsSection';
-import { DetailsSection } from './recipe-form/DetailsSection';
-import { IngredientsSection } from './recipe-form/IngredientsSection';
-import { StepsSection } from './recipe-form/StepsSection';
-import { TitleField } from './recipe-form/TitleField';
-import { useRecipeDraft } from './recipe-form/use-recipe-draft';
+import { AssetIO } from '../../obsidian/assets';
+import { RecipeModel } from '../../recipe/parser/types';
+import { BasicsSection } from './BasicsSection';
+import { DetailsSection } from './DetailsSection';
+import { IngredientsSection } from './IngredientsSection';
+import { StepsSection } from './StepsSection';
+import { TitleField } from './TitleField';
+import { useRecipeDraft } from './use-recipe-draft';
 
 interface RecipeFormEditorProps {
   recipe: RecipeModel;

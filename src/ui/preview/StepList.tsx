@@ -1,7 +1,7 @@
-import { AssetIO } from '../obsidian/assets';
-import { RecipeStep } from '../recipe/parser/types';
-import { PreviewImage } from './PreviewImage';
-import { StepCallout } from './StepCallout';
+import { AssetIO } from '../../obsidian/assets';
+import { RecipeStep } from '../../recipe/parser/types';
+import { PreviewImage } from '../shared/PreviewImage';
+import { StepCallout } from '../shared/StepCallout';
 
 interface StepListProps {
   steps: RecipeStep[];

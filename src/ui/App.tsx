@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { AssetIO } from '../obsidian/assets';
 import { RecipeModel } from '../recipe/parser/types';
 import { isRecipeEmpty } from '../recipe/model';
-import { RecipePreview } from './RecipePreview';
-import { RecipeFormEditor } from './RecipeFormEditor';
+import { RecipePreview } from './preview/RecipePreview';
+import { RecipeFormEditor } from './form/RecipeFormEditor';
 
 type Tab = 'preview' | 'form';
 
