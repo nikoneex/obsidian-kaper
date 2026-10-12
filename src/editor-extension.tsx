@@ -5,8 +5,8 @@ import { Root, createRoot } from 'react-dom/client';
 import { App as KaperApp } from './ui/App';
 import { AssetIO } from './assets';
 import { openCookMode } from './cook-mode';
-import { parseKaperYaml, serializeKaperYaml } from './parser/recipe-parser';
-import { RecipeModel } from './parser/types';
+import { parseKaperYaml, serializeKaperYaml } from './recipe/parser/recipe-parser';
+import { RecipeModel } from './recipe/parser/types';
 
 const FENCE_OPEN = '```kaper';
 const FENCE_CLOSE = '```';

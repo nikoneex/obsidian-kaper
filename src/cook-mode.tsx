@@ -2,9 +2,9 @@ import { App, Notice, Platform } from 'obsidian';
 import { ReactNode } from 'react';
 import { AssetIO } from './assets';
 import { COOK_VIEW_TYPE } from './cook-view';
-import { RecipeModel } from './parser/types';
+import { RecipeModel } from './recipe/parser/types';
 import { ReactModal } from './react-modal';
-import { hasSteps } from './recipe-model';
+import { hasSteps } from './recipe/model';
 import { CookMode } from './ui/CookMode';
 
 /**

@@ -15,10 +15,10 @@ import { COOK_VIEW_TYPE, KaperCookView } from './cook-view';
 import { kaperEditorExtension } from './editor-extension';
 import { registerKaperReadingMode } from './reading-mode';
 import { FileLabelRewriter } from './file-label-rewriter';
-import { ensureKaperId, hasKaperFrontmatter } from './frontmatter';
+import { ensureKaperId, hasKaperFrontmatter } from './recipe/frontmatter';
 import { ensureRecipeId, readRecipeId } from './recipe-id';
-import { serializeKaperYaml } from './parser/recipe-parser';
-import { RecipeModel } from './parser/types';
+import { serializeKaperYaml } from './recipe/parser/recipe-parser';
+import { RecipeModel } from './recipe/parser/types';
 
 const RIBBON_ICON = 'utensils-crossed';
 const DEFAULT_BASE = 'Untitled';

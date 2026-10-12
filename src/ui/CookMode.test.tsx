@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import type { AssetIO } from '../assets';
-import type { RecipeModel, RecipeStep } from '../parser/types';
+import type { RecipeModel, RecipeStep } from '../recipe/parser/types';
 import { CookMode } from './CookMode';
 
 const assets = { resolveImage: (src: string) => src } as unknown as AssetIO;

@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
 import { AssetIO } from '../../assets';
-import { RecipeStep } from '../../parser/types';
+import { RecipeStep } from '../../recipe/parser/types';
 import { TimeInput } from '../TimeInput';
 import { SectionProps } from './draft';
 import { pickAndSaveImage } from './image-upload';

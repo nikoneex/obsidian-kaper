@@ -1,4 +1,4 @@
-import { IngredientAmount, RecipeModel, RecipeStep } from '../../parser/types';
+import { IngredientAmount, RecipeModel, RecipeStep } from '../../recipe/parser/types';
 
 // ── Draft types (form-local shape, distinct from RecipeModel) ────────────────
 

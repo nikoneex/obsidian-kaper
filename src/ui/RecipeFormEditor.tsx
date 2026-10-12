@@ -1,5 +1,5 @@
 import { AssetIO } from '../assets';
-import { RecipeModel } from '../parser/types';
+import { RecipeModel } from '../recipe/parser/types';
 import { BasicsSection } from './recipe-form/BasicsSection';
 import { DetailsSection } from './recipe-form/DetailsSection';
 import { IngredientsSection } from './recipe-form/IngredientsSection';

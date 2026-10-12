@@ -1,5 +1,5 @@
 import { AssetIO } from '../assets';
-import { RecipeStep } from '../parser/types';
+import { RecipeStep } from '../recipe/parser/types';
 import { PreviewImage } from './PreviewImage';
 import { StepCallout } from './StepCallout';
 

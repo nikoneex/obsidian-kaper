@@ -1,5 +1,5 @@
 import { AssetIO } from '../assets';
-import { RecipeModel } from '../parser/types';
+import { RecipeModel } from '../recipe/parser/types';
 import { RecipePreview } from './RecipePreview';
 
 interface ReadingPreviewProps {

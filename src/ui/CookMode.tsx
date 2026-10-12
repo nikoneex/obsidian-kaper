@@ -1,6 +1,6 @@
 import { CSSProperties, useCallback, useEffect, useState } from 'react';
 import { AssetIO } from '../assets';
-import { RecipeModel } from '../parser/types';
+import { RecipeModel } from '../recipe/parser/types';
 import { isLastStep, nextIndex, prevIndex, progressPercent } from './cook-mode-nav';
 import { IconChevronLeft, IconChevronRight, IconTimer } from './icons';
 import { PreviewImage } from './PreviewImage';

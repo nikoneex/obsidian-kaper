@@ -10,7 +10,7 @@ import { RecipeModel } from './types';
  * `stringifyYaml` are backed by eemeli/yaml (npm `yaml`, YAML 1.2 core schema),
  * disassembled from obsidian-1.13.7.asar (bL calls
  * `new Document(o, r, {nullStr:"", lineWidth:0, aliasDuplicateObjects:false})`).
- * The test stub in test/obsidian-yaml-stub.ts calls the same package with the
+ * The test stub in test/stubs/obsidian.ts calls the same package with the
  * same options.
  *
  * They assert what the parser DOES today, not necessarily what is ideal. A

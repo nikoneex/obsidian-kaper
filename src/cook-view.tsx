@@ -2,7 +2,7 @@ import { ItemView, ViewStateResult, WorkspaceLeaf } from 'obsidian';
 import { Root, createRoot } from 'react-dom/client';
 import { AssetIO } from './assets';
 import { loadRecipeFromFile } from './recipe-file';
-import { hasSteps } from './recipe-model';
+import { hasSteps } from './recipe/model';
 import { CookMode } from './ui/CookMode';
 
 export const COOK_VIEW_TYPE = 'kaper-cook-view';

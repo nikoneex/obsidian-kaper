@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RecipeModel } from '../../parser/types';
+import { RecipeModel } from '../../recipe/parser/types';
 import { RecipeDraft, draftToRecipe, recipeToDraft } from './draft';
 
 /**

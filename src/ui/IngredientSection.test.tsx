@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { IngredientSection } from './IngredientSection';
-import { IngredientAmount } from '../parser/types';
+import { IngredientAmount } from '../recipe/parser/types';
 
 function render(items: IngredientAmount[]) {
   return renderToStaticMarkup(<IngredientSection ingredients={{ main: items }} />);

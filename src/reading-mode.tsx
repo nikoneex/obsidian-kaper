@@ -2,7 +2,7 @@ import { MarkdownRenderChild, Plugin } from 'obsidian';
 import { createRoot } from 'react-dom/client';
 import { AssetIO } from './assets';
 import { openCookMode } from './cook-mode';
-import { parseKaperYaml } from './parser/recipe-parser';
+import { parseKaperYaml } from './recipe/parser/recipe-parser';
 import { ReadingPreview } from './ui/ReadingPreview';
 
 /**

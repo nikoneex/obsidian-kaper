@@ -32,8 +32,8 @@ export default [
 
       // Obsidian ships a YAML parser (parseYaml/stringifyYaml from 'obsidian');
       // the review bot flags bundling js-yaml. The parser now uses the built-in
-      // engine (src/parser/yaml-engine.ts), so this is an error to keep js-yaml
-      // out of shipped code. The test stub (test/obsidian-yaml-stub.ts) lives
+      // engine (src/recipe/parser/yaml-engine.ts), so this is an error to keep js-yaml
+      // out of shipped code. The test stub (test/stubs/obsidian.ts) lives
       // outside src/ and is not governed by this rule.
       'no-restricted-imports': [
         'error',

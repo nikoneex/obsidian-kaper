@@ -1,5 +1,5 @@
-import { IngredientGroup } from '../parser/types';
-import { nonEmptyIngredientGroups } from '../recipe-model';
+import { IngredientGroup } from '../recipe/parser/types';
+import { nonEmptyIngredientGroups } from '../recipe/model';
 
 /**
  * The "Ingredients" section of the recipe preview. Filters out empty groups,

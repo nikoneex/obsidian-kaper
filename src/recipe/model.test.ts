@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { RecipeModel } from './parser/types';
-import { hasIngredients, hasSteps, isRecipeEmpty, nonEmptyIngredientGroups } from './recipe-model';
+import { hasIngredients, hasSteps, isRecipeEmpty, nonEmptyIngredientGroups } from './model';
 
 function recipe(partial: Partial<RecipeModel>): RecipeModel {
   return { title: 'X', ingredients: {}, steps: [], ...partial } as unknown as RecipeModel;

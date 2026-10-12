@@ -14,7 +14,7 @@ import { parseYaml, stringifyYaml } from 'obsidian';
  * instead. If future compatibility with those becomes a concern, revisit
  * `recipe-parser.canon.test.ts` which pins the engine-visible behavior.)
  *
- * Tests resolve `obsidian` to test/obsidian-yaml-stub.ts (see vitest.config.ts),
+ * Tests resolve `obsidian` to test/stubs/obsidian.ts (see vitest.config.ts),
  * which calls the `yaml` package with the same stringify options Obsidian does.
  * The npm `obsidian` package is types-only with no runtime, so the alias is
  * required.

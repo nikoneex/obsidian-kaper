@@ -1,6 +1,6 @@
 import { App, TFile } from 'obsidian';
-import { parseKaperYaml } from './parser/recipe-parser';
-import { RecipeModel } from './parser/types';
+import { parseKaperYaml } from './recipe/parser/recipe-parser';
+import { RecipeModel } from './recipe/parser/types';
 
 const FENCE_OPEN = '```kaper';
 const FENCE_CLOSE = '```';

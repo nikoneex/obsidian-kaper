@@ -1,7 +1,7 @@
 import { AssetIO } from '../assets';
 import { KAPER_WEB_URL } from '../constants';
-import { RecipeModel } from '../parser/types';
-import { isRecipeEmpty } from '../recipe-model';
+import { RecipeModel } from '../recipe/parser/types';
+import { isRecipeEmpty } from '../recipe/model';
 import { IconExternalLink, IconPlay, IconTimer, IconUsers } from './icons';
 import { IngredientSection } from './IngredientSection';
 import { PreviewImage } from './PreviewImage';
