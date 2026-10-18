@@ -120,6 +120,8 @@ Bug fixes and pre-discussed features are welcome. Kaper is a one-person, spare-t
 - **No AI-generated bulk.** Large AI-generated PRs aren't accepted. Keep code readable, minimal, and in the style that's already here.
 - **Pass the checks.** Run `npm run format`, `npm run lint`, `npm run build`, and `npm test` before you push.
 - **Keep it small.** One PR, one issue.
+- **Keep contributions compatible with the license.** Contributions should be
+  offered under GPL-3.0-only with the Obsidian linking exception below.
 
 To work on the plugin locally:
 
@@ -134,7 +136,18 @@ Then symlink the repo into a test vault's `.obsidian/plugins/kaper` folder.
 
 ## License
 
-[MIT](LICENSE)
+Kaper for Obsidian is licensed under [GPL-3.0-only](LICENSE) with an
+[Obsidian linking exception](docs/licensing/OBSIDIAN-LINKING-EXCEPTION.txt).
+If you distribute a modified version, you must provide its source code under
+GPL-3.0-only. The exception allows the plugin to run with Obsidian without
+changing Obsidian's own license.
+
+Copyright © 2026 nikoneex and contributors.
+
+Published releases through 1.4.4 were under MIT and remain available under
+those terms. The [MIT notice](docs/licensing/MIT-previous-versions.txt) is
+retained for code originating in those releases. Changing the license now does
+not revoke rights already granted for earlier versions.
 
 ---
 

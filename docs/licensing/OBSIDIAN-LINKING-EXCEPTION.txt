@@ -1,0 +1,15 @@
+Obsidian linking exception
+
+This is an additional permission under section 7 of the GNU General Public
+License, version 3 (GPL-3.0-only), for Kaper for Obsidian code whose copyright
+holder offers it with this exception.
+
+You may link or combine that code with the Obsidian application through
+Obsidian's plugin API, and convey the resulting combination. The GPL-3.0-only
+terms continue to apply to the Kaper for Obsidian code and any modifications
+to it. This exception does not grant any rights in Obsidian or any other
+software.
+
+If you modify the Kaper for Obsidian code, you may extend this exception to
+your version, but you are not required to do so. If you do not extend it,
+remove this exception notice from your version.
