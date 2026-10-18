@@ -31,6 +31,9 @@ const scripts = await esbuild.context({
   outfile: 'main.js',
   jsx: 'automatic',
   minify: prod,
+  banner: {
+    js: '/*! Kaper for Obsidian (C) 2026 nikoneex and contributors. GPL-3.0-only with Obsidian linking exception. Source and license: https://github.com/nikoneex/obsidian-kaper */',
+  },
 });
 
 // Obsidian loads a single styles.css from the plugin root; the source is split
@@ -40,6 +43,9 @@ const styles = await esbuild.context({
   bundle: true,
   logLevel: 'info',
   outfile: 'styles.css',
+  banner: {
+    css: '/*! Kaper for Obsidian (C) 2026 nikoneex and contributors. GPL-3.0-only with Obsidian linking exception. Source and license: https://github.com/nikoneex/obsidian-kaper */',
+  },
 });
 
 const contexts = [scripts, styles];

@@ -4,6 +4,13 @@ All notable changes to the Kaper plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## Unreleased
+
+### Changed
+
+- Future releases use GPL-3.0-only with a narrow Obsidian linking exception.
+  The MIT notice is retained for previously published code.
+
 ## [1.4.0] — 2026-08-06
 
 ### Added
