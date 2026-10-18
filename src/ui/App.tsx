@@ -1,10 +1,10 @@
 import { Platform } from 'obsidian';
 import { useState } from 'react';
-import { AssetIO } from '../assets';
-import { RecipeModel } from '../parser/types';
-import { isRecipeEmpty } from '../recipe-model';
-import { RecipePreview } from './RecipePreview';
-import { RecipeFormEditor } from './RecipeFormEditor';
+import { AssetIO } from '../obsidian/assets';
+import { RecipeModel } from '../recipe/parser/types';
+import { isRecipeEmpty } from '../recipe/model';
+import { RecipePreview } from './preview/RecipePreview';
+import { RecipeFormEditor } from './form/RecipeFormEditor';
 
 type Tab = 'preview' | 'form';
 

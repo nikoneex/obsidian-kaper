@@ -1,0 +1,70 @@
+/* ── Form ──────────────────────────────────────────────────────────────── */
+
+.kaper-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-6);
+  padding: var(--size-4-3) 0;
+}
+
+.kaper-form__title-row {
+  padding-bottom: var(--size-4-2);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.kaper-form__title-input {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-interface);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-normal);
+  padding: 0;
+}
+
+.kaper-form__title-input::placeholder {
+  color: var(--text-faint);
+}
+
+.kaper-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+}
+
+.kaper-form__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kaper-block .kaper-form__section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.kaper-form__row {
+  display: flex;
+  gap: var(--size-4-2);
+}
+
+.kaper-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.kaper-form__field > label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}

@@ -1,0 +1,387 @@
+/* ── Preview ──────────────────────────────────────────────────────────── */
+
+.kaper-preview {
+  display: flex;
+  flex-direction: column;
+  padding: var(--size-4-2) 0;
+}
+
+.kaper-preview__cover {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: var(--radius-m);
+  margin-bottom: 20px;
+}
+
+.kaper-preview__header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 28px;
+}
+
+.kaper-preview__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.kaper-block .kaper-preview__title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-normal);
+  margin: 0 0 10px;
+}
+
+.kaper-preview__title-row .kaper-preview__title {
+  margin-bottom: 0;
+}
+
+/* On mobile the title can be long; let the Start Cooking button wrap under it
+   instead of being squeezed beside the title. */
+.is-mobile .kaper-preview__title-row {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Obsidian core indents `.markdown-rendered ol > li` by 3ch; drop it on mobile
+   for recipe steps so they line up with the rest of the preview. */
+.is-mobile .kaper-preview ol > li {
+  margin-inline-start: 0;
+}
+
+.kaper-preview__cook-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--size-2-3) var(--size-4-3);
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: var(--radius-m);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.kaper-preview__cook-btn:hover {
+  background: var(--interactive-accent-hover);
+}
+
+.kaper-preview__kaper-link {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--link-color, var(--text-accent));
+  text-decoration: var(--link-decoration, underline);
+  cursor: pointer;
+}
+
+.kaper-preview__kaper-link:hover {
+  color: var(--link-color-hover, var(--text-accent-hover));
+  text-decoration: var(--link-decoration-hover, underline);
+}
+
+/* Cook mode's web view is desktop-only, so hide its link on mobile. */
+.is-mobile .kaper-preview__kaper-link {
+  display: none;
+}
+
+.kaper-preview__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.kaper-preview__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.kaper-preview__meta-item svg {
+  color: var(--text-faint);
+}
+
+.kaper-preview__meta-divider {
+  width: 1px;
+  height: 12px;
+  background: var(--background-modifier-border);
+}
+
+.kaper-preview__difficulty {
+  text-transform: capitalize;
+  gap: 8px;
+}
+
+.kaper-preview__difficulty-label {
+  color: var(--text-muted);
+}
+
+.kaper-preview__difficulty-bars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.kaper-preview__difficulty-bar {
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--background-modifier-border);
+}
+
+.kaper-preview__difficulty--easy .kaper-preview__difficulty-bar:nth-child(-n + 1),
+.kaper-preview__difficulty--medium .kaper-preview__difficulty-bar:nth-child(-n + 2),
+.kaper-preview__difficulty--hard .kaper-preview__difficulty-bar:nth-child(-n + 3) {
+  background: var(--interactive-accent);
+}
+
+.kaper-preview__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kaper-preview__tag {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--background-secondary);
+  color: var(--text-muted);
+}
+
+/* ── Preview body ─────────────────────────────────────────────────────── */
+
+.kaper-preview__body {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.kaper-block .kaper-preview__section-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+/* ── Preview ingredients ──────────────────────────────────────────────── */
+
+.kaper-preview__ingredient-group {
+  margin-bottom: 20px;
+}
+
+.kaper-preview__ingredient-group:last-child {
+  margin-bottom: 0;
+}
+
+.kaper-block .kaper-preview__group-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+  text-transform: capitalize;
+}
+
+.kaper-preview__ingredient-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.kaper-preview__ingredient {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.kaper-preview__ingredient--optional {
+  opacity: 0.6;
+}
+
+.kaper-preview__ingredient-amount {
+  font-weight: 600;
+  color: var(--interactive-accent);
+  white-space: nowrap;
+  min-width: 72px;
+}
+
+.kaper-preview__ingredient-name {
+  color: var(--text-normal);
+}
+
+/* Prep/state detail. Muted like the substitution hint, but upright rather than
+   italic so the two stay distinguishable on an ingredient that has both. */
+.kaper-preview__ingredient-note {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.kaper-preview__ingredient-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Preview steps ────────────────────────────────────────────────────── */
+
+.kaper-preview__steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+}
+
+.kaper-preview__step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kaper-preview__step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kaper-preview__step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kaper-block .kaper-preview__step-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-normal);
+  flex: 1;
+  margin: 0;
+}
+
+.kaper-preview__step-duration {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.kaper-preview__step-note,
+.kaper-preview__step-technique {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding-left: 38px;
+  margin: 0;
+}
+
+.kaper-preview__step-image {
+  display: block;
+  max-width: calc(100% - 38px);
+  margin: 12px 0 0 38px;
+  border-radius: var(--radius-m);
+}
+
+/* Matches kaper web: a left-border accent, no fill, with a small uppercase
+   label coloured per type. Colours use Obsidian's theme palette so callouts
+   stay native to whatever theme is installed. */
+/* Shared callout accent + label typography for both the preview and cook
+   surfaces. One source of truth for the tip/warning colors (via the inherited
+   --kaper-callout-accent custom property) so the two can't drift apart; each
+   surface keeps its own spacing/scale in its own rules. */
+.kaper-preview__callout--tip,
+.kaper-cook__callout--tip {
+  --kaper-callout-accent: var(--color-blue);
+}
+
+.kaper-preview__callout--warning,
+.kaper-cook__callout--warning {
+  --kaper-callout-accent: var(--color-orange);
+}
+
+.kaper-preview__callout-label,
+.kaper-cook__callout-label {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kaper-callout-accent);
+}
+
+.kaper-preview__callout {
+  margin-left: 38px;
+  padding: 6px 12px;
+  border-left: 2.5px solid var(--kaper-callout-accent);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.kaper-preview__callout-label {
+  font-size: 10px;
+  margin-right: 4px;
+}
+
+/* ── Empty-state nudge (no ingredients & no steps) ─────────────────────── */
+
+.kaper-preview__nudge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 20px;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-secondary);
+}
+
+.kaper-preview__nudge-msg {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.kaper-preview__nudge-btn {
+  align-self: flex-end;
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  color: var(--text-accent);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.kaper-preview__nudge-btn:hover {
+  background: var(--background-modifier-hover);
+}

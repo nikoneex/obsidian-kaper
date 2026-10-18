@@ -1,11 +1,11 @@
 import obsidianmd from 'eslint-plugin-obsidianmd';
 
 // Guardrail against the checks the Obsidian plugin-review bot runs.
-// See docs/obsidian-review-warnings.md for the catalogue this enforces.
+// See docs/dev/review-warnings.md for the catalogue this enforces.
 export default [
   {
     // Build output and tooling scripts are not plugin source — don't lint them.
-    ignores: ['main.js', 'node_modules/**', '*.mjs'],
+    ignores: ['main.js', 'styles.css', 'node_modules/**', '*.mjs'],
   },
 
   // Official Obsidian ruleset: no-unsupported-api, prefer-window-timers,
@@ -32,8 +32,8 @@ export default [
 
       // Obsidian ships a YAML parser (parseYaml/stringifyYaml from 'obsidian');
       // the review bot flags bundling js-yaml. The parser now uses the built-in
-      // engine (src/parser/yaml-engine.ts), so this is an error to keep js-yaml
-      // out of shipped code. The test stub (test/obsidian-yaml-stub.ts) lives
+      // engine (src/recipe/parser/yaml-engine.ts), so this is an error to keep js-yaml
+      // out of shipped code. The test stub (test/stubs/obsidian.ts) lives
       // outside src/ and is not governed by this rule.
       'no-restricted-imports': [
         'error',

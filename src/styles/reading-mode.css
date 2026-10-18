@@ -1,0 +1,13 @@
+/* ── Reading mode ──────────────────────────────────────────────────────── */
+
+/* Hide the frontmatter Properties panel in Reading mode for recipe docs so the
+   rendered recipe stands alone. Scoped via the `kaper-recipe-doc` class the
+   reading-mode processor tags onto the container — Live Preview is untouched and
+   keeps showing Properties as the natural editing affordance. `.metadata-*`
+   covers modern Properties; `.frontmatter` covers the legacy YAML table. */
+.markdown-preview-view.kaper-recipe-doc .metadata-container,
+.markdown-preview-view.kaper-recipe-doc .frontmatter,
+.markdown-reading-view.kaper-recipe-doc .metadata-container,
+.markdown-reading-view.kaper-recipe-doc .frontmatter {
+  display: none;
+}

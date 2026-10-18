@@ -1,0 +1,260 @@
+/* ── Inputs ────────────────────────────────────────────────────────────── */
+
+.kaper-form__input,
+.kaper-form__textarea,
+.kaper-form__select {
+  background: var(--background-modifier-form-field);
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-family: var(--font-interface);
+  font-size: 14px;
+  color: var(--text-normal);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 34px;
+}
+
+.kaper-form__input::placeholder,
+.kaper-form__textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.kaper-form__input:focus,
+.kaper-form__textarea:focus,
+.kaper-form__select:focus {
+  border-color: var(--interactive-accent);
+}
+
+.kaper-form__textarea {
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.5;
+}
+
+.kaper-form__select {
+  cursor: pointer;
+  appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' stroke='%23999' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.kaper-form__input--narrow { max-width: 120px; flex: none; }
+.kaper-form__input--amount { width: 72px; flex: none; }
+.kaper-form__input--unit { width: 80px; flex: none; }
+.kaper-form__input--name { flex: 1; }
+.kaper-form__input--note { width: 140px; flex: none; }
+.kaper-form__input--sub { width: 100px; flex: none; }
+.kaper-form__input--step-title { flex: 1; }
+
+/* ── Time input (hours / minutes) ──────────────────────────────────────── */
+
+.kaper-time-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kaper-time-input__field {
+  width: 44px;
+  background: var(--background-modifier-form-field);
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 7px 8px;
+  font-family: var(--font-interface);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--text-normal);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
+}
+
+.kaper-time-input__field::placeholder { color: var(--text-faint); }
+
+.kaper-time-input__field:focus {
+  border-color: var(--interactive-accent);
+}
+
+.kaper-time-input__field:disabled { opacity: 0.5; cursor: default; }
+
+.kaper-time-input__unit {
+  font-size: 11px;
+  color: var(--text-faint);
+  user-select: none;
+}
+
+/* ── Tag input (chip input + suggestion dropdown) ──────────────────────── */
+
+.kaper-tag-input {
+  position: relative;
+  background: var(--background-modifier-form-field);
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 5px 8px;
+  cursor: text;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.kaper-tag-input.is-focused {
+  border-color: var(--interactive-accent);
+}
+
+.kaper-tag-input.is-open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.kaper-tag-input__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 22px;
+}
+
+.kaper-tag-input__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  padding: 2px 4px 2px 8px;
+  border-radius: 100px;
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  user-select: none;
+  line-height: 1;
+}
+
+.kaper-tag-input__chip-label {
+  white-space: nowrap;
+}
+
+.kaper-tag-input__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text-muted);
+  opacity: 0.55;
+  cursor: pointer;
+  border-radius: 100px;
+  transition: opacity 0.1s, background 0.1s;
+}
+
+.kaper-tag-input__chip-remove:hover {
+  opacity: 1;
+  background: var(--background-modifier-hover);
+}
+
+.kaper-tag-input__field {
+  flex: 1;
+  min-width: 80px;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 2px 0;
+  font-family: var(--font-interface);
+  font-size: 14px;
+  color: var(--text-normal);
+}
+
+.kaper-tag-input__field::placeholder { color: var(--text-faint); }
+
+.kaper-tag-input__field:disabled { opacity: 0.5; cursor: default; }
+
+.kaper-tag-input__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--background-primary);
+  border: 1.5px solid var(--interactive-accent);
+  border-top: 1px solid var(--background-modifier-border);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.kaper-tag-input__option {
+  padding: 7px 10px;
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.08s, color 0.08s;
+}
+
+.kaper-tag-input__option:hover,
+.kaper-tag-input__option.is-active {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+
+.kaper-form__add-btn {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-accent);
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.kaper-form__add-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
+.kaper-form__remove-btn,
+.kaper-form__icon-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.1s, color 0.1s;
+}
+
+.kaper-form__remove-btn:hover {
+  background: var(--background-modifier-error-hover);
+  color: #ffffff;
+}
+
+.kaper-form__icon-btn:hover:not(:disabled) {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.kaper-form__icon-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}

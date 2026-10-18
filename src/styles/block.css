@@ -1,0 +1,80 @@
+/* ── Block container ───────────────────────────────────────────────────── */
+
+.kaper-block {
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+/* Reset Obsidian's default heading styles inside the block — class rules win */
+.kaper-block h1,
+.kaper-block h2,
+.kaper-block h3,
+.kaper-block h4,
+.kaper-block h5,
+.kaper-block h6 {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  border-bottom: none;
+}
+
+.kaper-view-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+
+.kaper-tabs {
+  display: flex;
+  gap: var(--size-2-2);
+  margin-bottom: var(--size-4-3);
+}
+
+/* Consumes Obsidian's --tab-* theme variables so themes that restyle tabs flow
+   into ours; fallbacks preserve our previous hardcoded look. */
+.kaper-tab {
+  padding: var(--size-2-2) var(--size-4-2);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--tab-text-color, var(--text-muted));
+  cursor: pointer;
+  font-size: var(--tab-font-size, 13px);
+  font-weight: var(--tab-font-weight, inherit);
+}
+
+.kaper-tab.is-active {
+  color: var(--tab-text-color-focused-active-current, var(--text-normal));
+  border-bottom-color: var(--interactive-accent);
+}
+
+.kaper-cook-mode-button {
+  margin-left: auto;
+  padding: var(--size-2-2) var(--size-4-2);
+  background: none;
+  border: none;
+  color: var(--text-accent);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.kaper-parse-error {
+  padding: var(--size-4-3);
+  border-radius: var(--radius-m);
+  border: 1px solid var(--text-error);
+  background-color: rgba(var(--color-red-rgb), 0.1);
+  color: var(--text-normal);
+}
+
+.kaper-parse-error strong {
+  color: var(--text-error);
+}
+
+.kaper-parse-error p {
+  margin: var(--size-4-1) 0 0;
+}
