@@ -4,6 +4,12 @@ All notable changes to the Kaper plugin are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Recipe scaling in Cook Mode.** Cook Mode now opens on an ingredients checklist before step 1: tick ingredients off as you gather them, and use the servings stepper to scale every amount up or down. Scaling matches the Kaper web app — amounts round to two decimals, and units with no meaningful multiple (`to taste`, `as needed`, `pinch`, `dash`) are left alone. Recipes with no ingredients skip straight to step 1.
+
 ## [1.4.0] — 2026-08-06
 
 ### Added

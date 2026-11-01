@@ -17,7 +17,7 @@
 - **Write recipes as notes.** A recipe is a markdown file with `kaper: true` in its frontmatter and a ` ```kaper ` YAML block in the body. Everything outside the block is normal markdown. For example, a story about where the recipe came from, links to related notes, or photos.
 - **See them rendered inline.** In Live Preview and Reading view, the block becomes a formatted recipe card with ingredients, steps, times, tags, and images. Switch to Source mode to see the raw YAML.
 - **Edit with a form instead of YAML.** Set the title, servings, prep and cook time, tags, ingredient groups, and steps with notes, tips, warnings, and durations. Drag ingredients to reorder them. Every change saves automatically.
-- **Cook step by step.** Click **Start Cooking** to walk through the recipe one step at a time, with a progress bar and ← / → keys. It opens as a dockable side panel on desktop and a full-screen sheet on mobile.
+- **Cook step by step.** Click **Start Cooking** to tick off ingredients as you gather them and scale the servings up or down, then walk through the recipe one step at a time, with a progress bar and ← / → keys. It opens as a dockable side panel on desktop and a full-screen sheet on mobile.
 - **Match your theme.** Kaper uses your accent color and surface palette, so recipes look at home in any theme.
 
 Kaper works on desktop and mobile. On mobile, recipes are a read-only preview and Cook Mode. Creating, converting, and form editing are desktop-only for now.
