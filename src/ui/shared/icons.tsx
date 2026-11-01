@@ -77,3 +77,16 @@ export const IconPlay = ({ size = 13 }: { size?: number }) => (
     <path d="M8 5v14l11-7z" />
   </svg>
 );
+
+export const IconMinus = ({ size = 16 }: { size?: number }) => (
+  <Stroke size={size}>
+    <path d="M5 12h14" />
+  </Stroke>
+);
+
+export const IconPlus = ({ size = 16 }: { size?: number }) => (
+  <Stroke size={size}>
+    <path d="M5 12h14" />
+    <path d="M12 5v14" />
+  </Stroke>
+);

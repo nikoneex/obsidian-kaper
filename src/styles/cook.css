@@ -232,3 +232,163 @@
 .kaper-cook__btn--next:hover {
   background: var(--interactive-accent-hover);
 }
+
+/* ── Cook mode: ingredients page ──────────────────────────────────────── */
+
+/* Servings scaler: a label on the left, a −/+ stepper on the right. */
+.kaper-cook__servings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--size-4-3);
+  margin-bottom: var(--size-4-5);
+  padding: var(--size-4-2) var(--size-4-3);
+  background: var(--background-secondary);
+  border-radius: var(--radius-m);
+}
+
+.kaper-cook__servings-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.kaper-cook__servings-label svg {
+  color: var(--text-faint);
+}
+
+.kaper-cook__stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-2);
+}
+
+.kaper-cook__stepper-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  box-shadow: none;
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+  cursor: pointer;
+}
+
+.kaper-cook__stepper-btn:hover:not(:disabled) {
+  background: var(--background-modifier-border);
+}
+
+.kaper-cook__stepper-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.kaper-cook__stepper-value {
+  min-width: 28px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-normal);
+}
+
+/* Checklist: one row per ingredient, the whole row toggles the checkbox. */
+.kaper-cook__ingredient-group {
+  margin-bottom: var(--size-4-5);
+}
+
+.kaper-cook__ingredient-group:last-child {
+  margin-bottom: 0;
+}
+
+.kaper-cook__ingredient-group-name {
+  margin: 0 0 var(--size-4-2);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.kaper-cook__ingredient-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-1);
+  margin: 0;
+  padding: 0;
+}
+
+.kaper-cook__ingredient {
+  /* Obsidian sizes its checkboxes from this variable; a touch larger here for
+     fingers at the counter. */
+  --checkbox-size: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--size-4-3);
+  padding: var(--size-4-2);
+  border-radius: var(--radius-s);
+  font-size: 16px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.kaper-cook__ingredient:hover {
+  background: var(--background-modifier-hover);
+}
+
+.kaper-cook__ingredient input[type='checkbox'] {
+  flex-shrink: 0;
+  margin: 2px 0 0;
+}
+
+.kaper-cook__ingredient-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 8px;
+  transition: opacity 0.15s;
+}
+
+.kaper-cook__ingredient--optional .kaper-cook__ingredient-text {
+  opacity: 0.6;
+}
+
+.kaper-cook__ingredient--checked .kaper-cook__ingredient-text {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+.kaper-cook__ingredient-amount {
+  font-weight: 600;
+  color: var(--interactive-accent);
+  white-space: nowrap;
+}
+
+.kaper-cook__ingredient--checked .kaper-cook__ingredient-amount {
+  color: var(--text-muted);
+}
+
+.kaper-cook__ingredient-name {
+  color: var(--text-normal);
+}
+
+/* Prep/state detail and substitution, muted like the preview's. */
+.kaper-cook__ingredient-note {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.kaper-cook__ingredient-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-style: italic;
+}

@@ -21,6 +21,8 @@ export class KaperCookView extends ItemView {
   private root: Root | null = null;
   private filePath = '';
   private title = 'Cooking...';
+  /** Bumped per rendered recipe; see {@link renderRecipe}. */
+  private session = 0;
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -82,8 +84,14 @@ export class KaperCookView extends ItemView {
     }
 
     this.title = recipe.title;
+    // Obsidian reuses an open leaf for a same-type setViewState, so this can
+    // re-render with a different recipe in place. Without a fresh key React
+    // would keep the previous recipe's page, servings, and ticked ingredients;
+    // keying each open makes it a clean session, as the mobile modal is.
+    this.session += 1;
     root.render(
       <CookMode
+        key={this.session}
         recipe={recipe}
         assets={this.assets}
         filePath={this.filePath}
