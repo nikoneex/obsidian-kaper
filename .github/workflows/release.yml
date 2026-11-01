@@ -49,4 +49,6 @@ jobs:
           gh release create "$tag" \
             --title="$tag" \
             --draft \
-            main.js manifest.json styles.css
+            main.js manifest.json styles.css \
+            LICENSE docs/licensing/OBSIDIAN-LINKING-EXCEPTION.txt \
+            docs/licensing/MIT-previous-versions.txt
