@@ -4,7 +4,7 @@
 
 <p align="center"><b>Recipes that live in your vault.</b></p>
 
-<p align="center">Structured recipes inside plain markdown notes. Inline preview. Form editor. Step-by-step Cook Mode. Works on desktop and mobile.</p>
+<p align="center">Structured recipes inside plain markdown notes. Inline preview. Form editor. Step-by-step Cook Mode with servings scaling. Works on desktop and mobile.</p>
 
 <p align="center"><a href="https://obsidian.md/plugins?id=kaper">Install</a>&nbsp;· <a href="docs/kaper-format.md">File format</a>&nbsp;· <a href="https://kaper.me">Kaper web app</a>&nbsp;· <a href="https://github.com/nikoneex/obsidian-kaper/issues">Issues</a>&nbsp;· <a href="CHANGELOG.md">Changelog</a></p>
 
@@ -23,6 +23,14 @@
 Kaper works on desktop and mobile. On mobile, recipes are a read-only preview and Cook Mode. Creating, converting, and form editing are desktop-only for now.
 
 <p align="center"><img src="assets/form.png" alt="The Kaper form editor" width="520"></p>
+
+## Scale a recipe as you cook
+
+<p align="center"><img src="assets/scale.png" alt="Cook Mode's ingredients page in Obsidian: a servings stepper above a grouped ingredient checklist for a carbonara recipe" width="520"></p>
+
+Cooking for six instead of two? Cook Mode opens on an ingredients page before the first step. Change the servings with the stepper and every amount updates in place, so you read the recipe at the size you're actually making. Tick ingredients off as you gather them, then press **Start cooking** to walk through the steps.
+
+Scaling follows the same rules as the Kaper web app: amounts round to two decimals, and measures with no meaningful multiple (`to taste`, `as needed`, a `pinch`, a `dash`) stay as written. Nothing is written back to the note. Your recipe keeps its original servings, and the next cook starts fresh.
 
 ## Get started
 
