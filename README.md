@@ -30,8 +30,6 @@ Kaper works on desktop and mobile. On mobile, recipes are a read-only preview an
 
 Cooking for six instead of two? Cook Mode opens on an ingredients page before the first step. Change the servings with the stepper and every amount updates in place, so you read the recipe at the size you're actually making. Tick ingredients off as you gather them, then press **Start cooking** to walk through the steps.
 
-Scaling follows the same rules as the Kaper web app: amounts round to two decimals, and measures with no meaningful multiple (`to taste`, `as needed`, a `pinch`, a `dash`) stay as written. Nothing is written back to the note. Your recipe keeps its original servings, and the next cook starts fresh.
-
 ## Get started
 
 1. In Obsidian, open **Settings → Community plugins**, search for **Kaper**, then install and enable it.
