@@ -1,5 +1,6 @@
 import { IngredientGroup } from '../../recipe/parser/types';
 import { nonEmptyIngredientGroups } from '../../recipe/model';
+import { IngredientText } from '../shared/IngredientText';
 
 /**
  * The "Ingredients" section of the recipe preview. Filters out empty groups,
@@ -26,19 +27,7 @@ export function IngredientSection({ ingredients }: { ingredients: IngredientGrou
                   (item.optional ? ' kaper-preview__ingredient--optional' : '')
                 }
               >
-                <span className="kaper-preview__ingredient-amount">
-                  {item.amount} {item.unit}
-                </span>
-                <span className="kaper-preview__ingredient-name">
-                  {item.name}
-                  {/* Nested rather than a sibling so the comma sits tight against the
-                      name — the list item is a flex row with a gap between children. */}
-                  {item.note && (
-                    <span className="kaper-preview__ingredient-note">, {item.note}</span>
-                  )}
-                </span>
-                {item.optional && <i>(optional)</i>}
-                {item.sub && <span className="kaper-preview__ingredient-sub">or {item.sub}</span>}
+                <IngredientText block="kaper-preview" item={item} />
               </li>
             ))}
           </ul>
